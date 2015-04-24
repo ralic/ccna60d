@@ -923,7 +923,7 @@ Total Mac Addresses for this criterion: 6
 
 对 CAM 表的攻击易于开展，因为有着像 MACOF 及 DSNIFF 等常见的工具可用于实施这样的行为。而增加 VLANs 的数目（此举减少了广播域的尺寸），可有助于降低 CAM 表攻击的影响，在交换机上配置端口安全特性，是推荐的保全方案。
 
-
+### MAC 嗅探攻击，MAC Spoofing Attacks
 
 
 

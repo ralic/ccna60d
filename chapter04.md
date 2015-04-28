@@ -984,6 +984,7 @@ VTP-Server-1(config-if)#switchport mode access
 
 默认情况下，端口安全是关闭的；但可通过接口配置命令 `switchport port-security [mac-address {mac-address} [vlan {vlan-id | {access | voice}}] | mac-address {sticky} [mac-address | vlan {vlan-id | {access | voice}}] [maximum {value} [vlan {vlan-list | {access | voice}}]] 予以开启。表 4.1 说明了该命令的这些选项。
 
+
 | 关键字 | 说明 |
 | -- | -- |
 | mac-address {mac-address} | 此关键字用于指定一个静态保全 MAC 地址。你还可以加入不超过配置的最大数目的其它安全 MAC 地址。 |

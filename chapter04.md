@@ -955,4 +955,13 @@ __经由端口安全特性，我们可以指定特定 MAC 才被允许访问某�
 
 ### 动作的端口安全，Port Security Actions
 
-一旦开启了端口安全，管理员就可定义出在出现违反端口安全事件后，交换机所采取的动作了。
+一旦开启了端口安全，管理员就可定义出在出现违反端口安全事件后，交换机所采取的动作了。思科 IOS 软件允许管理员指定 4 种在出现冲突时所采取的不同动作。
+
+* 保护，Protect
+* 关闭（默认动作）, Shutdown(default)
+* 限制，Restrict
+* 关闭 VLAN （超出 CCNA 大纲）, Shutdown VLAN(outside of the CCNA syllabus)
+
+__保护动作选项强制端口进入受保护端口模式（Protected Port mode）__。此模式下，交换机会简单地丢弃所有源地址不明的单播和多播帧（simply discard all Unicast or Multicast frames with unknown source MAC addresses）。而在交换机被配置为保护某端口时，当其以受保护端口模式运行时，不会发出通知，这就意味着由处于此模式下的交换机端口阻止所有流量时，管理员是无法获知的。
+
+关闭动作选项则是在出现违反端口安全后，将某端口置于某种错误关闭状态（an err-disabled state）。在此配置动作被用到时，交换机上相应端口的 LED 同时被关闭。而在关闭模式下，交换机发出一条 SNMP trap ([浅谈 Linux 系统中的 SNMP trap](http://www.ibm.com/developerworks/cn/linux/l-cn-snmp/index.html))

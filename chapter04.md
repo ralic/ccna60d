@@ -921,7 +921,7 @@ Total Mac Addresses for this criterion: 6
 
 如同所有的计算装置一样，交换机的存储资源也是有限的。这就意味着 __CAM 表的存储空间是固定的，已分配好的__。CAM 表溢出攻击（CAM table overflow attacks）将此限制作为目标，用大量随机生成的无效源及目的 MAC 地址灌入交换机，直到填满 CAM 表，此时交换机就无法接收新的 CAM 表条目了。在此情况下，交换机成为了一台集线器，只能开始简单地将新近接收的帧广播到其上的所有接口（同一 VLAN 中的），就是将该 VLAN 变成了一个大的广播域。
 
-对 CAM 表的攻击易于开展，因为有着像 MACOF 及 DSNIFF 等常见的工具可用于实施这样的行为。而增加 VLANs 的数目（此举减少了广播域的尺寸），可有助于降低 CAM 表攻击的影响，在交换机上配置端口安全特性，是推荐的保全方案。
+对 CAM 表的攻击易于开展，因为有着像 MACOF 及 DSNIFF 等常见的工具可用于实施这样的行为。而增加 VLANs 的数目（此举减少了广播域的尺寸），可有助于降低 CAM 表攻击的影响，在交换机上配置端口安全特性，是推荐的安全方案。
 
 ### MAC 欺骗攻击，MAC Spoofing Attacks
 
@@ -939,7 +939,7 @@ MAC 地址欺骗，用于冒充某个源 MAC 地址，以达到扮演网络上�
 
 此外，这也将扰乱交换机，造成反复的重写 MAC 地址表条目，引发在合法主机（也就是 2 号主机）上的拒绝服务攻击（Denial of Service , DoS）。而假如假冒的 MAC 地址树木很高，MAC 地址欺骗攻击还将对持续重写其 CAM 表的交换机的性能造成严重影响。应用端口安全(implementing port security)，可以减轻 MAC 地址欺骗攻击的影响。
 
-### 地址保全的端口安全，Port Security Secure Addresses
+### 地址安全的端口安全，Port Security Secure Addresses
 
 __经由端口安全特性，我们可以指定特定 MAC 才被允许访问某个交换机端口，同时限制某个单一交换机端口所支持的 MAC 地址数目__。以下本节所说明的几种端口安全应用方式。
 
@@ -947,9 +947,9 @@ __经由端口安全特性，我们可以指定特定 MAC 才被允许访问某�
 * 动态 MAC 地址保全, Dynamic secure MAC addresses
 * 绑定 MAC 地址保全, Sticky secure MAC addresses
 
-静态 MAC 地址保全是由网络管理员静态配置，并存储在 MAC 地址表中，同时还保存在交换机配置文件里。当将静态 MAC 地址保全指派给某个保全端口时，交换机不会转发那些源地址与所配置的静态保全 MAC 地址不匹配的帧。
+静态 MAC 地址保全是由网络管理员静态配置，并存储在 MAC 地址表中，同时还保存在交换机配置文件里。当将静态 MAC 地址保全指派给某个安全端口时，交换机不会转发那些源地址与所配置的静态安全 MAC 地址不匹配的帧。
 
-动态 MAC 地址保全，是交换机所学习到的，存储在 MAC 地址表中。与静态 MAC 地址保全不同，在交换机重启或断电后，动态保全 MAC 地址条目会从交换机中移除。在交换机再次启动时，这些地址要再次习得。
+动态 MAC 地址保全，是交换机所学习到的，存储在 MAC 地址表中。与静态 MAC 地址安全不同，在交换机重启或断电后，动态安全 MAC 地址条目会从交换机中移除。在交换机再次启动时，这些地址要再次习得。
 
 绑定的 MAC 地址保全，是静态和动态 MAC 地址保全的结合。地址可动态习得，也可静态配置，存储在 MAC 地址表中，也保存在交换机配置文件里。这就意味着在交换机关闭或是重启后，它无需再次动态发现 MAC 地址，因为这些 MAC 地址已经保存在配置文件中了（如你有保存允许的配置）。
 
@@ -964,4 +964,35 @@ __经由端口安全特性，我们可以指定特定 MAC 才被允许访问某�
 
 __保护动作选项强制端口进入受保护端口模式（Protected Port mode）__。此模式下，交换机会简单地丢弃所有源地址不明的单播和多播帧（simply discard all Unicast or Multicast frames with unknown source MAC addresses）。而在交换机被配置为保护某端口时，当其以受保护端口模式运行时，不会发出通知，这就意味着由处于此模式下的交换机端口阻止所有流量时，管理员是无法获知的。
 
-关闭动作选项则是在出现违反端口安全后，将某端口置于某种错误关闭状态（an err-disabled state）。在此配置动作被用到时，交换机上相应端口的 LED 同时被关闭。而在关闭模式下，交换机发出一条 SNMP trap ([浅谈 Linux 系统中的 SNMP trap](http://www.ibm.com/developerworks/cn/linux/l-cn-snmp/index.html))
+__关闭动作选项则是在出现违反端口安全后，将某端口置于某种错误关闭状态（an err-disabled state）__。在此配置动作被用到时，交换机上相应端口的 LED 同时被关闭。而在关闭模式下，交换机发出一条 SNMP trap ([浅谈 Linux 系统中的 SNMP trap](http://www.ibm.com/developerworks/cn/linux/l-cn-snmp/index.html)), 以及一条 syslog 消息，同时冲突计数器会增大。这个选项是接口配置了端口安全时的默认动作。
+
+__限制动作选项是在安全 MAC 地址数目到达管理员为该端口所定义的最大限制时，用于丢弃那些带有不明 MAC 地址的数据包__。此模式下，交换机会持续限制额外的那些 MAC 地址发出帧，直到移除对那些安全 MAC 地址数目的限制，或直到所允许的最大地址数目得以增加。和关闭工作选项一样，交换机也会发出一条 SNMP trap 及一条 syslog 消息，同时冲突计数器会增加。
+
+__关闭 VLAN 动作选项跟关闭动作选项类似；不过此选项是关闭某个 VLAN, 而不是某个交换机端口__。此配置可能会应用在那些指派了多个 VLAN， 诸如语音 VLAN 和数据 VLAN， 的端口上，以及交换机的中继链路上。
+
+### 端口安全配置， Configuring Port Security
+
+在配置端口安全之前，建议将交换机端口静态配置为二层接入端口（端口安全只能配置为静态接入端口或中继端口上，不能配置在动态端口上）。此配置如下面的输出所示。
+
+```
+VTP-Server-1(config)#interface FastEthernet0/1
+VTP-Server-1(config-if)#switchport
+VTP-Server-1(config-if)#switchport mode access
+```
+
+> __注意:__在诸如 Catalyst 2950 及 Catalyst 2960 系列的二层交换机上无需 `switchport` 命令。而在比如 Catalyst 3750、Catalyst 4500 以及 Catalyst 6500 系列等的多层交换机上， 它是要要到的。
+
+默认情况下，端口安全是关闭的；但可通过接口配置命令 `switchport port-security [mac-address {mac-address} [vlan {vlan-id | {access | voice}}] | mac-address {sticky} [mac-address | vlan {vlan-id | {access | voice}}] [maximum {value} [vlan {vlan-list | {access | voice}}]] 予以开启。表 4.1 说明了该命令的这些选项。
+
+| 关键字 | 说明 |
+| -- | -- |
+| mac-address {mac-address} | 此关键字用于指定一个静态保全 MAC 地址。你还可以加入不超过配置的最大数目的其它安全 MAC 地址。 |
+| vlan {vlan id} | 此关键字应只使用在某个中继端口上，以指定 VLAN ID 和 MAC 地址。如没有指定 VLAN ID，就使用原生 VLAN。 |
+| vlan {access} | 此关键字应只用在某个接入端口上，以指定该 VLAN 作为接入 VLAN。 |
+| vlan {voice} | 此关键字应只用在某个接入端口上, 用以知道该 VLAN 作为一个语音 VLAN。而只有在该特定端口上配置了语音 VLAN 时，该选项才可用。 |
+| mac-address {sticky} [mac-address] | 此关键字用于在特定接口上开启动态或地址绑定学习（used to enable dynamic or sticky learning），或者为其配置一个静态安全 MAC 地址。| 
+| maxium {value} | 此关键字用于指定某个接口上可以学到的安全地址的最大数目。默认是 1。 |
+
+### 静态安全地址配置， Configuring Static Secure MAC Addresses
+
+

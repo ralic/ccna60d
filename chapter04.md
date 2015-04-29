@@ -1071,7 +1071,6 @@ Security Violation count : 0
 
 而要查看该端口上具体配置的静态安全 MAC 地址，就要用到 `show port-security address` 或者 `show running-config interface [name]` 命令了。以下输出演示了 `show port-security address`。
 
-
 <pre>
 VTP-Server-1#<b>show port-security address</b>
 			Secure Mac Address Table

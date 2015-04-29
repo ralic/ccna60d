@@ -1085,4 +1085,8 @@ Total Addresses in System : 1
 Max Addresses limit in System : 1024
 <pre>
 
+### 动态安全 MAC 地址的配置，Configuring Dynamic Secure MAC Address
 
+默认情况下，当某个端口的端口安全开启时，该端口无需管理员做任何配置，就会动态学习并将学习到的 MAC 地址设为安全 MAC 地址。而要令到该端口学到不止一个 MAC 地址并将它们设为安全 MAC 地址，就要使用命令 `switchport port-security maxium [number]`。记住 `[number]` 关键字是依平台而定的，在不同的思科 Catalyst 交换机型号上会有所不同。
+
+!["现实场景"](images/real-world.png)

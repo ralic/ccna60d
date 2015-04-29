@@ -1034,3 +1034,55 @@ VTP-Server-1(config-if)#switchport port-security mac-address 001f.3c59.7777 vlan
 记住在某个同时配置了语音 VLAN 和数据 VLAN 的接口上开启端口安全时，该端口上的最大允许安全地址数应设置为 2，这一点非常重要。这又是通过包含在上面输出中的__接口配置命令__ `switchport port-security maxium 2` 完成的。
 
 两个 MAC 地址中的一个由 IP 电话使用，交换机在语音 VLAN 上学到此地址。另一个由可连接在 IP 电话上的主机（比如 PC）所使用。交换机将在数据 VLAN 上学到这个 MAC 地址。
+
+### 静态安全地址配置的验证，Verifying Static Secure MAC Address Configuration
+
+同过执行 `show port-security` 命令，可以验证全局端口安全配置参数（global port security configuration parameters）。下面展示了默认值下的此命令的打印输出。
+
+<pre>
+VTP-Server-1#show port-security
+Secure Port	MaxSecureAddr	<b>CurrentAddr</b>	SecurityViolation	Security Action
+			(Count)			(Count)				(Count)
+-------------------------------------------------------
+Gi0/2		1				1					0					Shutdown
+------------------------------------------------------------------
+<b>Total Addresses in System : 1</b>
+Max Addresses limit in System : 1024
+</pre>
+
+如同上面的输出中所见到的那样，默认情况下，每个端口上仅允许一个安全 MAC 地址。此外，在出现冲突事件时的默认动作就是关闭端口。粗体文本表明，已知仅有一个安全地址，就是配置在接口上的静态地址。经由执行 `show port-security interface [name]` 亦可确认同样的参数，如下面的输出所示。
+
+<pre>
+VTP-Server-1#show port-security interface gi0/2
+Port Security : Enabled
+Port status : SecureUp
+Violation mode : Shutdown
+Maximum MAC Addresses : 1
+Total MAC Addresses : 1
+<b>Configured MAC Addresses : 1</b>
+Sticky MAC Addresses : 0
+Aging time : 0 mins
+Aging type : Absolute
+SecureStatic address aging : Disabled
+Security Violation count : 0
+</pre>
+
+>__注意：__ 在我们进一步学习本章内容的过程中，将会详细介绍对上面的输出中其它默认参数的修改。
+
+而要查看该端口上具体配置的静态安全 MAC 地址，就要用到 `show port-security address` 或者 `show running-config interface [name]` 命令了。以下输出演示了 `show port-security address`。
+
+```
+<pre>
+VTP-Server-1#<b>show port-security address</b>
+			Secure Mac Address Table
+------------------------------------------------------------------
+Vlan	Mac Address		Type				Ports	Remaining Age
+														(mins)
+----	-----------		----				-----	-----------
+1		001f.3c59.d63b	SecureConfigured	Gi0/2		-
+-------------------------------------------------------------------
+Total Addresses in System : 1
+Max Addresses limit in System : 1024
+<pre>
+
+

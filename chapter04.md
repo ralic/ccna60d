@@ -1089,3 +1089,73 @@ Max Addresses limit in System : 1024
 默认情况下，当某个端口的端口安全开启时，该端口无需管理员做任何配置，就会动态学习并将学习到的 MAC 地址设为安全 MAC 地址。而要令到该端口学到不止一个 MAC 地址并将它们设为安全 MAC 地址，就要使用命令 `switchport port-security maxium [number]`。记住 `[number]` 关键字是依平台而定的，在不同的思科 Catalyst 交换机型号上会有所不同。
 
 !["现实场景"](images/real-world.png)
+
+__现实场景部署，Real-World Implementation__
+
+在使用思科 Catalyst 3750 交换机的生产网络中，事先确定下来某台特定交换机的用途，总是一个好主意，接着就可以通过全局配置命令（global configuration command） `sdm prefer {access | default | dual-ipv4-ipv6 {default | routing | vlan} | routing | vlan} [desktop]`, 选定恰当的交换机数据库（Switch Database Management, SDM）模板。
+
+各个 SDM 模板以支持正在或即将用到的那些特性的最优方式，来分配系统资源。默认的 SDM 模板则是尝试在各项特性间提供一种平衡。因此，会影响其它各项特性和功能的最大性能值。一个例子就是在采行端口安全时，所能学到或配置上的安全 MAC 地址最大可能数会减少。
+
+下面的输出演示了怎样将交换机端口，接口 GigabitEthernet0/2, 配置为动态学习并将至多两个 MAC 地址设为安全 MAC 地址。
+
+```
+VTP-Server-1(config)#interface GigabitEthernet0/2
+VTP-Server-1(config-if)#switchport
+VTP-Server-1(config-if)#switchport mode access
+VTP-Server-1(config-if)#switchport port-security
+VTP-Server-1(config-if)#switchport port-security maximum 2
+```
+
+### 验证动态 MAC 地址保全，Verifying Dynamic Secure MAC Addressed
+
+可用除了 `show running-config` 命令外的，在静态地址保全配置示例中用到的同样命令，来验证动态 MAC 地址保全的配置。这是因为，与静态或绑定的 MAC 地址保全不同，所有动态学习到的地址是不保存在交换机配置文件中的，且在端口关闭后会被移除。那些同样的地址也要在端口再度开启后重新学习。下面的输出演示了 `show port-security address` 命令的输出，现实了一个配置为动态 MAC 地址保全学习的接口。
+
+<pre>
+VTP-Server-1#<b>show port-security address</b>
+			Secure Mac Address Table
+------------------------------------------------------------------
+Vlan	Mac Address			Type				Ports	Remaining Age
+															(mins)
+----	-----------			----				-----	------------
+1		001d.09d4.0238		SecureDynamic 		Gi0/2		-
+1		001f.3c59.d63b		SecureDynamic		Gi0/2		-
+------------------------------------------------------------------
+Total Addresses in System : 2
+Max Addresses limit in System : 1024
+</pre>
+
+### 配置保全 MAC 地址绑定
+
+下面的输出演示了如何来在某个端口上配置动态绑定学习，以及限制端口学习到至多 10 个的 MAC 地址。
+
+```
+VTP-Server-1(config)#interface GigabitEthernet0/2
+VTP-Server-1(config-if)#switchport
+VTP-Server-1(config-if)#switchport mode access
+VTP-Server-1(config-if)#switchport port-security
+VTP-Server-1(config-if)#switchport port-security mac-address sticky
+VTP-Server-1(config-if)#switchport port-security maximum 10
+```
+
+基于上述配置，默认情况下，在接口 GigabitEthernet0/2 将会动态学到至多 10 个地址，并添加进交换机当前配置中去。在开启绑定地址学习后， 各个端口上学到的 MAC 地址被自动保存到当前配置文件，同时加入到地址表中。下面的输出显示了接口 GigabitEthernet0/2 上所自动学到的 MAC 地址（以粗体显示）。
+
+<pre>
+VTP-Server-1#show running-config interface GigabitEthernet0/2
+Building configuration...
+Current configuration : 550 bytes
+!
+interface GigabitEthernet0/2
+switchport
+switchport mode access
+switchport port-security
+switchport port-security maximum 10
+switchport port-security mac-address sticky
+<b>switchport port-security mac-address sticky 0004.c16f.8741</b>
+<b>switchport port-security mac-address sticky 000c.cea7.f3a0</b>
+<b>switchport port-security mac-address sticky 0013.1986.0a20</b>
+<b>switchport port-security mac-address sticky 001d.09d4.0238</b>
+<b>switchport port-security mac-address sticky 0030.803f.ea81</b>
+...
+</pre>
+
+

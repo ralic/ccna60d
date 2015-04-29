@@ -36,7 +36,7 @@
 
 * 描述不同的外部认证方式，describe external authentication methods
 * 配置并检查交换机端口安全特性，比如以下这些。
-    * MAC 地址绑定，sticky MAC
+    * MAC 地址粘滞，sticky MAC
     * MAC 地址限制，MAC address limitation
     * 静态/动态，static/dynamic
     * 危害模式，violation modes
@@ -945,13 +945,13 @@ __经由端口安全特性，我们可以指定特定 MAC 才被允许访问某�
 
 * 静态 MAC 地址保全, Static secure MAC addresses
 * 动态 MAC 地址保全, Dynamic secure MAC addresses
-* 绑定 MAC 地址保全, Sticky secure MAC addresses
+* 粘滞 MAC 地址保全, Sticky secure MAC addresses
 
 静态 MAC 地址保全是由网络管理员静态配置，并存储在 MAC 地址表中，同时还保存在交换机配置文件里。当将静态 MAC 地址保全指派给某个安全端口时，交换机不会转发那些源地址与所配置的静态安全 MAC 地址不匹配的帧。
 
 动态 MAC 地址保全，是交换机所学习到的，存储在 MAC 地址表中。与静态 MAC 地址安全不同，在交换机重启或断电后，动态安全 MAC 地址条目会从交换机中移除。在交换机再次启动时，这些地址要再次习得。
 
-绑定的 MAC 地址保全，是静态和动态 MAC 地址保全的结合。地址可动态习得，也可静态配置，存储在 MAC 地址表中，也保存在交换机配置文件里。这就意味着在交换机关闭或是重启后，它无需再次动态发现 MAC 地址，因为这些 MAC 地址已经保存在配置文件中了（如你有保存允许的配置）。
+粘滞的 MAC 地址保全，是静态和动态 MAC 地址保全的结合。地址可动态习得，也可静态配置，存储在 MAC 地址表中，也保存在交换机配置文件里。这就意味着在交换机关闭或是重启后，它无需再次动态发现 MAC 地址，因为这些 MAC 地址已经保存在配置文件中了（如你有保存允许的配置）。
 
 ### 动作的端口安全，Port Security Actions
 
@@ -991,7 +991,7 @@ VTP-Server-1(config-if)#switchport mode access
 | vlan {vlan id} | 此关键字应只使用在某个中继端口上，以指定 VLAN ID 和 MAC 地址。如没有指定 VLAN ID，就使用原生 VLAN。 |
 | vlan {access} | 此关键字应只用在某个接入端口上，以指定该 VLAN 作为接入 VLAN。 |
 | vlan {voice} | 此关键字应只用在某个接入端口上, 用以知道该 VLAN 作为一个语音 VLAN。而只有在该特定端口上配置了语音 VLAN 时，该选项才可用。 |
-| mac-address {sticky} [mac-address] | 此关键字用于在特定接口上开启动态或地址绑定学习（used to enable dynamic or sticky learning），或者为其配置一个静态安全 MAC 地址。| 
+| mac-address {sticky} [mac-address] | 此关键字用于在特定接口上开启动态或地址粘滞学习（used to enable dynamic or sticky learning），或者为其配置一个静态安全 MAC 地址。| 
 | maxium {value} | 此关键字用于指定某个接口上可以学到的安全地址的最大数目。默认是 1。 |
 
 ### 静态安全地址配置， Configuring Static Secure MAC Addresses
@@ -1108,7 +1108,7 @@ VTP-Server-1(config-if)#switchport port-security maximum 2
 
 ### 验证动态 MAC 地址保全，Verifying Dynamic Secure MAC Addressed
 
-可用除了 `show running-config` 命令外的，在静态地址保全配置示例中用到的同样命令，来验证动态 MAC 地址保全的配置。这是因为，与静态或绑定的 MAC 地址保全不同，所有动态学习到的地址是不保存在交换机配置文件中的，且在端口关闭后会被移除。那些同样的地址也要在端口再度开启后重新学习。下面的输出演示了 `show port-security address` 命令的输出，现实了一个配置为动态 MAC 地址保全学习的接口。
+可用除了 `show running-config` 命令外的，在静态地址保全配置示例中用到的同样命令，来验证动态 MAC 地址保全的配置。这是因为，与静态或粘滞的 MAC 地址保全不同，所有动态学习到的地址是不保存在交换机配置文件中的，且在端口关闭后会被移除。那些同样的地址也要在端口再度开启后重新学习。下面的输出演示了 `show port-security address` 命令的输出，现实了一个配置为动态 MAC 地址保全学习的接口。
 
 <pre>
 VTP-Server-1#<b>show port-security address</b>
@@ -1124,9 +1124,9 @@ Total Addresses in System : 2
 Max Addresses limit in System : 1024
 </pre>
 
-### 配置保全 MAC 地址绑定
+### 配置保全 MAC 地址粘滞，Configuring Sticky Secure MAC Addresses
 
-下面的输出演示了如何来在某个端口上配置动态绑定学习，以及限制端口学习到至多 10 个的 MAC 地址。
+下面的输出演示了如何来在某个端口上配置动态粘滞学习，以及限制端口学习到至多 10 个的 MAC 地址。
 
 ```
 VTP-Server-1(config)#interface GigabitEthernet0/2
@@ -1137,7 +1137,7 @@ VTP-Server-1(config-if)#switchport port-security mac-address sticky
 VTP-Server-1(config-if)#switchport port-security maximum 10
 ```
 
-基于上述配置，默认情况下，在接口 GigabitEthernet0/2 将会动态学到至多 10 个地址，并添加进交换机当前配置中去。在开启绑定地址学习后， 各个端口上学到的 MAC 地址被自动保存到当前配置文件，同时加入到地址表中。下面的输出显示了接口 GigabitEthernet0/2 上所自动学到的 MAC 地址（以粗体显示）。
+默认情况下，基于上述配置，在接口 GigabitEthernet0/2 将会动态学到至多 10 个地址，并添加进交换机当前配置中去。在开启粘滞地址学习后， 各个端口上学到的 MAC 地址被自动保存到当前配置文件，同时加入到地址表中。下面的输出显示了接口 GigabitEthernet0/2 上所自动学到的 MAC 地址（以粗体显示）。
 
 <pre>
 VTP-Server-1#show running-config interface GigabitEthernet0/2
@@ -1156,6 +1156,25 @@ switchport port-security mac-address sticky
 <b>switchport port-security mac-address sticky 001d.09d4.0238</b>
 <b>switchport port-security mac-address sticky 0030.803f.ea81</b>
 ...
+</pre>
+
+上面输出中粗体的 MAC 地址都是动态学到的，且被加入到当前配置文件中了。而无需管理员手动配置来将这些地址加入到配置文件。默认情况下，粘滞 MAC 地址保全并不是自动加入到启动配置文件（the startup configuration, NVRAM）中去的。而为确认此信息已被保存到 NVRAM 中，也就是这些地址不要在交换机重启后重新学习，就要记住执行 `copy running-config startup-config` 命令， 或者命令 `copy system:running-config nvram:startup-config`, 执行二者中的哪一条，取决于部署该特性的那台交换机的 IOS 版本。下面的输出演示了在配置了粘滞地址学习的端口上的 `show port-security address` 命令。
+
+<pre>
+VTP-Server-1#show port-security address
+		Secure Mac Address Table
+------------------------------------------------------------------
+Vlan	Mac Address			Type			Ports	Remaining Age
+														(mins)
+----	-----------			----			-----	------------
+   1	0004.c16f.8741		<b>SecureSticky</b>	Gi0/2		-
+   1	000c.cea7.f3a0		<b>SecureSticky</b>	Gi0/2		-
+   1	0013.1986.0a20		<b>SecureSticky</b>	Gi0/2		-
+   1	001d.09d4.0238		<b>SecureSticky</b>	Gi0/2		-
+   1	0030.803f.ea81		<b>SecureSticky</b>	Gi0/2		-
+-------------------------------------------------------------------
+Total Addresses in System : 5
+Max Addresses limit in System : 1024
 </pre>
 
 

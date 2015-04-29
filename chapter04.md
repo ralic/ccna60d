@@ -1177,4 +1177,99 @@ Total Addresses in System : 5
 Max Addresses limit in System : 1024
 </pre>
 
+你还可以在交换机上设置一个老化时间和类型（an aging time and type）, 不过这是超出 CCNA 要求的。（如你愿意可以自己试试。）
 
+### 配置端口安全冲突的动作， Configuring the Port Security Violation Action
+
+和在早前指出的那样，思科 IOS 软件允许管理员指定于出现冲突时可采取的 4 种不同动作，如下所示。
+
+* 保护动作，Protect
+* 端口关闭动作（默认），Shutdown(default)
+* 限制动作，Restrict
+* 关闭 VLAN 动作（CCNA 大纲不要求），Shutdown VLAN (this is outside the CCNA syllabus)
+
+使用接口配置命令 `switchport port-security [violation {protect | restrict | shutdown | shutdown vlan}]` 来配置这些选项。如果某个端口因为因为一个安全冲突而关闭，它就显示为 `errdisabled`，此时需要使用 `shutdown` 和接着的 `no shutdown` 命令来将其再度开启。
+
+```
+Switch#show interfaces FastEthernet0/1 status
+Port Name	Status			Vlan	Duplex	Speed	Type
+Fa0/1		errdisabled		100		full	100		100BaseSX
+```
+
+__思科要求你知道何种冲突动作引起发出给网络管理员一条 SNMP 消息以及产生一条日志消息，__ 下面的表 4.2 是你所要的信息。
+
+| 模式 | 端口动作 | 流量 | 系统日志 | 冲突计数器 |
+| -- | -- | -- | -- | -- |
+| 保护模式 | 端口是受保护的 | 抛弃未知 MAC 地址的帧 | 不会记录 | 不会增加 |
+| 关闭模式 | 端口出错关闭 | 关闭流量转发 | 记录日志并发出一条 SNMP trap 消息 | 计数器增加 |
+| 限制模式 | 端口开放 | 超出数量的那些 MAC 流量被拒绝 | 记录日志并发出一条 SNMP trap 消息 | 计数器增加 |
+
+__为顺利通过考试，你务必要记住这个表！__
+
+下面的输出演示了如何在某个端口上配置粘滞地址学习最多 10 个 MAC 地址。如果端口上探测到某未知 MAC 地址（比如第 11 个 MAC 地址）时，端口将被配置为丢弃收到的那些帧。
+
+```
+VTP-Server-1(config)#interface GigabitEthernet0/2
+VTP-Server-1(config-if)#switchport port-security
+VTP-Server-1(config-if)#switchport port-security mac-address sticky
+VTP-Server-1(config-if)#switchport port-security maximum 10
+VTP-Server-1(config-if)#switchport port-security violation restrict
+```
+
+### 对端口安全冲突动作的验证，Verifying the Port Security Violation Action
+
+是通过命令 `show port-security` 命令，来对所配置的端口安全冲突动作进行验证的，如下面的输出所示。
+
+<pre>
+VTP-Server-1#<b>show port-security</b>
+Secure Port	MaxSecureAddr	CurrentAddr	SecurityViolation	Security Action
+				(Count)			(Count)		(Count)
+Gi0/2			10				5			0				Restrict
+Total Addresses in System : 5
+Max Addresses limit in System : 1024
+</pre>
+
+如交换机上开启了日志记录，同时配置了限制模式（Restrict mode）或关闭模式（Shutdown mode），类似于下面输出的这些消息将会在控制台打印出来，并记录到本地缓存或者发往某台日志服务器。
+
+<pre>
+VTP-Server-1#<b>show logging</b>
+...
+[Truncated Output]
+...
+<b>04:23:21: %PORT_SECURITY-2-PSECURE_VIOLATION:</b> Security violation occurred, caused by MAC
+address 0013.1986.0a20 on port Gi0/2.
+<b>04:23:31: %PORT_SECURITY-2-PSECURE_VIOLATION:</b> Security violation occurred, caused by MAC
+address 000c.cea7.f3a0 on port Gi0/2.
+<b>04:23:46: %PORT_SECURITY-2-PSECURE_VIOLATION:</b> Security violation occurred, caused by MAC
+address 0004.c16f.8741 on port Gi0/2.
+</pre>
+
+最后要说明的一点是__在 Packet Tracer 上可以配置交换机安全，但许多命令及 `show` 命令不会工作。__
+
+## 第四天的问题，Day 4 Questions
+
+1. Write out the two ways of configuring console passwords. Write the actual commands.
+2. Which command will permit only SSH traffic into the VTY lines?
+3. Which command will encrypt a password with level 7 encryption?
+4. Name the eight levels of logging available on the router.
+5. Why would you choose SSH access over Telnet?
+6. Your three options upon violation of your port security are protect,` _______`, and `_______`.
+7. How would you hard set a port to accept only MAC 0001.c74a.0a01?
+8. Which command turns off CDP for a particular interface?
+9. Which command turns off CDP for the entire router or switch?
+10. Which command adds a password to your VTP domain?
+11. Which command would permit only VLANs 10 to 20 over your interface?
+
+## 第四天问题的答案，Answers
+
+1. The `password xxx` and `login local` commands (username and password previously configured).
+2. The `transport input ssh` command.
+3. The `service password-encryption` command.
+4. Alerts, critical, debugging, emergencies, errors, informational, notifications, and warnings.
+5. SSH offers secure, encrypted traffic.
+6. Shutdown and restrict.
+7. Issue the `switchport port-security mac-address x.x.x.x` command.
+8. The `no cdp enable` command.
+9. The `no cdp run` command.
+10. The `vtp password xxx` command.
+11. The `switchport trunk allowed vlan 10-20` command.

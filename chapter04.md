@@ -1082,7 +1082,7 @@ Vlan	Mac Address		Type				Ports	Remaining Age
 -------------------------------------------------------------------
 Total Addresses in System : 1
 Max Addresses limit in System : 1024
-<pre>
+</pre>
 
 ### 动态安全 MAC 地址的配置，Configuring Dynamic Secure MAC Address
 

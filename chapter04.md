@@ -933,7 +933,7 @@ MAC 地址欺骗，用于冒充某个源 MAC 地址，以达到扮演网络上�
 
 现在，假设 1 号主机被某个想要接收所有发往 2 号主机流量的攻击者入侵了。则经由 MAC 地址欺骗，攻击者精心构建出使用 2 号主机源地址的以太网帧。在交换机收到该帧后，它记下该源地址，并重写 CAM 表中 2 号主机所对应的条目，将其指向 FastEthernet 0/1 端口，而不是 2 号主机所真正连接的 FastEthernet 0/2。此概念如图 4.4 所示。
 
-!["MAC 地址欺骗"](images/0404.png) 
+!["MAC 地址欺骗"](images/0404.png width=800) 
 
 根据图 4.4, 在 3 号主机或 4 号主机尝试将帧发给 2 号主机时，交换机会将这些帧转发出 FastEthernet 0/1, 到 1 号主机，因为 CAM 表已被 MAC 地址欺骗攻击投毒。在 2 号主机发出另一个帧时，交换机再次从 FastEthernet 0/2 了解其 MAC 地址, 并再度将 CAM 表条目重写，以反应出该变化。结果就出现 2 号主机与 1 号主机之间就谁保有此 MAC 地址的拔河。
 
@@ -996,4 +996,41 @@ VTP-Server-1(config-if)#switchport mode access
 
 ### 静态安全地址配置， Configuring Static Secure MAC Addresses
 
+下面的输出演示了怎样在某个接口上开启端口安全，以及在某个交换机__接入端口__上配置一个静态安全 MAC 地址 001f:3c59:d63b。
 
+```
+VTP-Server-1(config)#interface GigabitEthernet0/2
+VTP-Server-1(config-if)#switchport
+VTP-Server-1(config-if)#switchport mode access
+VTP-Server-1(config-if)#switchport port-security
+VTP-Server-1(config-if)#switchport port-security mac-address 001f.3c59.d63b
+```
+
+下面的输出演示了怎样在某个接口上开启端口安全，并在某个交换机__中继端口__的 VLAN 5 中配置一个静态安全 MAC 地址 001f:3c59:d63b。
+
+```
+VTP-Server-1(config)#interface GigabitEthernet0/2
+VTP-Server-1(config-if)#switchport
+VTP-Server-1(config-if)#switchport trunk encapsulation dot1q
+VTP-Server-1(config-if)#switchport mode trunk
+VTP-Server-1(config-if)#switchport port-security
+VTP-Server-1(config-if)#switchport port-security mac-address 001f.3c59.d63b vlan 5
+```
+
+而下面的输出则演示了如何在某个接口上开启端口安全，并在某个交换机接入端口的 VLAN 5(数据 VLAN） 和 VLAN 7(语音 VLAN），分别配置一个静态安全 MAC 地址 001f:3c59:5555 和 001f:3c59:7777。
+
+```
+VTP-Server-1(config)#interface GigabitEthernet0/2
+VTP-Server-1(config-if)#switchport
+VTP-Server-1(config-if)#switchport mode access
+VTP-Server-1(config-if)#switchport access vlan 5
+VTP-Server-1(config-if)#switchport voice vlan 7
+VTP-Server-1(config-if)#switchport port-security
+VTP-Server-1(config-if)#switchport port-security maximum 2
+VTP-Server-1(config-if)#switchport port-security mac-address 001f.3c59.5555 vlan access
+VTP-Server-1(config-if)#switchport port-security mac-address 001f.3c59.7777 vlan voice
+```
+
+记住在某个同时配置了语音 VLAN 和数据 VLAN 的接口上开启端口安全时，该端口上的最大允许安全地址数应设置为 2，这一点非常重要。这又是通过包含在上面输出中的__接口配置命令__ `switchport port-security maxium 2` 完成的。
+
+两个 MAC 地址中的一个由 IP 电话使用，交换机在语音 VLAN 上学到此地址。另一个由可连接在 IP 电话上的主机（比如 PC）所使用。交换机将在数据 VLAN 上学到这个 MAC 地址。

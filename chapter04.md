@@ -1273,3 +1273,199 @@ address 0004.c16f.8741 on port Gi0/2.
 9. The `no cdp run` command.
 10. The `vtp password xxx` command.
 11. The `switchport trunk allowed vlan 10-20` command.
+
+## 第四天实验，Day 4 Labs
+
+### 路由器安全基础实验，Basic Router Security Lab
+
+__拓扑图，Topology__
+
+!["拓扑图"](images/0405.png)
+
+__实验目的，Purpose__
+
+学习一些给路由器上锁所需的基本步骤。
+
+__实验步骤, Walkthrough__
+
+1. 使用某个启用秘密口令（an enable secret password），登入使用保护启用模式（Protect Enable mode）。通过登出特权模式（Privileged mode）并再度登入来进行测试。
+
+```
+Router#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Router(config)#enable secret cisco
+Router(config)#exit
+Router#
+%SYS-5-CONFIG_I: Configured from console by console
+Router#exi
+Router con0 is now available
+Press RETURN to get started.
+Router>en
+Password:
+Router#
+```
+
+2. 设置一个启用口令（enable pasword），接着加入口令加密服务（service password encryption）。此操作在实际路由器上很少执行，因为这是不安全的做法。
+
+```
+Router(config)#no enable secret
+Router(config)#enable password cisco
+Router(config)#service pass
+Router(config)#service password-encryption
+Router(config)#exit
+Router#
+%SYS-5-CONFIG_I: Configured from console by console
+Router#show run
+Building configuration...
+Current configuration: 480 bytes
+!version 12.4
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname Router
+!
+enable password 7 0822455D0A16
+```
+
+3. 对 Telnet 线路进行保护。建立一个本地用户名及其口令，并令到用户在登入路由器时，使用此用户名和口令。
+
+```
+Router(config)#line vty 0 ?
+<1-15>
+Last Line number
+<cr>
+Router(config)#line vty 0 15
+Router(config-line)#login local
+Router(config-line)#exit
+Router(config)#username in60days password cisco
+Router(config)#
+```
+
+之前你已经测试过 Telnet 了，但请无需担心在加入一台 PC 及 Telnet 到路由器，会受到要求用户名和口令的提示。
+
+4. 用一个口令来保护控制台。只需在控制台端口上直接设置一个口令就行。
+
+```
+Router(config)#line console 0
+Router(config-line)#password cisco
+```
+
+通过将控制台线从路由器拔出，并再次插入路由器，就可以对此进行测试。同样，如有一个替代端口，也可为其设置口令进行保护。
+
+```
+Router(config)#line aux 0
+Router(config-line)#password cisco
+```
+
+5. 通过仅允许 SSH 流量进入，来保护 Telnet 线路。还可以仅允许 SSH 流量发出。该命令需要一个安全镜像（a security image）才能工作。
+
+```
+Router(config)#line vty 0 15
+Router(config-line)#transport input ssh
+Router(config-line)#transport output ssh
+```
+
+6. 添加一个今日横幅消息（a banner message of the day, MOTD）。将告知路由器已结束输入的字符设为 ”X“（界定符，the delimiting character）。
+
+```
+Router(config)#banner motd X
+Enter TEXT message.
+End with the character ‘X’.
+Do not use this router without authorization. X
+Router(config)#
+Router(config)#exit
+Router#
+%SYS-5-CONFIG_I: Configured from console by console
+Exit
+Router con0 is now available
+Press RETURN to get started.
+Do not use this router without authorization.
+Router>
+```
+
+7. 关闭整个路由器的思科发现协议。还可以使用命令 `no cdp enable interface`，只关闭某个接口上的思科发现协议。
+
+`Router(config)#no cdp run`
+
+可通过在关闭思科发现协议前，连接一台交换机或路由器到该路由器，并执行 `show cdp neighbor (detail)` 命令，来测试上面的命令是否起作用。
+
+8. 设置路由器将日志消息发送到网络上的某台主机。
+
+```
+Router#conf t
+Enter configuration commands, one per line.
+End with CNTL/Z.
+Router(config)#logging ?
+	A.B.C.D		IP address of the logging host
+	buffered	Set buffered logging parameters
+	console		Set console logging parameters
+	host		Set syslog server IP address and parameters
+	on			Enable logging to all enabled destinations
+	trap		Set syslog server logging level
+	userinfo	Enable logging of user info on privileged mode enabling
+Router(config)#logging 10.1.1.1
+```
+
+### 交换机安全基础实验，Basic Switch Security Lab
+
+__拓扑图，Topology__
+
+!["交换机安全基础实验拓扑图"](images/0405.png)
+
+__实验目的，Purpose__
+
+学习一些给交换机上锁的基本步骤。
+
+__实验步骤，Walkthrough__
+
+1. 连接一台 PC 或笔记本计算机到交换机。另外为后面的配置建立一个控制台连接。连接 PC 的那个以太网端口，将会作为本实验中配置安全设置的那个端口。我所选择的是交换机的 FastEthernet0/1 端口。
+
+2. 登入 VTY 线路，并建立使用本地用户名和口令的远程登陆访问（Telnet access referring to a local username and password）。
+
+```
+Switch#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Switch(config)#line vty 0 ?
+	<1-15>	Last Line number
+	<cr>
+Switch(config)#line vty 0 15
+Switch(config-line)#?
+Switch(config-line)#login local
+Switch(config-line)#exit
+Switch(config)#username in60days password cisco
+Switch(config)#
+```
+
+3. 为交换机上的 VLAN 1 添加一个 IP 地址（所有端口都自动在 VLAN 1 中）。此外， 将 192.168.1.1 加到 PC 的 FastEthernet 接口上。
+
+<pre>
+Switch(config)#interface vlan1
+Switch(config-if)#ip address 192.168.1.2 255.255.255.0
+Switch(config-if)#no shut
+%LINK-5-CHANGED: Interface Vlan1, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan2, changed state to up
+Switch(config-if)#^Z <b>← press Ctrl+Z keys</b>
+Switch#
+Switch#ping 192.168.1.1 <b>← test connection from switch to PC</b>
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 31/31/32 ms
+Switch#
+</pre>
+
+4. 通过从 PC 远程登陆到交换机来测试远程登陆。
+
+!["测试远程登陆"](images/0407.png)
+
+5. IT 经理改变主意，要仅使用 SSH 访问，那么就在 VTY 线路上修改配置。仅有那些确定的交换机型号和 IOS 版本才支持 `SSH` 命令。
+
+```
+Switch(config)#line vty 0 15
+Switch(config-line)#transport input ssh
+```
+
+6. 现在从 PC 尝试登入交换机。因为仅允许 SSH， 此连接将失败。
+
+

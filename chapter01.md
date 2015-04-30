@@ -1,4 +1,7 @@
-# 第一天 -- 网络、线缆、OSI 以及 TCP 模型
+# 第一天
+
+__网络、线缆、OSI 以及 TCP 模型__
+__Networks, Cables, OSI, and TCP Models__
 
 ## 第一天的任务
 

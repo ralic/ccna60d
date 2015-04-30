@@ -1,6 +1,6 @@
 # CSMA/CD, 交换和虚拟局域网
 
-__ CSMA/CD, Switching, and VLANs __
+__CSMA/CD, Switching, and VLANs__
 
 ## 第二天的任务
 

@@ -1468,4 +1468,66 @@ Switch(config-line)#transport input ssh
 
 6. 现在从 PC 尝试登入交换机。因为仅允许 SSH， 此连接将失败。
 
+!["Telnet 失败"](images/0409.png)
+
+7. 在交换机上为 FastEthernet 端口设置端口安全。如你未将端口设置为接入模式（而是动态模式或者中继模式）的话，此操作将失败。
+
+```
+Switch(config)#interface FastEthernet0/1
+Switch(config-if)#switchport port-security
+Command rejected: FastEthernet0/1 is a dynamic port.
+Switch(config-if)#switchport mode access
+Switch(config-if)#switchport port-security
+Switch(config-if)#
+```
+
+8. 硬性设置 PC 的 MAC 地址为该端口的允许地址。在 PC 的命令行上使用命令 `ipconfig/all` 来查看其 MAC 地址。再就要检查端口安全的状态和设置了。
+
+<pre>
+Switch(config-if)#switchport port-security mac-address 0001.C7DD.CB18
+Switch(config-if)#^Z
+Switch#show port-security int FastEthernet0/1
+Port Security				: Enabled
+Port Status					: <b>Secure-up</b>
+Violation Mode				: Shutdown
+Aging Time					: 0 mins
+Aging Type					: Absolute
+SecureStatic Address Aging	: Disabled
+Maximum MAC Addresses		: 1
+Total MAC Addresses			: 1
+Configured MAC Addresses	: 0
+Sticky MAC Addresses		: 0
+Last Source Address:Vlan	: <b>0001.C7DD.CB18:1</b>
+Security Violation Count	: 0
+</pre>
+
+9. 修改 PC 的 MAC 地址，如你无法修改，可以将另一台设备插入该交换机端口。这将会令到该端口关闭，因为破坏了安全设置。下面的屏幕截图展示了 Packet Tracer 中修改 MAC 地址的地方。
+
+!["PT 修改 MAC 地址"](images/0410.png)
+
+10. 你将看到 FastEthernet 端口立即宕掉。
+
+<pre>
+Switch#
+%LINK-5-CHANGED: Interface FastEthernet0/1, changed state to administratively down
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to down
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan1, changed state to down
+Switch#
+%SYS-5-CONFIG_I: Configured from console by console
+Switch#show port-security interface FastEthernet0/1
+Port Security				: Enabled
+Port Status					: <b>Secure-shutdown</b>
+Violation Mode				: Shutdown
+Aging Time					: 0 mins
+Aging Type					: Absolute
+SecureStatic Address Aging	: Disabled
+Maximum MAC Addresses		: 1
+Total MAC Addresses			: 0
+Configured MAC Addresses	: 0
+Sticky MAC Addresses		: 0
+Last Source Address:Vlan	: <b>0001.C7DD.CB19:1</b>
+Security Violation Count	: 1
+</pre>
+
+>__注意：__ 请重复本实验，直到理解这些命令，并在不看上述实验步骤的情况下输入这些命令为止（本书的其它实验也要这样做）。
 

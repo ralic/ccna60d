@@ -1411,7 +1411,7 @@ Router(config)#logging 10.1.1.1
 
 __拓扑图，Topology__
 
-!["交换机安全基础实验拓扑图"](images/0405.png)
+!["交换机安全基础实验拓扑图"](images/0406.png)
 
 __实验目的，Purpose__
 

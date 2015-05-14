@@ -96,4 +96,61 @@ IP 版本 4(IPv4）设计用于解决设备命名问题。IPv4 使用二进制�
 
 2+1=3
 
+如你使用8位二进制数（也就是一个八位字节），你能取得如何从0到255之间的数值。而你可以看到，这些位数自右往左移动。
+
+<table>
+<tr><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
+
+在往各列中填入0时，就有了十进制的0。
+
+<table>
+<tr><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
+<tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+</table>
+
+而将1填入各列，就得到了十进制的255.
+
+<table>
+<tr><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
+<tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+</table>
+
+不信吗？
+
+128+64+32+16+8+4+2+1=255
+
+如此，逻辑使然，你实际上可以通过将0或1放入不同的列，而生成0到255之间的任何数值。比如。
+
+<table>
+<tr><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
+<tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+</table>
+
+32+8+4=44
+
+__上面的基础知识，是IP寻址和子网划分的基础。__下面的表5.1对你现在所掌握的进行了总结。这些值可用作任意子网掩码，所以请留心一下。
+
+__表 5.1 -- 二进制值，Binary Values__
+
+<table>
+<tr><th>二进制，Binary</th><th>十进制，Decimal</th></tr>
+<tr><td>1000 0000</td><td>128</td></tr>
+<tr><td>1100 0000</td><td>192</td></tr>
+<tr><td>1110 0000</td><td>224</td></tr>
+<tr><td>1111 0000</td><td>240</td></tr>
+<tr><td>1111 1000</td><td>248</td></tr>
+<tr><td>1111 1100</td><td>252</td></tr>
+<tr><td>1111 1110</td><td>254</td></tr>
+<tr><td>1111 1111</td><td>255</td></tr>
+</table>
+
+构造一些你自己的二进制数，确保你完全地掌握了这个概念。
+
+### 十六进制，Hexadecimal
+
+十六进制（hex）是另一个替代的计数系统。比起以2或10来计数，它用到16个数字或字母。十六进制从0开始知道F，如下面所示。
+`0	1	2	3	4	5	6	7	8	9	10	A	B	C	D	E	F`
+
 

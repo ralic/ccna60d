@@ -151,6 +151,20 @@ __表 5.1 -- 二进制值，Binary Values__
 ### 十六进制，Hexadecimal
 
 十六进制（hex）是另一个替代的计数系统。比起以2或10来计数，它用到16个数字或字母。十六进制从0开始知道F，如下面所示。
-`0	1	2	3	4	5	6	7	8	9	10	A	B	C	D	E	F`
+`0	1	2	3	4	5	6	7	8	9	A	B	C	D	E	F`
 
+每位十六进制数实际上代表的是4位二进制数，如表5.2所示。
 
+__表5.2 -- 十进制、十六进制和二进制位数，Decimal, Hex, and Binary Digits__
+
+<table>
+<tr><th>十进制，Decimal</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>十六进制，Hex</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>二进制，Binary</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
+
+<table>
+<tr><th>十进制，Decimal</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>十六进制，Hex</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>二进制，Binary</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>

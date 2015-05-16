@@ -1,4 +1,6 @@
-# CSMA/CD, 交换和虚拟局域网
+# 第二天
+
+__CSMA/CD, 交换和虚拟局域网__
 
 __CSMA/CD, Switching, and VLANs__
 

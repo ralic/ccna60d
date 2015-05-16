@@ -168,3 +168,5 @@ __表5.2 -- 十进制、十六进制和二进制位数，Decimal, Hex, and Binar
 <tr><th>十六进制，Hex</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><th>二进制，Binary</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 </table>
+
+

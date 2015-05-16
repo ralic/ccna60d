@@ -158,15 +158,15 @@ __表 5.1 -- 二进制值，Binary Values__
 __表5.2 -- 十进制、十六进制和二进制位数，Decimal, Hex, and Binary Digits__
 
 <table>
-<tr><th>十进制，Decimal</th><td>0</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><th>十六进制，Hex</th><td>0</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><th>二进制，Binary</th><td>0000</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>十进制，Decimal</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr>
+<tr><th>十六进制，Hex</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr>
+<tr><th>二进制，Binary</th><td>0000</td><td>0001</td><td>0010</td><td>0011</td><td>0100</td><td>0101</td><td>0110</td><td>0111</td></tr>
 </table>
 
 <table>
-<tr><th>十进制，Decimal</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><th>十六进制，Hex</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><th>二进制，Binary</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>十进制，Decimal</th><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td></tr>
+<tr><th>十六进制，Hex</th><td>8</td><td>9</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td></tr>
+<tr><th>二进制，Binary</th><td>1000</td><td>1001</td><td>1010</td><td>1011</td><td>1100</td><td>1101</td><td>1110</td><td>1111</td></tr>
 </table>
 
 

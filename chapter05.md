@@ -169,4 +169,10 @@ __表5.2 -- 十进制、十六进制和二进制位数，Decimal, Hex, and Binar
 <tr><th>二进制，Binary</th><td>1000</td><td>1001</td><td>1010</td><td>1011</td><td>1100</td><td>1101</td><td>1110</td><td>1111</td></tr>
 </table>
 
+将二进制转换成十六进制及十进制，是相当简单的，如表5.3所示。
 
+<table>
+<tr><th>十进制，Decimal</th><td>13</td><td>6</td><td>2</td><td>12</td></tr>
+<tr><th>十六进制, Hex</th><td>D</td><td>6</td><td>2</td><td>C</td></tr>
+<tr><th>二进制，Binary</th><td>1101</td><td>0110</td><td>0010</td><td>1100</td></tr>
+</table>

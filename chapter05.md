@@ -188,5 +188,5 @@ __表5.3 -- 二进制到十六进制、十进制的转换__
 ... 如此等等。
 
 <table>
-<tr><th rowspan=2></th><td>4096</td><td>256</td><td>16</td><td>1</td></tr>
+<tr><th rowspan=2>十六进制，Hex</th><td>4096</td><td>256</td><td>16</td><td>1</td></tr>
 <tr><td></td><td></td><td>1</td><td>A</td></tr></table>

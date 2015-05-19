@@ -100,7 +100,7 @@ IP 版本 4(IPv4）设计用于解决设备命名问题。IPv4 使用二进制�
 
 <table>
 <tr><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td> </td></tr>
 </table>
 
 在往各列中填入0时，就有了十进制的0。

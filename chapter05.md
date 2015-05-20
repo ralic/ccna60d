@@ -349,10 +349,10 @@ C类地址 = 255.255.255.0
 
 <table>
 <tr><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td><td>子网号</td></tr>
-<tr><th></th><th></th><td></td><td></td><td></td><td></td><td></td><td></td><td>0</td></tr>
-<tr><th></th><th></th><td></td><td></td><td></td><td></td><td></td><td></td><td>64</td></tr>
-<tr><th></th><th></th><td></td><td></td><td></td><td></td><td></td><td></td><td>128</td></tr>
-<tr><th></th><th></th><td></td><td></td><td></td><td></td><td></td><td></td><td>192</td></tr>
+<tr><th>0</th><th>0</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><th>0</th><th>1</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>64</td></tr>
+<tr><th>1</th><th>0</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>128</td></tr>
+<tr><th>1</th><th>1</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>192</td></tr>
 </table>
 
 考虑二进制数学，你能发现对主机位的头两位使用，就可以使用00、01、10和11四种组合，在将其写出后，在子网列就得到子网0、64、128以及192四个子网号。为更明了的表示，头两列的子网号标记为灰色，而剩下的6位，就用作每个子网的主机号。

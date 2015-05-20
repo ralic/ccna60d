@@ -422,9 +422,9 @@ C类地址 = 255.255.255.0
 
 <table>
 <tr><td>二进制位数</td><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
-<tr><td>子网号</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>128</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>192</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>子网号</td><td>〇</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>128</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>192</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>224</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>240</td><td></td><td></td><td>为计算出主机所在的子网是哪一个</td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>248</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
@@ -432,12 +432,12 @@ C类地址 = 255.255.255.0
 <tr><td>254</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>255</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr style="background-color: grey"><td></td><td>子网数</td><td>主机数-2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>16</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>32</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>64</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2</td><td>〇</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4</td><td>〇</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>8</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>16</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>32</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>64</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 </table>
 
 

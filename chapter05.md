@@ -243,7 +243,7 @@ __在网络中，是不可以有全0地址的__。在加入其它三个8位二�
 
 `126.200.133.1`
 
-这些都是A类地址，因为它们都是在1到126的范围内。127不是IP地址所允许的数字；127.0.0.1实际上用于在设备上测试TCP/IP是否正常。
+这些都是A类地址，因为它们都是在1到126的范围内。127不是IP地址所允许的数字；__127.0.0.1实际上用于在设备上测试TCP/IP是否正常__。
 
 B类地址前8位二进制数的头两位则必须是10。这就意味着前8位二进制数值处于128到191之间，也就是下面这样。
 
@@ -369,7 +369,7 @@ C类地址 = 255.255.255.0
 
 我所创建的网站 [www.subnetting.org](http://www.subnetting.org)是一个非常有用的资源，有着一些有个子网划分和网络设计的习题。
 
-###无类域间陆游，Classless Inter-Domain Routing, CIDR
+###无类域间路由，Classless Inter-Domain Routing, CIDR
 
 无类域间路由是由互联网工程任务组（Internet Engineering Task Force, IETF）创建的，作为一种分配IP地址块及路由IP数据包的方法。这里要考察的CIDR主要特性，就是以斜杠（/）地址表示法（slash address notation）, 来表示子网掩码。因为这可以节省时间，所以该方法是较为重要的，在现实中也要用到，而除此之外，还会考到有关CIDR地址的问题。
 
@@ -425,7 +425,7 @@ C类地址 = 255.255.255.0
 其中一列会是”2的幂“， 另一列就是”2的幂减去2。“ 减去的2的意思是要除去不能使用的两个地址，一个是网络号，另一个是广播地址。以数字2开始，乘以2, 一直到回答问题所需要的大小为止。
 
 <table>
-<tr><td>二进制位数</td><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
+<tr><td>二进制位数</td><td>128</td><td>64</td><td style="width: 160px">32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
 <tr><td>子网号</td><td>〇</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>128</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>192</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>

@@ -425,7 +425,7 @@ C类地址 = 255.255.255.0
 其中一列会是”2的幂“， 另一列就是”2的幂减去2。“ 减去的2的意思是要除去不能使用的两个地址，一个是网络号，另一个是广播地址。以数字2开始，乘以2, 一直到回答问题所需要的大小为止。
 
 <table>
-<tr><td>二进制位数</td><td>128</td><td>64</td><td style="width: 160px">32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
+<tr><td>二进制位数</td><td>128</td><td>64</td><td style="width:100px">32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
 <tr><td>子网号</td><td>〇</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>128</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>192</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>

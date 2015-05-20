@@ -431,7 +431,13 @@ C类地址 = 255.255.255.0
 <tr><td>252</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>254</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>255</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr style="background-color: grey"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr style="background-color: grey"><td></td><td>子网数</td><td>主机数-2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>16</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>32</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>64</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 </table>
 
 

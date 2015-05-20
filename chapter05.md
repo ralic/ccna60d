@@ -444,4 +444,29 @@ C类地址 = 255.255.255.0
 <tr><td>64</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 </table>
 
+通过直接切入一个考试问题，可以更好的学习到子网划分。
+
+192.168.1.100/26 是在那个子网中？
+
+那么，你知道这是一个C类地址，而C类地址的默认掩码是24个二进制位，或写着255.255.255.0。而这里是26位，所以有两位被借用来产生子网了。我们只需简单地在上面的秘笈图表中的顶上一行，从左往右勾上两个位置。这样就揭示出子网个数了。接着在子网号那列往下勾上两个位置，来揭示出所存在的子网掩码。
+
+<table>
+<tr><td>二进制位数</td><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
+<tr><td>子网号</td><td>〇</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>128</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>192</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>224</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>240</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>248</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>252</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>254</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>255</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>子网数</td><td>主机数-2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>8</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>16</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>32</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>64</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
 

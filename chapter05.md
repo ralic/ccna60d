@@ -334,3 +334,13 @@ C类地址 = 255.255.255.0
 <tr><th>子网掩码</th><td>255</td><td>255</td><td>255</td><td>0</td></tr>
 <tr><th>二进制形式</th><td>1111 1111</td><td>1111 1111</td><td>1111 1111</td><td>0000 0000</td></tr>
 <table>
+
+在从后8位二进制数借用2位后，就会得到下面的子网，每个子网有62台主机。
+
+<table>
+<tr><th>网络号</th><th>网络号</th><th>网络号</th><th>子网号</th><th>主机</th><th>广播地址</th></tr>
+<tr><td>192</td><td>168</td><td>1</td><td>0</td><td>1-62</td><td>63</td></tr>
+<tr><td>192</td><td>168</td><td>1</td><td>64</td><td>65-126</td><td>127</td></tr>
+<tr><td>192</td><td>168</td><td>1</td><td>128</td><td>129-190</td><td>191</td></tr>
+<tr><td>192</td><td>168</td><td>1</td><td>192</td><td>193-254</td><td>255</td></tr>
+</table>

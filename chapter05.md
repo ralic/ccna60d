@@ -718,46 +718,64 @@ __CCNA考试要求你掌握路由汇总__。如你能快速地算出同样的位
 
 ## 第五天问题的答案
 
-1. 11000000.10100000.11010010.10110001.
-2. 147.
-3. 10.x.x.x – any address starting with a 10. 172.16.x.x to 172.31.x.x – any address starting with 172.16 to 172.31, inclusive. 192.168.x.x – any address starting with 192.168.
-4. 255.255.240.0.
-5. 255.248.0.0.
-6. 62.
-7. 172.16.127.254.
-8. 192.168.1.0.0/26, 192.168.1.0.64/26, 192.168.1.0.128/26, and 192.168.1.0.192/26.
+1. `11000000.10100000.11010010.10110001`.
+2. `147`.
+3. `10.x.x.x` – any address starting with a `10`. `172.16.x.x` to `172.31.x.x` – any address starting with `172.16` to `172.31`, inclusive. `192.168.x.x` – any address starting with `192.168`.
+4. `255.255.240.0`.
+5. `255.248.0.0`.
+6. `62`.
+7. `172.16.127.254`.
+8. `192.168.1.0.0/26`, `192.168.1.0.64/26`, `192.168.1.0.128/26`, and `192.168.1.0.192/26`.
 9. A classless protocol.
-10. 172.16.8.0/21 (mask: 255.255.248.0).
+10. `172.16.8.0/21` (mask: `255.255.248.0`).
 
 ## 课文中进制转换的答案
 
 1. Convert 1111 to hex and decimal
+```
 	Hex = F
 	Decimal = 15
+```
 2. Convert 11010 to hex and decimal
+```
 	Hex = 1A
 	Decimal = 26
+```
 3. Convert 10000 to hex and decimal
+```
 	Hex = 10
 	Decimal = 16
+```
 4. Convert 20 to binary and hex
+```
 	Binary = 10100
 	Hex = 14
+```
 5. Convert 32 to binary and hex
+```
 	Binary = 100000
 	Hex = 20
+```
 6. Convert 101 to binary and hex
+```
 	Binary = 1100101
-	Hex = 657. 
+	Hex = 657 
+```
 7. Convert A6 from hex to binary and decimal
+```	
 	Binary = 10100110
 	Decimal = 166
+```
 8. Convert 15 from hex to binary and decimal
+```
 	Binary = 10101
 	Decimal = 21
+```
 9. Convert B5 from hex to binary and decimal
+```
 	Binary = 10110101
 	Decimal = 181
+```
 
 ## 第五天的实验
 

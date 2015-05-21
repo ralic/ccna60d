@@ -630,12 +630,12 @@ __CCNA考试要求你掌握路由汇总__。如你能快速地算出同样的位
 <tr><td>128</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>192</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>224</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>240</td><td></td><td></td><td style="width:100px">为计算出主机所在的子网是哪一个</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>240</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>248</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>252</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>254</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>255</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr style="background-color: grey"><td></td><td>子网数</td><td>主机数-2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>子网数</td><td>主机数-2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>2</td><td>〇</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>4</td><td>〇</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>8</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
@@ -657,3 +657,27 @@ __CCNA考试要求你掌握路由汇总__。如你能快速地算出同样的位
 <tr><td>192.168.1.128 -- 使用中</td><td>3</td><td>62</td></tr>
 <tr><td>192.168.1.192 -- 使用中</td><td>4</td><td>62</td></tr>
 </table>
+
+在发现基础设施中有着两个仅需30台主机的较小网络之前，这么做是没有问题的。那么在已经使用了3个较小子网（标为“使用中”），而仅剩下一个（也就是192.168.1.0）时呢？变长子网掩码就可以让你用上任何已划分出的子网，对其再进行划分。__唯一的规则就是IP地址仅能使用一次，而与其掩码无关__。
+
+如你使用子网划分秘笈图表，那么就可以看到哪个掩码带来30台主机的子网。
+
+<table>
+<tr><td></td><td>子网数</td><td>主机数-2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2</td><td>〇</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4</td><td>〇</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>8</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>16</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>32</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>64</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
+
+该图表的上面部分（这里没有显示）告诉我们在左边列勾选了3个位置，这就给出掩码224或者是/27(借用了3位）。
+
+<table>
+<tr><th>192.168.1.0/27</th><th>子网</th><th>主机数</th></tr>
+<tr><td>192.168.1.0</td><td>1</td><td>30</td></tr>
+<tr><td>192.168.1.32</td><td>2</td><td>30</td></tr>
+<tr><td>192.168.1.64</td><td>不能使用</td><td>不能使用</td></tr>
+</table>
+

@@ -811,3 +811,53 @@ Clock mux=0x30, ucmd_ctrl=0x0, port_status=0x1
 line state: down
 <b>DCE cable</b>, no clock rate
 </pre>
+
+2. 在一侧为路由器加上主机名及IP地址，如该侧是DCE，就为其加上时钟速率（the clock rate）。
+
+```
+Router#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Router(config)#hostname RouterA
+RouterA(config)#interface s0/1/0
+RouterA(config-if)#ip add 192.168.1.1 255.255.255.0
+RouterA(config-if)#clock rate 64000
+RouterA(config-if)#no shut
+%LINK-5-CHANGED: Interface Serial0/1/0, changed state to downRouterA(config-if)#
+```
+
+3. 为另一侧加上主机名和IP地址。同时使用`no shut`命令将该接口开启。
+
+```
+Router>en
+Router#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Router(config)#hostname RouterB
+RouterB(config)#int s0/1/0
+RouterB(config-if)#ip address 192.168.1.2 255.255.255.0
+RouterB(config-if)#no shut
+%LINK-5-CHANGED: Interface Serial0/1/0, changed state to down
+RouterB(config-if)#^Z
+RouterB#
+%LINK-5-CHANGED: Interface Serial0/1/0, changed state to up
+```
+
+4. 用`ping`命令测试连接。
+
+```
+RouterB#ping 192.168.1.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 31/31/32 ms
+```
+
+>__注意：__如ping不工作，就要反复检查，确保在正确的路由器上加上了`clock rate`命令。还要确保正确插入了线缆，并使用命令 `show controllers serial x/x/x`, 这里的接口编号是你的路由器上的。
+
+### 二进制转换及子网划分练习， Binary Conversion and Subnetting Practice
+
+请将今天所剩下的时间，用来做下面这些重要的联系。
+
+* 十进制到二进制的转换（随机数字）
+* 二进制到十进制的转换（随机数字）
+* IPv4 子网划分（随机网络和场景）
+

@@ -106,4 +106,22 @@ NAT内部和外部的分址，是一个经典的考试问题，所以还需在�
 
 > Farai 指出 -- “请看看命令`ip nat inside source static`, 可以在[www.howtonetwork.net/public/698.cfm](http://www.howtonetwork.net/public/698.cfm)免费查阅。”
 
+下面的输出给出了一种思科IOS软件下配置NAT（动态NAT）的方式。可以看出，该配置使用了可用的`description`和`remark`两种特性，来帮助管理员更容易地对网络进行管理和故障排除。
 
+```
+R1(config)#interface FastEthernet0/0
+R1(config-if)#description ‘Connected To The Internal LAN’
+R1(config-if)#ip address 10.5.5.1 255.255.255.248
+R1(config-if)#ip nat inside
+R1(config-if)#exit
+R1(config)#interface Serial0/0
+R1(config-if)#description ‘Connected To The ISP’
+R1(config-if)#ip address 150.1.1.1 255.255.255.248
+R1(config-if)#ip nat outside
+R1(config-if)#exit
+R1(config)#access-list 100 remark ‘Translate Internal Addresses Only’
+R1(config)#access-list 100 permit ip 10.5.5.0 0.0.0.7 any
+R1(config)#ip nat pool INSIDE-POOL 150.1.1.3 150.1.1.6 prefix-length 24
+R1(config)#ip nat inside source list 100 pool INSIDE-POOL
+R1(config)#exit
+```

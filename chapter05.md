@@ -610,4 +610,50 @@ __CCNA考试要求你掌握路由汇总__。如你能快速地算出同样的位
 
 ###变长子网掩码的使用，Using VLSM
 
+先看看下面这个网络。
 
+* 192.168.1.0/24 = 这是一个有254台主机的网络
+
+当然这会很好地工作，那么如果你的网络需要多于一个的子网呢？或者你的那些子网无需254台这么多的主机呢？此两种情形，都需要做出一些改变。如你取而代之的是用一个/26的掩码，就可以得到这样的结果。
+
+* 192.168.1.0/26 = 4个有62台主机的子网
+
+如这样不适当，那么来个/28的掩码如何？
+
+* 192.168.1.0/28 = 16个有14太主机的子网
+
+对子网划分秘笈的设计部门的再度引用，可帮你计算出如何来在网络中应用变长子网掩码，或是有助于解答考试问题。在使用/26掩码是，你可以发现将会得到多少个子网及每个子网有多少台主机。
+
+<table>
+<tr><td>二进制位数</td><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
+<tr><td>子网号</td><td>〇</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>128</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>192</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>224</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>240</td><td></td><td></td><td style="width:100px">为计算出主机所在的子网是哪一个</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>248</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>252</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>254</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>255</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr style="background-color: grey"><td></td><td>子网数</td><td>主机数-2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2</td><td>〇</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4</td><td>〇</td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>8</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>16</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>32</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>64</td><td></td><td>〇</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
+
+因为必须从主机位借用两位，所以得到4个子网，每个子网有62台主机。
+
+###切开网络，Slicing Down Networks
+
+变长子网掩码的关键在于取得网络块并令到这些网络块满足特定的网络需求（take your network block and make it work for your particular network needs）。那典型的网络地址192.168.1.0/24来说，在使用VLSM时，你可以使用掩码/26, 实现这样的划分。
+
+<table>
+<tr><th>192.168.1.0/26</th><th>子网</th><th>主机数</th></tr>
+<tr><td>192.168.1.0</td><td>1</td><td>62</td></tr>
+<tr><td>192.168.1.64 -- 使用中</td><td>2</td><td>62</td></tr>
+<tr><td>192.168.1.128 -- 使用中</td><td>3</td><td>62</td></tr>
+<tr><td>192.168.1.192 -- 使用中</td><td>4</td><td>62</td></tr>
+</table>

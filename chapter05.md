@@ -681,3 +681,115 @@ __CCNA考试要求你掌握路由汇总__。如你能快速地算出同样的位
 <tr><td>192.168.1.64</td><td>不能使用</td><td>不能使用</td></tr>
 </table>
 
+是不可以使用.64子网的，因为该子网已被使用了。现在就可以使用其余两个子网了。如你只需使用一个，那么就还可以将剩下的那个进行进一步划分，得到更多的子网，只是每个子网中的主机数更少而已。
+
+##IP分址故障排除，Troubleshooting IP Addresses Issues
+
+###子网掩码及网关故障的排除
+
+在出现IP分址、子网掩码或网关问题时，你会看到多种现象。一些问题会如同下面这样。
+
+* 网络设备可在其本地子网通信，却无法与本地网络之外的设备通信。这通常表明有着与网关配置或运行相关类型的问题。
+* 没有任何类型的IP通信，不管是内部的还是远程的。这通常表明存在大问题，可能涉及相应设备上功能的缺失。
+* 还有这种能与某些IP地址通信，却无法与存在的全部IP地址通信的情形。这通常是最难解决的故障，因为其可能有很多原因。
+
+在处理这些问题的过程中，__首先要做的就是对设备上所配置的IP地址、子网掩码及默认网关进行反复检查__。同时__还要查看设备文档，来验证相应信息__。__大量的故障都是由错误配置造成的__。
+
+如你正在首次安装一些网络设备，多半要手动输入一些IP地址、子网掩码和默认网关等信息。建议在进行提交前进行检查，因为这方面人所犯的错误是难免的。__许多企业都有关于将新设备引入网络的手册, 包括网关测试及到SNMP服务器的可达能力__。
+
+如需在故障排除过程中收集信息，可能需要__做一下包捕获，以此来观察设备间发送了哪些数据包__。__如果看到有来自其它网络上主机的包，就可能存在某种VLAN错误配置问题__。__如怀疑子网掩码不正确，就要检查网络上其它设备的参数__。如果其它机器工作良好，就要在该设备上使用如预期一样无法工作的同一子网掩码，并再行测试。
+
+在使用了动态主机分址（DHCP）来为网络上的设备分配包括子网掩码和网关的地址信息时，就要__检查DHCP服务器配置__，因为此时问题可能发生在另一方面了。DHCP服务器错误配置或者DHCP服务已阻塞，都是可能的，所以在故障排除时包含这一步是必要的。务必还要记住从DHCP地址池中排除一些保留地址，因为这些地址通常会分配给服务器及路由器接口。
+
+另一些有助于找出网络故障发生所在之处的故障排除工具有traceroute和ping。在本书及本书实验中会有涉及。
+
+##第五天的问题，Day 5 Questions
+
+1. Convert `192.160.210.177` into binary (without using a calculator).
+2. Convert `10010011` into decimal.
+3. What is the private range of IP addresses?
+4. Write out the subnet mask from CIDR `/20`.
+5. Write out the subnet mask from CIDR `/13`.
+6. `192.168.1.128/26` gives you how many available addresses?
+7. What is the last host of the `172.16.96.0/19` network?
+8. Starting with `192.168.1.0/24`, with VLSM, you can use a /26 mask and generate which subnets?
+9. In order to use route summarisation on your network, you need to use what?
+10. Write down the subnets `172.16.8.0` to `172.16.15.0`, and work out the common bits and what subnet mask you should use as a summary. Don’t look in the book before working this out. 
+
+## 第五天问题的答案
+
+1. 11000000.10100000.11010010.10110001.
+2. 147.
+3. 10.x.x.x – any address starting with a 10. 172.16.x.x to 172.31.x.x – any address starting with 172.16 to 172.31, inclusive. 192.168.x.x – any address starting with 192.168.
+4. 255.255.240.0.
+5. 255.248.0.0.
+6. 62.
+7. 172.16.127.254.
+8. 192.168.1.0.0/26, 192.168.1.0.64/26, 192.168.1.0.128/26, and 192.168.1.0.192/26.
+9. A classless protocol.
+10. 172.16.8.0/21 (mask: 255.255.248.0).
+
+## 课文中进制转换的答案
+
+1. Convert 1111 to hex and decimal
+	Hex = F
+	Decimal = 15
+2. Convert 11010 to hex and decimal
+	Hex = 1A
+	Decimal = 26
+3. Convert 10000 to hex and decimal
+	Hex = 10
+	Decimal = 16
+4. Convert 20 to binary and hex
+	Binary = 10100
+	Hex = 14
+5. Convert 32 to binary and hex
+	Binary = 100000
+	Hex = 20
+6. Convert 101 to binary and hex
+	Binary = 1100101
+	Hex = 657. 
+7. Convert A6 from hex to binary and decimal
+	Binary = 10100110
+	Decimal = 166
+8. Convert 15 from hex to binary and decimal
+	Binary = 10101
+	Decimal = 21
+9. Convert B5 from hex to binary and decimal
+	Binary = 10110101
+	Decimal = 181
+
+## 第五天的实验
+
+###路由器上的IP分址实验
+
+__拓扑图，Topology__
+
+![路由器上的IP分址实验拓扑图](images/0505.png)
+__路由器上的IP分址实验拓扑图__
+
+__实验目的, Purpose__
+
+学习如何熟练地在路由器上配置IP地址，并经由某个串行接口执行ping操作。
+
+__实验步骤，Walkthrough__
+
+1. 先是明确路由器上的串行借口编号，你的路由器与上面拓扑图中的可能有所不同。同时，还要明确串行链路的哪一端连接的是DCE线，因为在该端是需要`clock rate`命令的。
+
+<code>
+Router>en
+Router#sh ip interface brief
+Interface		IP-Address	OK?	Method	Status					Protocol
+FastEthernet0/0	unassigned	YES	unset	administratively down	down
+FastEthernet0/1	unassigned	YES	unset	administratively down	down
+<b>Serial0/1/0</b>		unassigned	YES	unset	administratively down	down
+Vlan1			unassigned	YES	unset	administratively down	down
+Router#
+Router#show controllers Serial0/1/0
+M1T-E3 pa: show controller:
+PAS unit 0, subunit 0, f/w version 2-55, rev ID 0x2800001, version 2
+idb = 0x6080D54C, ds = 0x6080F304, ssb=0x6080F4F4
+Clock mux=0x30, ucmd_ctrl=0x0, port_status=0x1
+line state: down
+<b>DCE cable</b>, no clock rate
+</code>

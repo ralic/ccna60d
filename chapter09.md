@@ -76,3 +76,5 @@ __命名ACLs允许给某过滤清单一个名称，而不是编号__。这就令
 <tr><td>53</td><td>DNS</td><td>443</td><td>HTTPS(带有SSL的HTTP)</td></tr>
 <tr><td>69</td><td>TFTP</td><td></td><td></td></tr>
 </table>
+
+## 访问控制清单规则，Access Control List Rules

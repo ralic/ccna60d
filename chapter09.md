@@ -172,11 +172,57 @@ access-list 1 permit host 172.16.1.1
 access-list 1 permit host 172.16.2.1
 ```
 
-实际上还需在配置行之间加入一个叹号（如是将其粘贴到路由器上的情况下），来告诉路由器执行一次回车（you actually need to add an exclamation mark in-between each line of configuration, if you are pasting it in, to tell the router to do a carriage return[wikipedia: 回车符](http://zh.wikipedia.org/wiki/%E5%9B%9E%E8%BD%A6%E7%AC%A6)）。
+实际上还需在配置行之间加入一个叹号（如是将其粘贴到路由器上的情况下），来告诉路由器执行一次确认（you actually need to add an exclamation mark in-between each line of configuration, if you are pasting it in, to tell the router to do a carriage return）[wikipedia: 回车符](http://zh.wikipedia.org/wiki/%E5%9B%9E%E8%BD%A6%E7%AC%A6)。
 
 ```
 access-list 1 permit host 172.16.1.1
 !
 access-list 1 permit host 172.16.2.2
 ```
+
+下面是正被粘贴到路由器配置中的那些行。要先删除早先的ACL，再粘贴进新版本。
+
+```
+Router#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Router(config)#no access-list 1
+Router(config)#access-list 1 permit host 172.16.1.1
+Router(config)#!
+Router(config)#access-list 1 permit host 172.16.2.2
+Router(config)#exit
+Router#
+%SYS-5-CONFIG_I: Configured from console by console
+show ip access
+Router#show ip access-lists
+Standard IP access list 1
+	permit host 172.16.1.1
+	permit host 172.16.2.2
+Router#
+Router(config)#int FastEthernet0/0
+Router(config-if)#ip access-group 1 in ← reapply to the interface
+```
+
+如使用的是Packet Tracer, 那么这些命可能不会工作。同时，请一定在某台路由器上尝试这些命令，因为它们是考试考点。__记住在编辑ACL前要先在接口上关闭它（此时它就不再是活动的了），以避免一些奇怪或是不可预期的行为发生__。而在IOS 12.4及以后的版本中，如何来编辑ACLs，会在后面演示。
+
+###ACL规则六 -- 在接口上关闭ACL
+
+__Disable the ACL on the interface.__
+
+在打算短时间对ACL进行测试或是撤销ACL时，许多工程师都会将其完全删除掉。这是不必要的。如你要停止ACL运行，只需简单地将其从所应用到的接口上移除即可。
+
+```
+Router(config)#int FastEthernet0/0
+Router(config-if)#no ip access-group 1 in
+Router(config-if)#^Z
+```
+
+###ACL规则七 -- 可重用同一ACL
+
+__You can reuse the same ACL.__
+
+这是我在实际网络中经常见到的。整个网络通常都有着同样的ACL策略。与其配置多条ACLs，只需简单地引用同一ACL，然后在所需要的那些接口上应用该ACL即可。图9.3演示了此概念。
+
+![ACL的重用](images/0903.png)
+__图9.3 -- ACL的重用__
+
 

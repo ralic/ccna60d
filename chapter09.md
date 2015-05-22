@@ -663,4 +663,10 @@ Extended IP access list test
 	20 permit ip any any <b>(56 matches)</b>
 </pre>
 
+在将某同一ACL重用到不同接口上时，这种方式并不会提供到十分特定的信息，因为它给出的是整体统计信息。
 
+__单个接口上的ACL统计信息__
+
+__Per Interface ACL Statistics__
+
+在想要查看单个接口上的ACL匹配情况，不管是进还是出方向时，

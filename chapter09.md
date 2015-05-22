@@ -172,7 +172,7 @@ access-list 1 permit host 172.16.1.1
 access-list 1 permit host 172.16.2.1
 ```
 
-实际上还需在配置行之间加入一个叹号（如是将其粘贴到路由器上的情况下），来告诉路由器执行一次回车（you actually need to add an exclamation mark in-between each line of configuration, if you are pasting it in, to tell the router to do a carriage return[wikipedia: 回车符]http://zh.wikipedia.org/wiki/%E5%9B%9E%E8%BD%A6%E7%AC%A6()）。
+实际上还需在配置行之间加入一个叹号（如是将其粘贴到路由器上的情况下），来告诉路由器执行一次回车（you actually need to add an exclamation mark in-between each line of configuration, if you are pasting it in, to tell the router to do a carriage return[wikipedia: 回车符](http://zh.wikipedia.org/wiki/%E5%9B%9E%E8%BD%A6%E7%AC%A6)）。
 
 ```
 access-list 1 permit host 172.16.1.1

@@ -394,9 +394,9 @@ Router(config)#ip access-list ?
 	standard	Standard access list
 R1(config)#ip access-list standard ?
 	<1-99>	Standard IP access-list number<1300-1999> Standard IP access-list number (expanded range)
-	<b>WORD	Access-list name</b>
+	<b>WORD		Access-list name</b>
 R1(config)#ip access-list extended ?
 	<100-199>	Extended IP access-list number
 	<2000-2699>	Extended IP access-list number (expanded range)
-	<b>WORD Access-list name</b>
+	<b>WORD 	Access-list name</b>
 </pre>

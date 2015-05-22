@@ -400,3 +400,80 @@ R1(config)#ip access-list extended ?
 	<2000-2699>	Extended IP access-list number (expanded range)
 	<b>WORD 	Access-list name</b>
 </pre>
+
+命名ACLs在语法上与其它类型的ACLs（也就是标准和扩展的编号ACLs）有着轻微的不同。同时也__可以编辑活动的命名ACLs__, 这是一个有用的特性。只需简单地告诉路由器要配置一条命名ACL， 而不管它是标准的还是扩展的。在较新的IOS版本上，也可以编辑编号ACLs，所以请检查所用的平台。
+
+在使用`ip access-list`命令常见一条命名ACL时，思科IOS会将你带入ACL配置模式，在那里就可以输入或是移除ACL条目了（就是那些拒绝或放行的访问条件）。图9.8展示了一条命名ACL的实例，以及相应的输出。
+
+![命名ACL](images/0908.png)
+__图9.8 -- 命名ACL__
+
+```
+Router(config)#ip access-list extended BlockWEB
+Router(config-ext-nacl)#?
+Ext Access List configuration commands:
+	<1-2147483647>	Sequence Number
+	default			Set a command to its defaults
+	deny			Specify packets to reject
+	dynamic			Specify a DYNAMIC list of PERMITs or DENYs
+	evaluate		Evaluate an access list
+	exit			Exit from access-list configuration mode
+	no				Negate a command or set its defaults
+	permit			Specify packets to forward
+	remark			Access list entry comment
+Router(config-ext-nacl)#deny tcp any any eq 80
+Router(config-ext-nacl)#permit ip any any
+```
+
+命名ACL的验证，可通过下面的命令完成。
+
++ `show ip access-list`: 显示设备上所创建的所有ACLs
++ `show ip access-list <acl_name>`: 显示某条特定的命名ACL
+
+```
+Router(config)#do show ip access-lists
+Standard IP access list test
+	30 permit 10.1.1.1
+	20 permit 192.168.1.1
+	15 permit 172.20.1.1
+	10 permit 172.16.1.1
+```
+
+要知道如何来增加或是删除某条命令ACL中的条目，请参考下面的“ACL序列号（ACL Sequence Numbers）”小节。
+
+###应用ACLs
+
+__Applying ACLs__
+
+__为让ACLs发挥效果，就必须将ACL应用到路由器的某个接口或端口上__。之所以这样讲，是因为我曾见到许多的新手思科工程师在敲入了ACL后，就想为什么它不工作！或者他们配置了ACL，却将错误的ACL编号或命名应用到相应的接口上。
+
+__如要应用在某条线路上，就必须使用`access-class`命令来指定它__，而__如果是应用在某个接口上，就要用`ip access-group`命令__。思科这么做的原因，我也不知道。
+
+这里有应用ACLs到端口或接口上的三个实例。
+
+接口上的应用。
+
+```
+Router(config)#int FastEthernet0/0
+Router(config-if)#ip access-group 101 in
+```
+
+线路上的应用。
+
+```
+Router(config)#line vty 0 15
+Router(config-line)#access-class 101 in
+```
+
+接口上的应用。
+
+```
+Router(config)#int FastEthernet0/0
+Router(config-if)#ip access-group BlockWEB in
+```
+
+##ACL序列号
+
+__ACL Sequence Numbers__
+
+

@@ -309,7 +309,30 @@ __图9.5 -- 带有源和目的地址的进入数据包__
 
 在上面的图9.5中，进入的数据包有着一个源和目的地址，但标准ACL只会查看源地址。该ACL会放行会拒绝该源地址（参见图9.6）。
 
-`Router(config)#access-list 1 permit host 172.16.1.1`
 
 ![有着多台/个主机网络的网络](images/0906.png)
+
+
+```
+Router(config)#access-list 1 permit host 172.16.1.1
+Router(config)#access-list 1 permit host 172.16.1.1
+Router(config)#access-list 1 permit host 192.168.1.1
+Router(config)#access-list 1 permit 10.1.0.0 0.0.255.255
+```
+
+此ACL应在服务器侧的路由器上应用。又记得在清单的底部有一条隐式的“deny all”，所以其它流量都会给阻止掉。
+
+###扩展ACLs
+
+__Extended ACLs__
+
+__扩展的编号ACLs中可以构建出细得多的粒度__。而正是由于有了细得多的粒度，令到扩展的编号ACLs变得诡异起来。藉由扩展的编号ACLs，可以对源或目的网络地址、端口、协议及服务进行过滤。
+
+一般来说，你可以看看扩展的ACLs配置语法，就像下面这样。
+
+`access list# permit/deny [service/protocol] [source network/IP] [destination network/IP] [port#]`
+
+![阻止服务器访问实例](images/0907.png)
+__图9.7 -- 阻止服务器访问实例__
+
 

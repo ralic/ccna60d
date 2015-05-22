@@ -131,4 +131,52 @@ __The router can't filter self-generated traffic.__
 ![对自身流量的ACL测试](images/0902.png)
 __图9.2 -- 对自身流量的ACL测试__
 
+###ACL规则五 -- 不能对运行中的ACL进行编辑
+
+__You can't edit a live ACL.__
+
+实际上，在IOS 12.4之前的版本中，只能对命名ACL进行编辑, 而不能对标准ACL或扩展ACLs两种进行编辑。这曾是ACL架构的一个局限（this was a limitation of ACL architecture）。在IOS 12.4之前，如想要编辑标准ACL或扩展ACL，就必须按照以下两部进行（这里使用list 99作为例子）。
+
+1. 使用命令`no ip access-group 99 in`，在接口上停用ACL流量（stop ACL traffic on the interface with the `no ip access-group 99 in` command）。
+2. 将该条ACL复制粘贴到文本编辑器，并在那里编辑好。
+3. 进入到ACL模式，将新的ACL粘贴上去。
+4. 再次将该ACL应用到接口。
+
+在实际的路由器上，执行下面的这些命令。
+
+在接口上已创建并应用的ACL。
+
+```
+Router>en
+Router#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Router(config)#access-list 1 permit 172.16.1.1
+Router(config)#access-list 1 permit 172.16.2.1
+Router(config)#interface FastEthernet0/0
+Router(config-if)#ip access-group 1 in
+```
+
+现在其从接口上卸下。
+
+```
+Router(config)#int FastEthernet0/0
+Router(config-if)#no ip access-group 1 in
+Router(config-if)#^Z
+```
+
+查看那些ACLs。将其复制并粘贴到文本编辑器，并进行修改。
+
+```
+Router#show run ← or show ip access lists
+access-list 1 permit host 172.16.1.1
+access-list 1 permit host 172.16.2.1
+```
+
+实际上还需在配置行之间加入一个叹号（如是将其粘贴到路由器上的情况下），来告诉路由器执行一次回车（you actually need to add an exclamation mark in-between each line of configuration, if you are pasting it in, to tell the router to do a carriage return[wikipedia: 回车符]http://zh.wikipedia.org/wiki/%E5%9B%9E%E8%BD%A6%E7%AC%A6()）。
+
+```
+access-list 1 permit host 172.16.1.1
+!
+access-list 1 permit host 172.16.2.2
+```
 

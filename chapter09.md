@@ -94,7 +94,7 @@ __图9.1 -- 接口上的一个方向仅做一条ACL__
 
 __the lines are processed top-down__
 
-某些工程师在他们的ACL未如预期那样运行时感到迷惑。路由器会看看ACL的顶行，在发现匹配后，就会停在那里且不再对其它行进行检查了。为此，需要将最明确的那些条目放在ACL的顶部（you need to put the most specific entries at the top of the ACL）。比如在利用ACL来阻挡主机172.16.1.1时的做法。
+某些工程师在他们的ACL未如预期那样运行时感到迷惑。路由器会看看ACL的顶行，在发现匹配后，就会停在那里且不再对其它行进行检查了。为此，需要将__最明确的(最小的)那些条目放在ACL的顶部__（you need to put the most specific entries at the top of the ACL）。比如在利用ACL来阻挡主机172.16.1.1时的做法。
 
 <table>
 <tr><td>Permit 10.0.0.0</td><td></td><td>没有匹配的</td></tr>
@@ -103,5 +103,32 @@ __the lines are processed top-down__
 <tr><td>Permit 172.16.1.0</td><td></td><td>不会处理了</td></tr>
 <tr><td>Deny 172.16.1.1</td><td></td><td>不会处理了</td></tr>
 </table>
+
+在本例中，应该将`Deny 172.16.1.1`这行，放到顶部，或至少应在语句（statement）`Permit 172.16.0.0`之前。
+
+###ACL规则三 -- 在每条ACL的底部，都有一句隐式的“deny all”
+
+__There is an implicit "deny all" at the bottom of every ACL__
+
+这条规则另很多工程师为难。在每条ACL的底部，有着一条看不见的命令。该命令设置为拒绝尚未匹配的所有流量。而阻止此命令起作用的唯一方法，就是在底部手动配置一条`permit all`命令。在取得来自IP地址172.20.1.1的某个进入的数据包时的做法。
+
+<table>
+<tr><td>Permit 10.0.0.0</td><td>无匹配项</td></tr>
+<tr><td>Permit 192.168.1.1</td><td>无匹配项</td></tr>
+<tr><td>Permit 172.16.0.0</td><td>无匹配项</td></tr>
+<tr><td>Permit 172.16.1.0</td><td>无匹配项</td></tr>
+<tr><td>[Deny all]</td><td>匹配 -- 丢弃数据包</td></tr>
+</table>
+
+你实际上想要路由器放行该数据包，但却拒绝了。原因就在于那条隐式的“deny all”命令了，而该命令实际上是一种安全手段。
+
+###ACL规则四 -- 路由器是不能过滤自己产生的流量的
+
+__The router can't filter self-generated traffic.__
+
+这在某个实际网络上于部署ACL前进行测试时，会造成混乱。路由器不会过滤其自身产生的流量。在图9.2中有演示。
+
+![对自身流量的ACL测试](images/0902.png)
+__图9.2 -- 对自身流量的ACL测试__
 
 

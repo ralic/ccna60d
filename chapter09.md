@@ -571,3 +571,96 @@ Extended IP access list test
 	10 deny tcp any any eq 80 <b>(10 matches)</b>
 	20 permit ip any any <b>(56 matches)</b>
 </pre>
+
+而如果需要更详细的有关那些为ACL条目所匹配的流量信息，可以给相关的ACL条目配置`log`或`log-input`参数。
+
+```
+Router(config)#ip access-list extended test
+Router(config)#no 10
+Router(config)#10 deny tcp any any eq 80 log
+Router#show ip access-lists
+Extended IP access list test
+	10 deny tcp any any eq 80 log
+	20 permit ip any any (83 matches)
+```
+
+在上面的配置样例中，配置了test ACL的10号条目的ACL日志。在某个数据包与那个条目匹配时，该ACL计数器就会增加，与此同时路由器也会生成一条包含了该特定ACL匹配的详细日志记录。
+
+`%SEC-6-IPACCESSLOGP: list test denied tcp 10.10.10.2(24667) -> 10.10.10.1(80), 1 packet`
+
+而如果你仍需要更多有关该事件（transaction）的细节，就要用`log-input`参数替代`log`参数了，就像下面这样。
+
+```
+Router(config)#ip access-list extended test
+Router(config)#no 10
+Router(config)#10 deny tcp any any eq 80 log-input
+Router#show ip access-lists
+Extended IP access list test
+	10 deny tcp any any eq 80 log-input
+	20 permit ip any any (125 matches)
+```
+
+这时，当有该特定ACL条目匹配时，路由器就会生成一条更为详细的日志消息，当中包含了进入的接口以及源MAC地址。
+
+`%SEC-6-IPACCESSLOGP: list test denied tcp 10.10.10.2(14013) (FastEthernet0/0 00aa.aabb.ccdd) -> 10.10.10.1(80), 1 packet`
+
+__ACL日志在查看到底那些数据包被丢弃或放行的故障排除中，会是非常有用的__, 但在现实世界情形中（此内容超出CCNA考试范围）不得提的是：包含`[log]`或`[log-input]`关键字的ACL条目是为路由器进行线程交换的, 与之相反，现代路由器中， 默认都是经由CEF交换的（ACL entries that contain `[log]` or `[log-input]` keyword are process-switched by the router, as opposed to being CEF-switched, which is the default in modern routers）。这需要更多的路由器CPU周期，因而导致在有大量与被记录的ACL条目匹配时，出现问题。
+
+###使用ACLs来限制Telnet和SSH访问
+
+__Using ACLs to Limit Telnet and SSH Access__
+
+除了在接口级别过滤流量外，ACLs可与其他设备特性配合使用，包括过滤VTY线路上的流量。在前面的课程中，我们曾学过如何利用`line vty`命令，配置Telnet和SSH以实现对某台设备的访问（比如路由器或交换机）。
+
+有时，我们可能不想接受到设备或自设备发出的所有Telnet/SSH连接。而为实现此操作，就必须定义一条ACL，以指定在VTY线路上所允许或拒绝的流量类型。该ACL可以是编号ACL或命名ACL。通过命令`access-class <acl> | [in|out]`, 将该ACL加入到想要的VTY线路上。
+
+下面的例子定义了一条允许来自主机10.10.10.1的Telnet流量，该ACL随后被应用到VTY线路的进入方向。
+
+```
+Router(config)#ip access-list extended VTY_ACCESS
+Router(config-ext-nacl)#permit tcp host 10.10.10.1 any eq telnet
+Router(config-ext-nacl)#deny tcp any any
+Router(config-ext-nacl)#exit
+Router(config)#
+Router(config)#line vty 0 4
+Router(config-line)# access-class VTY_ACCESS in
+Router(config-line)#
+```
+
+使用以下命令对配置进行验证。
+
+```
+Router#show run | sect line vty
+line vty 0 4
+access-class VTY_ACCESS in
+.....
+```
+
+##ACLs故障排除和验证
+
+__Trubleshooting and Verifying ACLs__
+
+相信有了对配置命令和规则的深入理解，在访问控制清单上就不会有问题了。在ACL不工作的时候，首先要通过ping操作，检查有没有基本的IP连通性问题。接着看看有没有应用该ACL，看看在ACL中有没有什么文字错误，以及你是否需要允许任何IP流量通过（记住那个隐式的”deny all“条目）。而一些在ACL故障排除过程中最重要的检查点包括下面这些。
+
++ 查看ACL统计信息
++ 检查所允许的网络
++ 检查应用ACL的接口及方向
+
+###查看ACL统计信息
+
+在成功配置一条ACL并将其应用到某个接口上之后，某种可以验证该ACL正确行为的手段非常重要，尤其是某个ACL条目被使用到的次数。基于匹配次数，就可以对过滤策略进行调整，或者对ACLs进行增强，以实现整体安全性的提升。而根据需求的不同，可以在全局层面或者单个接口上（从IOS 12.4开始）查看ACL统计信息。
+
+__ACL全局统计信息__
+
+__Global ACL Statistics__
+
+可使用命令`show ip access-list` 或 `show access-list`命令， 查看ACL全局统计信息，这两个命令又可以仅查看某个特定编号ACL或命名ACL的全局统计信息。
+
+<pre>
+Router#show ip access-lists
+Extended IP access list test
+	10 deny tcp any any eq 80 <b>(10 matches)</b>
+	20 permit ip any any <b>(56 matches)</b>
+</pre>
+
+

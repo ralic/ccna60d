@@ -135,7 +135,7 @@ __图9.2 -- 对自身流量的ACL测试__
 
 __You can't edit a live ACL.__
 
-实际上，在IOS 12.4之前的版本中，只能对命名ACL进行编辑, 而不能对标准ACL或扩展ACLs两种进行编辑。这曾是ACL架构的一个局限（this was a limitation of ACL architecture）。在IOS 12.4之前，如想要编辑标准ACL或扩展ACL，就必须按照以下两部进行（这里使用list 99作为例子）。
+实际上，在IOS 12.4之前的版本中，只能对命名ACL进行编辑, 而不能对标准ACL或扩展ACLs两种进行编辑。这曾是ACL架构的一个局限（this was a limitation of ACL architecture）。在IOS 12.4之前，如想要编辑标准ACL或扩展ACL，就必须按照以下步骤进行（这里使用list 99作为例子）。
 
 1. 使用命令`no ip access-group 99 in`，在接口上停用ACL流量（stop ACL traffic on the interface with the `no ip access-group 99 in` command）。
 2. 将该条ACL复制粘贴到文本编辑器，并在那里编辑好。

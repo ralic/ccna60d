@@ -387,7 +387,7 @@ Router(config)#access-list ?
 	dynamic-extended	Extend the dynamic ACL absolute timer
 	rate-limit			Simple rate-limit specific access list
 Router(config)#ip access-list ?
-	extended Extended access list
+	extended	Extended access list
 	log-update	Control access list log updates
 	logging		Control access list logging
 	resequence	Resequence access list

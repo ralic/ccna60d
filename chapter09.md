@@ -88,6 +88,20 @@ __Use only one ACL per interface per direction__
 这么做是很明智的。在同一接口上，有多条ACLs去做不同的事情，大概不是你想要的。简单地配置一条ACL，来完成需要完成的事情，而不是将过滤器分散到两条或多条的清单中。本应将“每个协议（per protocol）”加入到此规则中，因为这里是可以包含IPX的访问控制清单的，不过在现代网络中，IP已成为唯一的协议了。
 
 ![接口上的一个方向仅做一条ACL](images/0901.png)
-__接口上的一个方向仅做一条ACL__
+__图9.1 -- 接口上的一个方向仅做一条ACL__
+
+###ACL规则二 -- ACLs行自顶向下进行处理
+
+__the lines are processed top-down__
+
+某些工程师在他们的ACL未如预期那样运行时感到迷惑。路由器会看看ACL的顶行，在发现匹配后，就会停在那里且不再对其它行进行检查了。为此，需要将最明确的那些条目放在ACL的顶部（you need to put the most specific entries at the top of the ACL）。比如在利用ACL来阻挡主机172.16.1.1时的做法。
+
+<table>
+<tr><td>Permit 10.0.0.0</td><td></td><td>没有匹配的</td></tr>
+<tr><td>Permit 192.168.1.1</td><td></td><td>没有匹配的</td></tr>
+<tr><td>Permit 172.16.0.0</td><td>〇</td><td>匹配了-放行</td></tr>
+<tr><td>Permit 172.16.1.0</td><td></td><td>不会处理了</td></tr>
+<tr><td>Deny 172.16.1.1</td><td></td><td>不会处理了</td></tr>
+</table>
 
 

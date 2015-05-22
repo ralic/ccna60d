@@ -78,3 +78,16 @@ __命名ACLs允许给某过滤清单一个名称，而不是编号__。这就令
 </table>
 
 ## 访问控制清单规则，Access Control List Rules
+
+这是最难掌握的部分之一。我从没有在哪本思科手册中见到里面曾写过一条完整的规则清单。仅有一些手册对其简单概过或是稍加解释，另外一些则完全不讲。难点就在于这些规则一直都在用，但到目前为止你都是通过试误法发现的它们（the difficulty is that the rules always apply but unitil now, you found them only by trial and error）。下面就是你需要知道的这些规则了。
+
+###ACL规则一 -- 在每个接口的每个方向，只使用一条ACL
+
+__Use only one ACL per interface per direction__
+
+这么做是很明智的。在同一接口上，有多条ACLs去做不同的事情，大概不是你想要的。简单地配置一条ACL，来完成需要完成的事情，而不是将过滤器分散到两条或多条的清单中。本应将“每个协议（per protocol）”加入到此规则中，因为这里是可以包含IPX的访问控制清单的，不过在现代网络中，IP已成为唯一的协议了。
+
+![接口上的一个方向仅做一条ACL](images/0901.png)
+__接口上的一个方向仅做一条ACL__
+
+

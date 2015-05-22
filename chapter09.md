@@ -439,7 +439,7 @@ Standard IP access list test
 	10 permit 172.16.1.1
 ```
 
-要知道如何来增加或是删除某条命令ACL中的条目，请参考下面的“ACL序列号（ACL Sequence Numbers）”小节。
+要知道如何来增加或是删除某条命令ACL中的条目，请参考下面的“ACL序号（ACL Sequence Numbers）”小节。
 
 ###应用ACLs
 
@@ -472,8 +472,102 @@ Router(config)#int FastEthernet0/0
 Router(config-if)#ip access-group BlockWEB in
 ```
 
-##ACL序列号
+##ACL序号
 
 __ACL Sequence Numbers__
 
+自12.4往后，你会发现思科IOS给每个ACL条目添加了序号。那么现在就可以创建一条访问控制清单，并在其后从它里面一处一行了。
 
+```
+Router(config)#ip access-list standard test
+Router(config-std-nacl)#permit 172.16.1.1
+Router(config-std-nacl)#permit 192.168.1.1
+Router(config-std-nacl)#permit 10.1.1.1
+Router(config-std-nacl)#
+Router(config-std-nacl)#exit
+Router(config)#exit
+Router#
+*Jun 6 07:38:14.155: %SYS-5-CONFIG_I: Configured from console by console access
+Router#show ip access-lists
+Standard IP access list test
+	30 permit 10.1.1.1
+	20 permit 192.168.1.1
+	10 permit 172.16.1.1
+```
+
+注意到__在路由器运行配置中，序号并不会显示出来__。要查看它们，必须执行一个`show [ip] access-list`命令。
+
+##加入一个ACL行
+
+__Add an ACL Line__
+
+__要加入一个新的ACL行，只需简单地输入新的序号并接着输入该ACL语句__。下面的例子展示如何往现有的ACL中加入行15。
+
+```
+Router#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Router(config)#ip access
+Router(config)#ip access-list standard test
+Router(config-std-nacl)#15 permit 172.20.1.1
+Router(config-std-nacl)#
+Router(config-std-nacl)#do show ip access
+Router(config-std-nacl)#do show ip access-lists
+Standard IP access list test
+	30 permit 10.1.1.1
+	20 permit 192.168.1.1
+	15 permit 172.20.1.1
+	10 permit 172.16.1.1
+Router(config-std-nacl)#
+```
+
+###移除一个ACL行
+
+__Remove an ACL Line__
+
+要移除某个ACL行，只需简单地敲入`no <seq_number>`命令即可，就如同下面的例子中行20被删除掉了。
+
+```
+Router#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Router(config)#ip access
+Router(config)#ip access-list standard test
+Router(config-std-nacl)#no 20
+Router(config-std-nacl)#
+Router(config-std-nacl)#do show ip access
+Router(config-std-nacl)#do show ip access-lists
+Standard IP access list test30 permit 10.1.1.1
+	15 permit 172.20.1.1
+	10 permit 172.16.1.1
+Router(config-std-nacl)#
+```
+
+###为某条ACL重新编号
+
+__Resequence an ACL__
+
+要对某条ACL重新编号，使用`ip access-list resequence <acl_name> <starting_seq_number> <step_to_increment>`命令。该命令的行为可由下面的例子进行检验。
+
+```
+Router(config)#ip access-list resequence test 100 20
+Router(config)#do show ip access-lists
+Standard IP access list test
+	100 permit 10.1.1.1
+	120 permit 172.20.1.1
+	140 permit 172.16.1.1
+Router(config-std-nacl)#
+```
+
+命令`resequence`则会创建新的序号，自100开始，每个新行增加20。译者注：在更新的IOS版本中，此命令可指定开始序号及步进序号。
+
+###ACL日志
+
+__ACL Logging__
+
+默认情况下，通过那些为某个接口的数据包所匹配上的ACL条目，会创建出一个不断增大的计数器，该计数器可使用`show ip access-list`命令进行查看，如下面的例子所示。
+
+<pre>
+Router#show ip access-lists
+Extended IP access list test
+	10 deny tcp any any eq 80 <b>(10 matches)</b>
+	20 permit ip any any <b>(56 matches)</b>
+</pre>

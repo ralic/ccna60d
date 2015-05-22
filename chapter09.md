@@ -332,7 +332,71 @@ __扩展的编号ACLs中可以构建出细得多的粒度__。而正是由于有
 
 `access list# permit/deny [service/protocol] [source network/IP] [destination network/IP] [port#]`
 
+比如下面这样。
+
+```
+access-list 101 deny tcp 10.1.0.0 0.0.255.255 host 172.30.1.1 eq telnet
+access-list 100 permit tcp 10.1.0.0 0.0.255.255 host 172.30.1.1 eq ftp
+access-list 100 permit icmp any any
+```
+
 ![阻止服务器访问实例](images/0907.png)
 __图9.7 -- 阻止服务器访问实例__
 
 
+可为上面的网络配置一条ACL，以e-mail、web和文件服务器为例，可以像下面这样（应用在服务器侧的）。
+
+```
+access-list 100 permit tcp host 172.16.1.1 host 172.20.1.1 eq smtp
+access-list 100 permit tcp 10.1.0.0 0.0.255.255 host 172.30.1.1 eq ftp
+access-list 100 permit tcp host 192.168.1.1 host 172.40.1.1 eq www
+```
+
+而如有不同要求，就也可以像下面这条ACL。
+
+```
+access-list 101 deny icmp any 172.20.0.0 0.0.255.255
+access-list 101 deny tcp 10.1.0.0 0.0.255.255 host 172.30.1.1 eq telnet
+```
+
+或者也可以像下面这样。
+
+`access-list 102 permit tcp any host 172.30.1.1 eq ftp established`
+
+关键字`[established]`告诉路由器仅放行在网络内部的主机所发起的流量。三次握手标志（ACK或RST位）将表明这点（the three-way handshake flags, ACK or RST bit, will indicate this）。
+
+###命名ACLs
+
+__Named ACLs__
+
+与编号ACLs不同，命名ACLs可由其描述性名称容易地区分，而这在一些大型的配置中尤其有用。引入命名ACLs就是为增加灵活性及ACLs的易于管理的。命名ACLs可以看着是配置增强的提升，因为它并未对ACLs结构进行修改（仅改变了引用ACL的方式而已）。
+
+其语法跟编号ACLs是相似的，主要的不同就是使用名称而不是编号来区分ACLs。和编号ACLs一样，可以配置标准的或扩展的命名ACLs。
+
+在配置命名ACLs时的另一不同之处，就是必须一直使用命令`ip access-list`，这与编号ACLs可以只使用简单的`access-list`命令，是不一样的。
+
+<pre>
+Router(config)#access-list ?
+	<1-99>				IP standard access list
+	<100-199>			IP extended access list
+	<1100-1199>			Extended 48-bit MAC address access list
+	<1300-1999>			IP standard access list (expanded range)
+	<200-299>			Protocol type-code access list
+	<2000-2699>			IP extended access list (expanded range)
+	<700-799>			48-bit MAC address access list
+	dynamic-extended	Extend the dynamic ACL absolute timer
+	rate-limit			Simple rate-limit specific access list
+Router(config)#ip access-list ?
+	extended Extended access list
+	log-update	Control access list log updates
+	logging		Control access list logging
+	resequence	Resequence access list
+	standard	Standard access list
+R1(config)#ip access-list standard ?
+	<1-99>	Standard IP access-list number<1300-1999> Standard IP access-list number (expanded range)
+	<b>WORD	Access-list name</b>
+R1(config)#ip access-list extended ?
+	<100-199>	Extended IP access-list number
+	<2000-2699>	Extended IP access-list number (expanded range)
+	<b>WORD Access-list name</b>
+</pre>

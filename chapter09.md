@@ -669,4 +669,15 @@ __单个接口上的ACL统计信息__
 
 __Per Interface ACL Statistics__
 
-在想要查看单个接口上的ACL匹配情况，不管是进还是出方向时，
+在想要查看单个接口上的ACL匹配情况，不管是进还是出方向时，可以使用命令`show ip access-list interface <interface_name> [in|out]`，如下面所示。
+
+```
+Router#show ip access-list interface FastEthernet0/1 in
+Extended IP access list 100 in
+	10 permit ip host 10.10.10.1 any (5 matches)
+	30 permit ip host 10.10.10.2 any (31 matches)
+```
+
+如未有指定方向，则应用到该特定接口上的任何进或出方向的ACL都将显示出来。此特性也叫做“ACL可管理能力（ACL Manageability）”，自IOS 12.4开始可用。
+
+

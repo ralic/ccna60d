@@ -680,4 +680,27 @@ Extended IP access list 100 in
 
 如未有指定方向，则应用到该特定接口上的任何进或出方向的ACL都将显示出来。此特性也叫做“ACL可管理能力（ACL Manageability）”，自IOS 12.4开始可用。
 
+###检查那些放行的网络
+
+__Verifying the Permitted Networks__
+
+有的时候，特别实在那些必须配置很多ACLs的大型网络中，在配置ACL条目是就会犯下一些书写错误，而这就会导致不同接口上有错误的流量被阻止。为了检查那些正确的ACL条目（也就是permit及deny语句），可以照前面章节中讲到的那样，使用`show run | section access-list`或者`show ip access-list`命令。
+
+###检查ACL的接口和方向
+
+__Verifying the ACL Interface and Direction__
+
+在将某条ACL应用到某个接口上时，一个常见的错误就是将其应用到了错误的方向，也就是本应在进方向的，却应用到了出方向，或者本应在出方向的，却应用到了进方向。这会导致功能上和安全方面的很多问题。于是在ACL故障排除上的最先几步之一，就是检查ACL应用到正确的接口及正确的方向。
+
+为此，可以使用多种命令，包括`show run`及`show ip access-list interface <interface> | [in|out]`命令。
+
+##第九天的问题
+
+1. You can have a named, extended, and standard ACL on one incoming interface. True or false?
+2. You want to test why your ping is blocked on your Serial interface. You ping out from the router but it is permitted. What went wrong? (Hint: See ACL Rule 4.)
+3. Write a wildcard mask to match subnet mask `255.255.224.0`.
+4. What do you type to apply an IP access control list to the Telnet lines on a router?
+5. How can you verify ACL statistics per interface (name the command)?
+6. How do you apply an ACL to an interface?
+
 

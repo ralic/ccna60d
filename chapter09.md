@@ -711,3 +711,120 @@ __Verifying the ACL Interface and Direction__
 4. access-class .
 5. Issue the show ip access-list interface command.
 6. Issue the `ip access-group <ACL_name> [in|out]` command.
+
+##第九天的实验
+
+###标准ACL实验
+
+__Standard ACL Lab__
+
+__拓扑图__
+
+![标准ACL实验拓扑图](images/0909.png)
+
+标准ACL实验拓扑图
+
+__实验目的__
+
+学习如何配置一条标准ACL。
+
+__实验步骤__
+
+1. 配置上面的网络。在两台路由器上加入一条静态路由，领导到任何网络的任何流量都从串行接口发出。这么做的原因是，尽管这不是一个路由实验，仍然需要路由的流量。把.1地址加到路由器A的串行接口，.2地址加到路由器B的串行接口。
+
+```
+RouterA(config)#ip route 0.0.0.0 0.0.0.0 s0/1/0
+RouterB(config)#ip route 0.0.0.0 0.0.0.0 s0/1/0
+```
+
+2. 在路由器A上配置一条标准ACL，放行192.168.1.0/10网络。默认情况下，其它所有网络都将被阻止。
+
+```
+RouterA(config)#access-list 1 permit 192.168.1.0 0.0.0.63
+RouterA(config)#int Serial0/1/0
+RouterA(config-if)#ip access-group 1 in
+RouterA(config-if)#exit
+RouterA(config)#exit
+RouterA#
+```
+
+3. 从路由器B上测试该条ACL，默认将使用10.0.0.1地址。
+
+```
+RouterB#ping 10.0.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.0.0.1, timeout is 2 seconds:
+UUUUU
+Success rate is 0 percent (0/5)
+```
+
+4. 以源地址192.168.1.1来做另一个ping测试，这将没有问题。
+
+```
+RouterB#ping
+Protocol [ip]:
+Target IP address: 10.0.0.1
+Repeat count [5]:Datagram size [100]:
+Timeout in seconds [2]:
+Extended commands [n]: y
+Source address or interface: 192.168.1.1
+Type of service [0]:
+Set DF bit in IP header? [no]:
+Validate reply data? [no]:
+Data pattern [0xABCD]:
+Loose, Strict, Record, Timestamp, Verbose[none]:
+Sweep range of sizes [n]:
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.0.0.1, timeout is 2 seconds:
+Packet sent with a source address of 192.168.1.1
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 31/31/32 ms
+```
+
+###扩展ACL实验
+
+__拓扑图__
+
+![扩展ACL实验的拓扑图](images/0910.png)
+
+扩展ACl实验的拓扑图
+
+__实验目的__
+
+学习如何配置一条扩展ACL。
+
+__实验步骤__
+
+1. 配置上述网络。在路由器B上加入一条静态路由，令到前往所有网络的所有流量都从串行接口上发出。这么做是因为，尽管这不是一个路由实验，仍然需要路由流量。
+
+`RouterB(config)#ip route 0.0.0.0 0.0.0.0 s0/1/0`
+
+2. 在路由器A上配置一条扩展ACL。仅允许往环回接口上发起Telnet流量。
+
+```
+RouterA(config)#access-list 100 permit tcp any host 172.20.1.1 eq 23
+RouterA(config)#int s0/1/0
+RouterA(config-if)#ip access-group 100 in
+RouterA(config-if)#line vty 0 15
+RouterA(config-line)#password cisco
+RouterA(config-line)#login
+RouterA(config-line)#^Z
+RouterA#
+```
+
+上面的那条ACL编号为100, 这就告诉路由器，它是一条扩展ACL。所要允许的是TCP。该条ACL允许来自任何网络的，目的地址为172.20.1.1的Telnet端口，端口号为23。在执行`show run`命令时，就会看到，路由器实际上会将端口号替换为其对应的名称，就像下面演示的这样。
+
+`access-list 100 permit tcp any host 172.20.1.1 eq telnet`
+
+3. 现在，从路由器B上做一个Telnet测试。首先往路由器A的串行接口上Telnet，将会被阻止。接着测试环回接口。
+
+<pre>
+RouterB#telnet 10.0.0.1
+Trying 10.0.0.1 ...
+% Connection timed out; remote host not responding
+RouterB#telnet 172.20.1.1
+Trying 172.20.1.1 ...Open
+User Access Verification <b>←password won’t show when you type it</b>
+Password:
+RouterA> <b>←Hit Control+Shift+6 together and then let go and press the X key to quit.</b>
+</pre>

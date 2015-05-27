@@ -828,3 +828,81 @@ User Access Verification <b>←password won’t show when you type it</b>
 Password:
 RouterA> <b>←Hit Control+Shift+6 together and then let go and press the X key to quit.</b>
 </pre>
+
+>__注意：__我们会在其它实验中涉及ACLs，但你真的需要完全地掌握这些内容。为此，要尝试其它的TCP端口，比如80、25等等。另外，要试试那些UDP端口，比如53。如没有将一台PC接上路由器，则是无法对这些其它端口进行测试的。
+
+##命名ACL实验
+
+__拓扑图__
+
+![命名ACL实验拓扑图](images/0911.png)
+命名ACL实验拓扑图
+
+__实验目的__
+
+学习如何配置一条命名ACL。
+
+__实验步骤__
+
+1. 配置上面的网络。在两台路由器上加入一条静态路由，领导到任何网络的任何流量都从串行接口发出。这么做的原因是，尽管这不是一个路由实验，仍然需要路由的流量。
+
+```
+RouterA(config)#ip route 0.0.0.0 0.0.0.0 s0/1/0
+RouterB(config)#ip route 0.0.0.0 0.0.0.0 s0/1/0
+```
+
+2. 在路由器B上加入一条扩展的命名ACL。只放行主机172.20.1.1，阻止其它任何主机或网络。
+
+```
+RouterB(config)#ip access-list extended blockping
+RouterB(config-ext-nacl)#permit icmp host 172.20.1.1 any
+RouterB(config-ext-nacl)#exit
+RouterB(config)#int s0/1/0
+RouterB(config-if)#ip access-group blockping in
+RouterB(config-if)#
+```
+
+3. 现在分别从路由器A的串行接口和换回接口发出ping来测试该条ACL。
+
+```
+RouterA#ping 192.168.1.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+UUUUU
+Success rate is 0 percent (0/5)
+RouterA#ping
+Protocol [ip]:
+Target IP address: 192.168.1.1
+Repeat count [5]:
+Datagram size [100]:
+Timeout in seconds [2]:
+Extended commands [n]: y
+Source address or interface: 172.20.1.1
+Type of service [0]:
+Set DF bit in IP header? [no]:
+Validate reply data? [no]:
+Data pattern [0xABCD]:
+Loose, Strict, Record, Timestamp, Verbose[none]:
+Sweep range of sizes [n]:
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+Packet sent with a source address of 172.20.1.1
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 31/34/47 ms
+```
+
+>__注意：__你需要搞清楚各种服务，以及各种服务所用到的端口。否则，要配置ACL就会非常棘手。本条ACL相当简单，因此可以仅用一行完成。在有着路由协议运行时，需要放行它们。
+
+要放行RIP，就要像这样指定。
+
+`access-list 101 permit udp any any eq rip`
+
+要放行OSPF，要像这样指定。
+
+`access-list 101 permit ospf any any`
+
+要放行EIGRP，要像这样指定。
+
+`access-list 101 permit eigrp any any`
+
+

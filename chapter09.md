@@ -703,4 +703,11 @@ __Verifying the ACL Interface and Direction__
 5. How can you verify ACL statistics per interface (name the command)?
 6. How do you apply an ACL to an interface?
 
+##第九天问题的答案
 
+1. False. You can only configure a single ACL on an interface per direction.
+2. A router won’t filter traffic it generated itself.
+3. `0.0.31.255`.
+4. access-class .
+5. Issue the show ip access-list interface command.
+6. Issue the `ip access-group <ACL_name> [in|out]` command.

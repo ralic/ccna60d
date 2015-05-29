@@ -98,8 +98,11 @@ NAT内部和外部的分址，是一个经典的考试问题，所以还需在�
 在思科IOS上对网络地址转换的配置和验证是一个简单的事情。在配置NAT时，要执行下面这些操作。
 
 + 使用接口配置命令`ip nat inside`将一个或多个的接口指定为内部接口。
+
 + 使用接口配置命令`ip nat outside`将某个接口指定为外部接口。
-+ 配置一条访问控制清单（access control list, ACL）, 其将匹配所有需要转换的流量。此访问控制清单可以是标准ACL, 也可以是扩展的命名ACL或编号ACL（a standard or an extended named or numbered ACL）。
+
++ 配置一条访问控制清单（access control list, ACL）, 其将匹配所有需要转换的流量。此访问控制清单可以是标准、扩展的命名ACL或编号ACL（a standard or an extended named or numbered ACL）。
+
 + 作为可选项，使用全局配置命令`ip nat pool <name> <start-ip> <end-ip> [netmaske <mask> | prefix-length <length>]`, 配置一个全球地址池(a pool of global addresses)。这会定义出一个内部本地地址将会转换成的内部全球地址池。
 
 + 使用全局配置命令`ip nat inside source list <ACL> [interface | pool] <name> [overload]`，全局性地配置上NAT。

@@ -128,3 +128,25 @@ R1(config)#ip nat pool INSIDE-POOL 150.1.1.3 150.1.1.6 prefix-length 24
 R1(config)#ip nat inside source list 100 pool INSIDE-POOL
 R1(config)#exit
 ```
+
+按照这个配置，命令`show ip nat translations`就可以用来对路由器上具体进行的转换进行查看，如下面的输出所示。
+
+```
+R1#show ip nat translations
+Pro		Inside global	Inside local	Outside local	Outside global
+icmp	150.1.1.4:4		10.5.5.1:4		200.1.1.1:4		200.1.1.1:4
+icmp	150.1.1.3:1		10.5.5.2:1		200.1.1.1:1		200.1.1.1:1
+tcp		150.1.1.5:159	10.5.5.3:159	200.1.1.1:23	200.1.1.1:23
+```
+
+在路由器上配置NAT时，通常有以下三个选择。
+
++ 对一个内部地址，用一个外部地址进行替换（静态NAT，static NAT）
++ 对多个内部地址，用两个以上的外部地址进行替换（动态NAT，dynamic NAT）
++ 将多个内部地址，用多个外部端口进行转换（这就是__端口地址转换__，或者叫__单向NAT__, Port Address Translation or one-way NAT）
+
+###静态NAT
+
+__Static NAT__
+
+

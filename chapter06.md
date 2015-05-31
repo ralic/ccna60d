@@ -149,4 +149,36 @@ tcp		150.1.1.5:159	10.5.5.3:159	200.1.1.1:23	200.1.1.1:23
 
 __Static NAT__
 
+在网络内部一些有一台web服务器时，就要将某个特定内部地址，替换成另一个外部地址了。如此时仍然进行动态分址，就没有办法到达该特定目的地址，因为它总是变动的。
 
+>Farai指出，“对那些需要经由互联网可达的所有服务器，比如e-mail或FTP服务器，都要使用静态NAT（如下面的图6.4所示）”
+
+![在用的静态NAT](images/0604.png)
+__图6.4 -- 在用的静态NAT__
+
+<table>
+<tr><th>内部地址</th><th>外部NAT地址</th></tr>
+<tr><td>192.168.1.1</td><td>200.1.1.1</td></tr>
+<tr><td>192.168.2.1</td><td>200.1.1.2</td></tr>
+</table>
+
+对上面的网络，配置应像下面这样。
+
+```
+Router(config)#interface f0/0
+Router(config-if)#ip address 192.168.1.1 255.255.255.0
+Router(config-if)#ip nat inside
+Router(config)#interface f0/1
+Router(config-if)#ip address 192.168.2.1 255.255.255.0
+Router(config-if)#ip nat inside
+Router(config)#interface s0/0
+Router(config-if)#ip nat outside
+Router(config-if)#exit
+Router(config)#ip nat inside source static 192.168.1.1 200.1.1.1
+Router(config)#ip nat inside source static 192.168.2.1 200.1.1.2
+```
+命令`ip nat inside`和`ip nat outside`，告诉路由器哪些是内侧NAT接口，哪些是外侧的NAT接口。而命令`ip nat inside source`命令，就定义了那些静态转换，想要多少条就可以有多少条的该命令，那么就算你掏钱买的那些公网IP地址有多少个，就写上多少条吧。在思科公司，笔者曾解决有关此类问题的大量主要的配置错误，就是找不到`ip nat inside`及`ip nat outside`语句！考试中可能会碰到那些要求找出配置错误的问题。
+
+强烈建议将上述命令敲入到某台路由器中去。本书中有很多的NAT实验，但是在阅读理论章节的同时，你敲入得越多，那么这些信息就能越好地进入你的大脑。
+
+###

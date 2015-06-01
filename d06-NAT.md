@@ -210,14 +210,17 @@ Router(config)#ip nat inside source list 1 pool poolname
 Router(config)#access-list 1 permit 192.168.1.0 0.0.0.255
 ```
 
-该ACL用于告诉路由器哪些地址要转换，哪些地址不要转换。而该子网掩码实际上是反转的，叫做反掩码，在第九天会涉及。所有NAT地址池都需要一个名字，而在本例中，它简单地叫做“poolname”。源列表引用自那个ACL（the source list refers to the ACL）。
+该ACL用于告诉路由器哪些地址要转换，哪些地址不要转换。而该子网掩码实际上是反转的，叫做反掩码，在第九天会涉及。所有NAT地址池都需要一个名字，而在本例中，它简单地叫做“poolname”。源列表引用自那个ACL（the source list refers to the ACL）, __经译者在GNS3上测试动态NAT仍然是一对一的地址转换__。
 
 ###NAT Overload/端口地址转换/单向NAT
 
 __NAT Overload/Port Address Translation/One-Way NAT__
 
-IP地址处于紧缺之中，在有着成千上万的地址需要路由时，将花一大笔钱。在次情况下，可以使用NAT overload方案（如图6.6）, 该方案又被思科叫做端口地址转换（Port Address Translation, PAT）或单向NAT。PAT巧妙地允许将某端口号加到某个IP地址，作为与另一个使用该IP地址的转换区分开来的方式。每个IP地址有多达65000个可以的端口号。
+IP地址处于紧缺之中，在有着成千上万的地址需要路由时，将花一大笔钱（__静态NAT、动态NAT都无法解决此问题__）。在此情况下，可以使用NAT overload方案（如图6.6）, 该方案又被思科叫做端口地址转换（Port Address Translation, PAT）或单向NAT。PAT巧妙地允许将某端口号加到某个IP地址，作为与另一个使用该IP地址的转换区分开来的方式。每个IP地址有多达65000个可以的端口号。
 
 尽管这是超出CCNA考试范围的，了解PAT如何处理端口号，会是有用的。在每个思科文档中，都将每个公网IP地址的可用端口号分为3个范围，分别是0-511、512-1023和1024-65535。PAT给每个UDP和TCP会话都分配一个独特的端口号。它会尝试给原始请求分配同样的端口值，但如果原始的源端口号已被使用，它就会开始从某个特别端口范围的开头进行扫描，找出第一个可用的端口号，分配给那个会话。
 
+![NAT Overload](images/0606.png)
+__图6.6 -- NAT Overload__
 
+h

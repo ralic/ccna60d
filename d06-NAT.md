@@ -185,7 +185,7 @@ Router(config)#ip nat inside source static 192.168.2.1 200.1.1.2
 
 通常会用到一组可路由地址，或是一个可路由地址池。一对一的NAT映射，有其局限性，首当其冲的就是成本高，其次路由器上有着多行的配置。动态NAT允许为内部主机配置一或多个的公网地址组。
 
-路由器会维护一个内部地址到外部地址对应的清单，而最后表格中的转换会超时(Your router will keep a list of the internal addresses to external addresses, and eventually the translation in the table will time out)。可以修改此超时值，但请找Cisco 技术支持工程师（a Cisco TAC engineer）的建议去修改。
+路由器会维护一个内部地址到外部地址对应的清单，而最后该表格中的转换会超时(Your router will keep a list of the internal addresses to external addresses, and eventually the translation in the table will time out)。可以修改此超时值，但请找Cisco 技术支持工程师（a Cisco TAC engineer）的建议去修改。
 
 ![到一个NAT公网可路由地址池的内部似有地址](images/0605.png)
 __图6.5 -- 到一个NAT公网可路由地址池的内部似有地址__
@@ -412,5 +412,7 @@ RouterA#
 NAT: expiring 172.16.1.1 (10.1.1.1) icmp 6 (6)
 NAT: expiring 172.16.1.1 (10.1.1.1) icmp 7 (7)
 ```
+
+>译者注: 通过本实验，要注意两个问题：一是__可路由地址可以是外部接口同一网段的地址，也可以不是__。二是__NAT超时问题，该参数可以设置__。
 
 

@@ -183,4 +183,41 @@ Router(config)#ip nat inside source static 192.168.2.1 200.1.1.2
 
 ###动态NAT或NAT地址池
 
-通常会用到一组可路由地址，或是一个可路由地址池。
+通常会用到一组可路由地址，或是一个可路由地址池。一对一的NAT映射，有其局限性，首当其冲的就是成本高，其次路由器上有着多行的配置。动态NAT允许为内部主机配置一或多个的公网地址组。
+
+路由器会维护一个内部地址到外部地址对应的清单，而最后表格中的转换会超时(Your router will keep a list of the internal addresses to external addresses, and eventually the translation in the table will time out)。可以修改此超时值，但请找Cisco 技术支持工程师（a Cisco TAC engineer）的建议去修改。
+
+![到一个NAT公网可路由地址池的内部似有地址](images/0605.png)
+__图6.5 -- 到一个NAT公网可路由地址池的内部似有地址__
+
+当路由器上的内部主机发出到外部的连接时，如执行命令`show ip nat translations`, 就会看到下面的包含类似信息的图表。
+
+<table>
+<tr><th>内侧地址</th><th>外侧NAT地址</th></tr>
+<tr><td>192.168.1.3</td><td>200.1.1.11</td></tr>
+<tr><td>192.168.1.2</td><td>200.1.1.14</td></tr>
+</table>
+
+在上面的图6.5中，让内部地址使用的是一个从200.1.1.1到200.1.1.16的地址池。下面是要实现该目的的配置文件。这里就不再给出路由器接口地址了。
+
+```
+Router(config)#interface f0/0 
+Router(config-if)#ip nat inside
+Router(config)#interface s0/1
+Router(config-if)#ip nat outside
+Router(config)#ip nat pool poolname 200.1.1.1 200.1.1.16 netmask 255.255.255.0
+Router(config)#ip nat inside source list 1 pool poolname
+Router(config)#access-list 1 permit 192.168.1.0 0.0.0.255
+```
+
+该ACL用于告诉路由器哪些地址要转换，哪些地址不要转换。而该子网掩码实际上是反转的，叫做反掩码，在第九天会涉及。所有NAT地址池都需要一个名字，而在本例中，它简单地叫做“poolname”。源列表引用自那个ACL（the source list refers to the ACL）。
+
+###NAT Overload/端口地址转换/单向NAT
+
+__NAT Overload/Port Address Translation/One-Way NAT__
+
+IP地址处于紧缺之中，在有着成千上万的地址需要路由时，将花一大笔钱。在次情况下，可以使用NAT overload方案（如图6.6）, 该方案又被思科叫做端口地址转换（Port Address Translation, PAT）或单向NAT。PAT巧妙地允许将某端口号加到某个IP地址，作为与另一个使用该IP地址的转换区分开来的方式。每个IP地址有多达65000个可以的端口号。
+
+尽管这是超出CCNA考试范围的，了解PAT如何处理端口号，会是有用的。在每个思科文档中，都将每个公网IP地址的可用端口号分为3个范围，分别是0-511、512-1023和1024-65535。PAT给每个UDP和TCP会话都分配一个独特的端口号。它会尝试给原始请求分配同样的端口值，但如果原始的源端口号已被使用，它就会开始从某个特别端口范围的开头进行扫描，找出第一个可用的端口号，分配给那个会话。
+
+

@@ -210,17 +210,210 @@ Router(config)#ip nat inside source list 1 pool poolname
 Router(config)#access-list 1 permit 192.168.1.0 0.0.0.255
 ```
 
-该ACL用于告诉路由器哪些地址要转换，哪些地址不要转换。而该子网掩码实际上是反转的，叫做反掩码，在第九天会涉及。所有NAT地址池都需要一个名字，而在本例中，它简单地叫做“poolname”。源列表引用自那个ACL（the source list refers to the ACL）, __经译者在GNS3上测试动态NAT仍然是一对一的地址转换__。
+该ACL用于告诉路由器哪些地址要转换，哪些地址不要转换。而该子网掩码实际上是反转的，叫做反掩码，在第九天会涉及。所有NAT地址池都需要一个名字，而在本例中，它简单地叫做“poolname”。源列表引用自那个ACL（the source list refers to the ACL）, __经译者在GNS3上测试,动态NAT仍然是一对一的地址转换__。
 
 ###NAT Overload/端口地址转换/单向NAT
 
 __NAT Overload/Port Address Translation/One-Way NAT__
 
-IP地址处于紧缺之中，在有着成千上万的地址需要路由时，将花一大笔钱（__静态NAT、动态NAT都无法解决此问题__）。在此情况下，可以使用NAT overload方案（如图6.6）, 该方案又被思科叫做端口地址转换（Port Address Translation, PAT）或单向NAT。PAT巧妙地允许将某端口号加到某个IP地址，作为与另一个使用该IP地址的转换区分开来的方式。每个IP地址有多达65000个可以的端口号。
+IP地址处于紧缺之中，在有着成千上万的地址需要路由时，将花一大笔钱（__静态NAT、动态NAT都无法解决此问题__）。在此情况下，可以使用__NAT overload方案__（如图6.6）, 该方案又被思科叫做__端口地址转换（Port Address Translation, PAT）__或__单向NAT__。PAT巧妙地允许将某端口号加到某个IP地址，作为与另一个使用该IP地址的转换区分开来的方式。每个IP地址有多达65000个可以的端口号。
 
-尽管这是超出CCNA考试范围的，了解PAT如何处理端口号，会是有用的。在每个思科文档中，都将每个公网IP地址的可用端口号分为3个范围，分别是0-511、512-1023和1024-65535。PAT给每个UDP和TCP会话都分配一个独特的端口号。它会尝试给原始请求分配同样的端口值，但如果原始的源端口号已被使用，它就会开始从某个特别端口范围的开头进行扫描，找出第一个可用的端口号，分配给那个会话。
+尽管__这是超出CCNA考试范围的，但了解PAT如何处理端口号，会是有用的__。在每个思科文档中，都将每个公网IP地址的可用端口号分为3个范围，分别是0-511、512-1023和1024-65535。PAT给每个UDP和TCP会话都分配一个独特的端口号。它会尝试给原始请求分配同样的端口值，但如果原始的源端口号已被使用，它就会开始从某个特别端口范围的开头进行扫描，找出第一个可用的端口号，分配给那个会话。
 
 ![NAT Overload](images/0606.png)
 __图6.6 -- NAT Overload__
 
-h
+此时，命令`show ip nat translations`给出的表格，将会显示下面这样的IP地址及端口号。
+
+<table>
+<tr><th>内侧地址</th><th>外侧NAT地址（带有端口号）</th></tr>
+<tr><td>192.168.1.1</td><td>200.1.1.1:30922</td></tr>
+<tr><td>192.168.2.1</td><td>200.1.1.2:30975</td></tr>
+</table>
+
+而要配置PAT，需要进行如同动态NAT的那些同样配置，还要在地址池后面加上关键字“overload”。
+
+<pre>
+Router(config)#interface f0/0
+Router(config-if)#ip nat inside
+Router(config)#interface s0/1
+Router(config-if)#ip nat outside
+Router(config)#ip nat pool poolname 200.1.1.1 200.1.1.1 netmask 255.255.255.0
+Router(config)#ip nat inside source list 1 pool poolname <b>overload</b>
+Router(config)#access-list 1 permit 192.168.1.0 0.0.0.255
+</pre>
+
+这该很容易记住吧！
+
+>Farai指出 -- “以多于一个IP方式使用PAT，就是对地址空间的浪费，因为路由器会使用第一个IP地址，并为每个随后的连接仅增大端口号。这就是为何通常将PAT配置为该接口上的超载(overload)。”
+
+##NAT故障排除
+
+__Troubleshooting NAT__
+
+NAT故障中十次有九次，都是由于路由器管理员忘记了把`ip nat outside`或`ip nat inside`命令加到路由器接口上。事实上，几乎总是存在这个问题！接下来最频繁的错误包括不正确的ACL，以及某个拼写错误的地址池名称（地址池是区分大小写的）。
+
+使用命令`debug ip nat [detailed]`，可以在路由器上对NAT转换进行调试，又可以使用命令`sh ip nat translations`，来查看NAT地址池。
+
+##第六天问题
+
+1. NAT converts the `_______` headers for incoming and outgoing traffic and keeps track of each session.
+2. The `_______` address is the IP address of an outside, or external, host as it appears to inside hosts.
+3. How do you designate inside and outside NAT interfaces?
+4. Which show command displays a list of your NAT table?
+5. When would you want to use static NAT?
+6. Write the configuration command for NAT `192.168.1.1` to `200.1.1.1`.
+7. Which command do you add to a NAT pool to enable PAT?
+8. NAT most often fails to work because the `_______` command is missing.
+9. Which `debug` command shows live NAT translations occurring?
+
+##第六天问题的答案
+
+1. Packet.
+2. Outside local.
+3. With the `ip nat inside` and `ip nat outside` commands.
+4. The `show ip nat translations` command.
+5. When you have a web server (for example) on the inside of your network.
+6. `ip nat inside source static 192.168.1.1 200.1.1.1`.
+7. The `overload` command.
+8. The `ip nat inside` or `ip nat outside` command.
+9. The `debug ip nat [detailed]` command.
+
+##第六天的实验
+
+###静态NAT实验
+
+__Static NAT Lab__
+
+__拓扑图__
+
+![静态NAT实验拓扑图](images/0607.png)
+__静态NAT实验拓扑图__
+
+__实验目的__
+
+学习如何配置静态NAT。
+
+__实验步骤__
+
+1. 将IP地址192.168.1.1 255.255.255.0加入到路由器A，并修改hostname为Router A。把IP地址192.168.1.2 255.255.255.0加入到路由器B。在正确的一侧加上时钟速度(clock rate)，然后分别自A往B和自B往A进行ping测试。如需提示，请回顾先前的那些实验。
+
+2. 在路由器A上需要加入一个IP地址，以模拟LAN上的一台主机。__通过一个环回接口，可以实现这个目的__。
+
+```
+RouterA#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+RouterA(config)#interface Loopback0
+RouterA(config-if)#ip add 10.1.1.1 255.0.0.0
+RouterA(config-if)#
+```
+
+3. 为进行测试，需要告诉Router B将发往任何网络的任何流量，都发往Router A。通过一条静态路由完成这个。
+
+```
+RouterB#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+RouterB(config)#ip route 0.0.0.0 0.0.0.0 Serial0/1/0
+RouterB(config)#
+```
+
+4. 要测试该条静态路由是否工作，通过从Router A上的环回接口对Router B进行ping操作。
+
+```
+RouterA#ping
+Protocol [ip]:
+Target IP address: 192.168.1.2
+Repeat count [5]:
+Datagram size [100]:
+Timeout in seconds [2]:
+Extended commands [n]: y
+Source address or interface: 10.1.1.1
+Type of service [0]:
+Set DF bit in IP header? [no]:
+Validate reply data? [no]:
+Data pattern [0xABCD]:
+Loose, Strict, Record, Timestamp, Verbose[none]:
+Sweep range of sizes [n]:
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.2, timeout is 2 seconds:
+Packet sent with a source address of 10.1.1.1
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 31/31/32 ms
+RouterA#
+```
+
+5. 在Router A上配置一个静态NAT条目。使用NAT，将地址10.1.1.1, 在其离开该路由器时，转换成172.16.1.1。同样需要告诉路由器哪个是NAT的内部接口，哪个是外部接口。
+
+```
+RouterA#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+RouterA(config)#int Loopback0
+RouterA(config-if)#ip nat inside
+RouterA(config-if)#int Serial0/1/0
+RouterA(config-if)#ip nat outside
+RouterA(config-if)#
+RouterA(config-if)#ip nat inside source static 10.1.1.1 172.16.1.1
+RouterA(config)#
+```
+
+6. 打开NAT调试，如此就可以看到转换的进行。此时再执行另一个扩展ping操作（自L0接口的），并查看NAT表。因为IOS的不同，你的输出可能与我的不一样。
+
+<pre>
+RouterA#debug ip nat
+IP NAT debugging is on
+RouterA#
+RouterA#ping
+Protocol [ip]:
+Target IP address: 192.168.1.2
+Repeat count [5]:
+Datagram size [100]:
+Timeout in seconds [2]:
+Extended commands [n]: y
+Source address or interface: <b>10.1.1.1</b>
+Type of service [0]:
+Set DF bit in IP header? [no]:
+Validate reply data? [no]:Data pattern [0xABCD]:
+Loose, Strict, Record, Timestamp, Verbose[none]:
+Sweep range of sizes [n]:
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.2, timeout is 2 seconds:
+Packet sent with a source address of 10.1.1.1
+NAT: s=10.1.1.1->172.16.1.1, d=192.168.1.2 [11]
+!
+NAT*: s=192.168.1.2, d=172.16.1.1->10.1.1.1 [11]
+NAT: s=10.1.1.1->172.16.1.1, d=192.168.1.2 [12]
+!
+NAT*: s=192.168.1.2, d=172.16.1.1->10.1.1.1 [12]
+NAT: s=10.1.1.1->172.16.1.1, d=192.168.1.2 [13]
+!
+NAT*: s=192.168.1.2, d=172.16.1.1->10.1.1.1 [13]
+NAT: s=10.1.1.1->172.16.1.1, d=192.168.1.2 [14]
+!
+NAT*: s=192.168.1.2, d=172.16.1.1->10.1.1.1 [14]
+NAT: s=10.1.1.1->172.16.1.1, d=192.168.1.2 [15]
+!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 31/46/110 ms
+RouterA#
+NAT*: s=192.168.1.2, d=172.16.1.1->10.1.1.1 [15]
+RouterA#show ip nat translations
+Pro
+Inside global Inside local
+Outside local Outside global
+icmp 172.16.1.1:10 10.1.1.1:10 192.168.1.2:10 192.168.1.2:10
+icmp 172.16.1.1:6 10.1.1.1:6 192.168.1.2:6 192.168.1.2:6
+icmp 172.16.1.1:7 10.1.1.1:7 192.168.1.2:7 192.168.1.2:7
+icmp 172.16.1.1:8 10.1.1.1:8 192.168.1.2:8 192.168.1.2:8
+icmp 172.16.1.1:9 10.1.1.1:9 192.168.1.2:9 192.168.1.2:9
+--- 10.1.1.1 --- ---
+172.16.1.1
+RouterA#
+</pre>
+
+7. 记住，路由器随后很快就会清除该NAT转换，为其它IP地址使用这个/这些NAT地址而对其进行清理。
+
+```
+NAT: expiring 172.16.1.1 (10.1.1.1) icmp 6 (6)
+NAT: expiring 172.16.1.1 (10.1.1.1) icmp 7 (7)
+```
+
+

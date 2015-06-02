@@ -88,4 +88,59 @@ __Hex Numbering__
 <tr><td>16 -- 十六进制</td><td>4096</td><td>256</td><td>16</td><td>1</td></tr>
 </table>
 
+可以看出每一位都从其右边的那位继承了数值。十进制计数是10乘1。二进制是1, 同时1乘了计数系统的2。如对三种计数系统进行的最后一个十六进制数位进行比较，就会发现为何十六进制是IPv6分址的首选格式了。
+
+<table>
+<tr><th>十进制</th><th>二进制</th><th>十六进制</th></tr>
+<tr><td>0</td><td>0000</td><td>0</td></tr>
+<tr><td>1</td><td>0001</td><td>1</td></tr>
+<tr><td>2</td><td>0010</td><td>2</td></tr>
+<tr><td>3</td><td>0011</td><td>3</td></tr>
+<tr><td>4</td><td>0100</td><td>4</td></tr>
+<tr><td>5</td><td>0101</td><td>5</td></tr>
+<tr><td>6</td><td>0110</td><td>6</td></tr>
+<tr><td>7</td><td>0111</td><td>7</td></tr>
+<tr><td>8</td><td>1000</td><td>8</td></tr>
+<tr><td>9</td><td>1001</td><td>9</td></tr>
+<tr><td>10</td><td>1010</td><td>A</td></tr>
+<tr><td>11</td><td>1011</td><td>B</td></tr>
+<tr><td>12</td><td>1100</td><td>C</td></tr>
+<tr><td>13</td><td>1101</td><td>D</td></tr>
+<tr><td>14</td><td>1110</td><td>E</td></tr>
+<tr><td>15</td><td>1111</td><td>F</td></tr>
+</table>
+
+为提供足够的地址来满足我们在今后许多年的需求，IPv6已被设计成可以提供数以百亿亿的地址。为做到这点，计数范围从32位二进制数，扩展到128位。每4位可用一个十六进制数位表示（这可从上面的图表看出）。逻辑上推断就是2个十六进制位给出的是8位二进制数，也就是一个字节。
+
+一个IPv6地址有128位长，又被分为8组的16位，在以完整格式写出时，用逗号将每组分开。每个4位十六进制数的范围是从0000到FFFF，其中F是十六进制计数方法中最高的数。
+
+<table>
+<tr><th>0000</th><th>0000</th><th>0000</th><th>0000</th><th>0000</th><th>0000</th><th>0000</th><th>0000</th></tr>
+<tr><td>to</td><td>to</td><td>to</td><td>to</td><td>to</td><td>to</td><td>to</td><td>to</td></tr>
+<tr><td>FFFF</td><td>FFFF</td><td>FFFF</td><td>FFFF</td><td>FFFF</td><td>FFFF</td><td>FFFF</td><td>FFFF</td></tr>
+</table>
+
+##IPv6分址
+
+我们已经知道，IPv6用到128位的地址。因为__此种地址格式不同于我们所熟悉的IPv4地址格式，在初次见到时通常会犯迷糊__。但是，一旦掌握了，那么在逻辑和结构上都是十分简单的。__这些128位的IPv6地址，使用的是十六进制数值__（也就是说，0到9以及字母A到F）。__同时在IPv4中，子网掩码既可以用CIDR表示法表示__（比如/16或/32）, __也可以用点分十进制表示法表示__（dotted-decimal notation, 比如255.255.0.0或255.255.255.255）, 但__在IPv6中，子网掩码只用CIDR表示法表示__，因为IPv6地址的长度很长。全球范围内128位IPv6地址，由下面3部分组成。
+
++ ISP分给的前缀，the provider-assigned prefix
++ 站点前缀，the site prefix
++ 接口或主机ID(及MAC地址)，the interface or host ID
+
+而ISP分给的前缀，也就是__全球地址空间__(the global address space)，它是一个__48位__的前缀，又被分为下面的3部分。
+
++ 16位保留的IPv6全球前缀，the 16-bit reserved IPv6 global prefix
++ 16位ISP所持有的前缀，the 16-bit provider-owned prefix
++ 16位ISP分配的前缀，the 16-bit provider-assigned prefix
+
+前16位的__IPv6全球前缀，用于表示IPv6全球地址空间__（the IPv6 global address space）。__所有IPv6全球互联网地址，都位于从2000::/16到3FFF::/16的范围__。而16位__服务商持有IPv6前缀，是分配给服务商且归其所有的__。ISP持有前缀，处于0000::/32到FFFF::/32范围。
+
+__接下来的16位，表示了一个由实际服务提供商从其分配的前缀地址空间中，所分配给某个组织的IPv6前缀__。该前缀处于0000::/48到FFFF::/48范围。这样，前48位就共同构成了IPv6地址的第一部分 -- 服务提供商分配的前缀，如下图7.1所示。
+
+![48位服务提供商分配的IPv6前缀](images/0701.png)
+__图7.1 -- 48位服务提供商分配的IPv6前缀__
+
+
+
 

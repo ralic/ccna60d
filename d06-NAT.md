@@ -585,3 +585,19 @@ icmp 	172.16.1.2:24 	10.2.2.2:24 	192.168.1.2:24 	192.168.1.2:24
 icmp 	172.16.1.2:25 	10.2.2.2:25 	192.168.1.2:25 	192.168.1.2:25
 RouterA#
 </pre>
+
+###NAT Overload实验
+
+__NAT Overload Lab__
+
+重复先前的实验。这次，在引用地址池时，将`overload`命令加到该配置行的后面。这会指示路由器使用PAT。去掉`Loopback1`。__请注意，正如Farai指出的那样，在真实世界中，地址池通常只会有一个地址，否则在外部接口上会超载__（Please note that as Farai says, in the real world, your pool will usually have only one address or you will overload your outside interface）。
+
+`RouterA(config)#ip nat inside source list 1 pool 60days overload`
+
+我已经为方便而使用思科Packet Tracer，完成了上面的实验，所以你通常会碰到与我的输出所不一致的输出。下面是一个PAT实验的示例输出。从中可以看出，路由器给每个转换都加上了一个端口号。不幸的是，在NAT地址池实验中，会看到相似的编号，这是一个PAT的混淆之处。
+
+<pre>
+RouterA#show ip nat tran
+Inside global	Inside local		Outside local		Outside global
+10.0.0.1:<b>8759</b> 	172.16.1.129:<b>8759</b> 	192.168.1.2:<b>8759</b> 	192.168.1.2:<b>8759</b>
+</pre>

@@ -430,4 +430,159 @@ __实验目的__
 
 __实验步骤__
 
-1. 
+1. 将IP地址192.168.1.1 255.255.255.0加入到路由器A，并修改hostname为Router A。把IP地址192.168.1.2 255.255.255.0加入到路由器B。在正确的一侧加上时钟速度(clock rate)，然后分别自A往B和自B往A进行ping测试。如需提示，请回顾先前的那些实验。
+
+2. 需要给RouterA添加两个IP地址来模拟LAN上的主机。通过两个环回接口，可以达到这个目的。这两个IP地址将位处不同子网，但都一10地址开头。
+
+<pre>
+RouterA#conf t
+Enter configuration commands, one per line.
+End with CNTL/Z.
+RouterA(config)#interface Loopback0
+RouterA(config-if)#ip add 10.1.1.1 255.255.255.0
+RouterA(config-if)#int l1 <b>← short for Loopback1</b>
+RouterA(config-if)#ip address 10.2.2.2 255.255.255.0
+RouterA(config-if)#
+</pre> 
+
+3. 为了进行测试，需要告诉RouterB将到任何网络的任何流量，都发往RouterA。用一条静态路由完成这点。
+
+```
+RouterB#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+RouterB(config)#ip route 0.0.0.0 0.0.0.0 Serial0/1/0
+RouterB(config)#
+```
+
+4. 在RouterA上，从环回接口向RouterB发出ping操作，以此来测试该静态路由是否工作。
+
+```
+RouterA#ping
+Protocol [ip]:
+Target IP address: 192.168.1.2
+Repeat count [5]:
+Datagram size [100]:
+Timeout in seconds [2]:
+Extended commands [n]: y
+Source address or interface: 10.1.1.1
+Type of service [0]:
+Set DF bit in IP header? [no]:
+Validate reply data? [no]:
+Data pattern [0xABCD]:
+Loose, Strict, Record, Timestamp, Verbose[none]:
+Sweep range of sizes [n]:
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.2, timeout is 2 seconds:
+Packet sent with a source address of 10.1.1.1
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 31/31/32 ms
+RouterA#
+```
+
+5. 在RouterA上配置一个NAT地址池。在本实验中，使用地址池172.16.1.1到172.16.1.10。任何以10开头的地址，都将成为一个NAT。记住你__必须__指定NAT的内部和外部接口，否则NAT就不会工作。
+
+```
+RouterA#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+RouterA(config)#int l0
+RouterA(config-if)#ip nat inside
+RouterA(config)#int l1
+RouterA(config-if)#ip nat inside
+RouterA(config-if)#int Serial0/1/0
+RouterA(config-if)#ip nat outside
+RouterA(config-if)#exit
+RouterA(config)#ip nat pool 60days 172.16.1.1 172.16.1.10 netmask 255.255.255.0
+RouterA(config)#ip nat inside source list 1 pool 60days
+RouterA(config)#access-list 1 permit 10.1.1.0 0.0.0.255
+RouterA(config)#access-list 1 permit 10.2.1.0 0.0.0.255
+RouterA(config)#
+```
+
+__命令`ip nat pool`创建出地址池。需要给地址池一个自己选择的名称。而命令`netmask`告诉路由器应用到地址池上的网络掩码__。
+
+命令`source list`告诉路由器查看的ACL。该条ACL告诉路由器哪些网络将与NAT地址池进行匹配和转换。
+
+6. 打开NAT调试，如此才可以看到转换的发生。接着执行扩展ping（自L0和L1发出的），并查看NAT表。因为IOS平台的不同，你的输出可能和下面的不一样。将会看到NAT地址池中的两个地址正在用到。
+
+<pre>
+RouterA#debug ip nat
+RouterA#ping
+Protocol [ip]:
+Target IP address: 192.168.1.2
+Repeat count [5]:Datagram size [100]:
+Timeout in seconds [2]:
+Extended commands [n]: y
+Source address or interface: <b>10.1.1.1</b>
+Type of service [0]:
+Set DF bit in IP header? [no]:
+Validate reply data? [no]:
+Data pattern [0xABCD]:
+Loose, Strict, Record, Timestamp, Verbose[none]:
+Sweep range of sizes [n]:
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.2, timeout is 2 seconds:
+Packet sent with a source address of 10.1.1.1
+NAT: s=10.1.1.1->172.16.1.1, d=192.168.1.2 [26]
+!
+NAT*: s=192.168.1.2, d=172.16.1.1->10.1.1.1 [16]
+NAT: s=10.1.1.1->172.16.1.1, d=192.168.1.2 [27]
+!
+NAT*: s=192.168.1.2, d=172.16.1.1->10.1.1.1 [17]
+NAT: s=10.1.1.1->172.16.1.1, d=192.168.1.2 [28]
+!
+NAT*: s=192.168.1.2, d=172.16.1.1->10.1.1.1 [18]
+NAT: s=10.1.1.1->172.16.1.1, d=192.168.1.2 [29]
+!
+NAT*: s=192.168.1.2, d=172.16.1.1->10.1.1.1 [19]
+NAT: s=10.1.1.1->172.16.1.1, d=192.168.1.2 [30]
+!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 17/28/32 ms
+RouterA#
+NAT*: s=192.168.1.2, d=172.16.1.1->10.1.1.1 [20]
+RouterA#ping
+Protocol [ip]:
+Target IP address: 192.168.1.2
+Repeat count [5]:
+Datagram size [100]:
+Timeout in seconds [2]:
+Extended commands [n]: y
+Source address or interface: <b>10.2.2.2</b>
+Type of service [0]:
+Set DF bit in IP header? [no]:Validate reply data? [no]:
+Data pattern [0xABCD]:
+Loose, Strict, Record, Timestamp, Verbose[none]:
+Sweep range of sizes [n]:
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.2, timeout is 2 seconds:
+Packet sent with a source address of 10.2.2.2
+NAT: s=10.2.2.2->172.16.1.2, d=192.168.1.2 [31]
+!
+NAT*: s=192.168.1.2, d=172.16.1.2->10.2.2.2 [21]
+NAT: s=10.2.2.2->172.16.1.2, d=192.168.1.2 [32]
+!
+NAT*: s=192.168.1.2, d=172.16.1.2->10.2.2.2 [22]
+NAT: s=10.2.2.2->172.16.1.2, d=192.168.1.2 [33]
+!
+NAT*: s=192.168.1.2, d=172.16.1.2->10.2.2.2 [23]
+NAT: s=10.2.2.2->172.16.1.2, d=192.168.1.2 [34]
+!
+NAT*: s=192.168.1.2, d=172.16.1.2->10.2.2.2 [24]
+NAT: s=10.2.2.2->172.16.1.2, d=192.168.1.2 [35]
+!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 31/31/32 ms
+RouterA#
+NAT*: s=192.168.1.2, d=172.16.1.2->10.2.2.2 [25]
+RouterA#show ip nat trans
+Pro		Inside global	Inside local	Outside local	Outside global
+icmp	172.16.1.1:16 	10.1.1.1:16 	192.168.1.2:16 	192.168.1.2:16
+icmp	172.16.1.1:17 	10.1.1.1:17 	192.168.1.2:17 	192.168.1.2:17
+icmp	172.16.1.1:18 	10.1.1.1:18 	192.168.1.2:18 	192.168.1.2:18
+icmp	172.16.1.1:19 	10.1.1.1:19 	192.168.1.2:19 	192.168.1.2:19
+icmp	172.16.1.1:20 	10.1.1.1:20 	192.168.1.2:20 	192.168.1.2:20
+icmp	172.16.1.2:21 	10.2.2.2:21 	192.168.1.2:21 	192.168.1.2:21
+icmp	172.16.1.2:22 	10.2.2.2:22 	192.168.1.2:22 	192.168.1.2:22
+icmp	172.16.1.2:23 	10.2.2.2:23 	192.168.1.2:23 	192.168.1.2:23
+icmp 	172.16.1.2:24 	10.2.2.2:24 	192.168.1.2:24 	192.168.1.2:24
+icmp 	172.16.1.2:25 	10.2.2.2:25 	192.168.1.2:25 	192.168.1.2:25
+RouterA#
+</pre>

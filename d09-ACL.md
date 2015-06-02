@@ -11,7 +11,7 @@ __Access Control Lists__
 + 阅读ICND1记诵指南
 + 在[subnetting.org](http://www.subnetting.org)上花15分钟
 
-和子网划分及VLSM一样，访问控制清单（access control lists, ACL）对于新CCNA学员来说，也是一大难点（one of the bugbear subjects）。有关ACL的问题有，学习有关的IOS配置命令、理解ACL规则（包括隐式的“deny all”规则），以及端口号和协议类型的学习。
+和子网划分及VLSM一样，访问控制清单（access control lists, ACL）对于新CCNA学员来说，也是一大难点（one of the bugbear subjects）。有关ACL的问题包括，学习相关的IOS配置命令、理解ACL规则（包括隐式的“deny all”规则），以及掌握端口号及协议类型。
 
 与其它CCNA科目一样，应该在学习过程中一次完成一个小部分，在路由器上使用所见到的每个命令，并完成许多实验。
 
@@ -235,12 +235,12 @@ ACLs的基本规则就是保持简短且只专注于做一件事情。许多新�
 
 ###ACL规则九 -- 尽可能将ACL放在接近源的地方
 
-思科文档建议将扩展ACL尽量放在源处，而将标准ACL尽量放在目的处，因为这可以避免不必要的开销，又能放行那些合法流量。
+思科文档建议将扩展ACL尽量放在离源近的地方，而将标准ACL尽量放在离目的近的地方，因为这可以避免不必要的开销，又能放行那些合法流量。
 
 ![将ACL尽量放在离源近的地方](images/0904.png)
 __图9.4 -- 将ACL尽量放在离源近的地方__
 
->Farai 指出 -- “思科官方建议是扩展ACL尽量里源近，而标准ACL尽量离目的近”。
+>Farai 指出 -- “思科官方建议是扩展ACL尽量离源近，而标准ACL尽量离目的近”。
 
 ##反掩码
 

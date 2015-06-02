@@ -436,8 +436,7 @@ __实验步骤__
 
 <pre>
 RouterA#conf t
-Enter configuration commands, one per line.
-End with CNTL/Z.
+Enter configuration commands, one per line. End with CNTL/Z.
 RouterA(config)#interface Loopback0
 RouterA(config-if)#ip add 10.1.1.1 255.255.255.0
 RouterA(config-if)#int l1 <b>← short for Loopback1</b>
@@ -500,7 +499,7 @@ RouterA(config)#
 
 __命令`ip nat pool`创建出地址池。需要给地址池一个自己选择的名称。而命令`netmask`告诉路由器应用到地址池上的网络掩码__。
 
-命令`source list`告诉路由器查看的ACL。该条ACL告诉路由器哪些网络将与NAT地址池进行匹配和转换。
+__命令`source list`告诉路由器查看的ACL。该条ACL告诉路由器哪些网络将与NAT地址池进行匹配和转换__。
 
 6. 打开NAT调试，如此才可以看到转换的发生。接着执行扩展ping（自L0和L1发出的），并查看NAT表。因为IOS平台的不同，你的输出可能和下面的不一样。将会看到NAT地址池中的两个地址正在用到。
 

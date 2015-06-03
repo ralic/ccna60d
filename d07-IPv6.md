@@ -324,3 +324,20 @@ __表7.4 -- IPv6可聚合全球单播地址__
 <tr><td>`2002::/16`</td><td>0010 0000 0000 0000</td><td>6to4迁移前缀</td></tr>
 <tr><td>`3FFE::/16`</td><td>0010 1111 1111 1110</td><td>6bone前缀</td></tr>
 </table>
+
+>__注意：__6to4迁移地址和6bone前缀将在本课程的后面说明。
+
+在IPv6全球可聚合单播地址范围，保留了一个叫做__ORCHID__（RFC 4843中定义的覆盖可路由加密散列标识、Overlay Routable Cryptographic Hash Identifiers defined in RFC 4843）特别的实验范围。ORCHID是用于加密散列标识的不可路由IPv6地址。这些地址使用IPv6前缀`2001:10::/28`。关于ORCHID地址的细节，是超出当前CCNA考试要求范围的，本模块或本课程都不会包含。
+
+###多播地址
+
+__Multicast Addresses__
+
+IPv6中用到的多播地址，是从FF00::/8这个IPv6前缀中得到的。IPv6中的多播和IPv4中的多播，运行的方式是不一样的。IPv6中重度使用到IP多播，并替换了一些诸如地址解析协议（Address Resolution Protocol, ARP）这样的IPv4协议。此外IPv6中还用多播来完成前缀通告及重编号（prefix advertisements and renumbering）, 以及用来完成重复地址侦测（Duplicate Address Detection, DAD）等。本模块后面会对这些概念进行说明。
+
+IPv6中的多播数据包，不会使用TTL值，将其限制在本地网络网段上。代之以使用多播地址内部的范围字段（the Scope filed），定义出其范围。网络网段上的那些IPv6节点，都侦听着多播包，甚至也会发出多播包来交换信息。这样就可以让IPv6网段上的所有节点，都知道在其同一网段上所有其它邻居。下图7.8中掩饰了IPv6网络中用到的多播地址的格式。
+
+![IPv6多播分址](images/0708.png)
+__图7.8 -- IPv6多播分址__
+
+

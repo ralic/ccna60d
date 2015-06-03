@@ -242,4 +242,14 @@ __IPv6 Addresses with an Embedded IPv4 Address__
 
 __The Different IPv6 Address Types__
 
+__IPv4支持4中不同类别的地址，分别是任意播（Anycast）、广播(Broadcast)、多播(Multicast)及单播(Unicast)地址__。尽管在本教程之前的模块中并未用到任意播一词, 但请仍要记住，__任意播地址并非特殊类型的地址__。相反，__一个任意播地址简单地就是一个分配给多个接口的IP地址__。常见的使用了任意播的技术包括IP多播应用(IP Multicast implementations)，以及6to4中继应用(6to4 relay implementation)。
+
+>__注意：__6to4是一种IPv4迁移到IPv6的过渡机制。对于CCNA考试来说，只需知道有这么个东西就行了。
+
+在任意播寻址方式下，设备使用从路由协议度量值上看离它们最近的那个公共地址。假如该主要地址不可达时，就会使用下一个最近的地址（with Anycast adressing, devices use the common address that is closest to them based on routing protocol metric. The next closest address is then used in the event that the primary address is no longer reachable）。此概念在下图7.5中进行了演示。
+
+![理解任意播寻址方式](images/0705.png)
+__图7.5 -- 理解任意播寻址方式__
+
+
 

@@ -246,10 +246,34 @@ __IPv4支持4中不同类别的地址，分别是任意播（Anycast）、广播
 
 >__注意：__6to4是一种IPv4迁移到IPv6的过渡机制。对于CCNA考试来说，只需知道有这么个东西就行了。
 
-在任意播寻址方式下，设备使用从路由协议度量值上看离它们最近的那个公共地址。假如该主要地址不可达时，就会使用下一个最近的地址（with Anycast adressing, devices use the common address that is closest to them based on routing protocol metric. The next closest address is then used in the event that the primary address is no longer reachable）。此概念在下图7.5中进行了演示。
+__在任意播寻址方式下，设备使用从路由协议度量值上看离它们最近的那个公共地址__(the common address)。假如该主要地址不可达时，就会使用下一个最近的地址（with Anycast adressing, devices use the common address that is closest to them based on routing protocol metric. The next closest address is then used in the event that the primary address is no longer reachable）。此概念在下图7.5中进行了演示。
 
 ![理解任意播寻址方式](images/0705.png)
 __图7.5 -- 理解任意播寻址方式__
 
+在图7.5中，R1和R2都有一个配置了公共地址15.1.1.254/32的环回接口Loopback 254。该前缀此时会经由EIGRP进行通告。默认情况下，R1和R2都会经由它们各自的相应环回接口，优先选择15.1.1.254/32前缀，因为该前缀是一个直接连接的子网。那么，两台路由器上所使用的公共地址绝不会发生冲突。
+
+假定在普通EIGRP度量值计算下，R3和R5都会优先选择R1通告的那个任意播地址（the Anycast address）, 这是由于其有着较小的IGP度量值(due to the lower IGP metric)。同样R4和R6则会优先选择R3通告的那个任意播地址，也是由于其有着较小的IGP度量值。要是R1或R3中的某台失效，网络中的路由器就会使用由剩下的那台路由器通告的任意播地址了。某个组织在应用任意播分址时，既可以使用RFC 1918中定义的地址空间中的某个单播地址(私有地址)，也可以使用其公网地址块中的某个单播地址。
+
+>__注意：__当前的CCNA考试并不要求你采用任何的任意播分址或解决方案。但熟悉此概念是必要的。在完成路由章节的学习后，你将更为明白。
+
+在CCNA层次，IPv4的广播、多播及单播地址都无需更为详尽地阐述，本课程及本模块都不会对它们进行更为详细的说明。与IPv4支持这四种类型的地址相比，IPv6废除了广播地址，同时取而代之的仅支持以下类型的地址。
+
++ 本地链路地址，Link-Local addresses
++ 本地站点地址，Site-Local addresses
++ 可聚合全球单播地址，Aggregatable Global Unicast addresses
++ 多播地址，Multicast addresses
++ 任意播地址，Anycast addresses
++ 环回地址，Loopback addresses
++ 未指定的地址，Unspecified addresses
+
+###本地链路地址
+
+__Link-Local Addresses__
+
+__IPv6本地链路地址只能用在本地链路上__（也就是一个设备间所共享的网段），__是在某个接口上开启了IPv6时，自动分配给各接口的__。这些地址分配自本地链路前缀（the Link-Local prefix）__`FE80::/10`__。记住`FE80::/10`等价于`FE80:0:0:0:0:0:0:0/10`, 又可以表示为`FE80:0000:0000:0000:0000:0000:0000:0000/10`。为了构成该地址，从第11到64位被设置为0, 同时接口的EUI-64(Extended Unique Identifier 64，64位扩展唯一标识）给追加到本地链路地址上去，作为下一顺位的64位（the lower-order 64 bits）。__EUI-64是由IEEE分配给接口产商的24位ID，以及产商分配给其产品的40位值构成__。本模块稍后会更详细地说明EUI-64分址。图7.6演示了本地链路地址的格式。
+
+![IPv6本地链路分址](images/0706.png)
+__图7.6 -- IPv6本地链路分址__
 
 

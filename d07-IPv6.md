@@ -463,7 +463,7 @@ __表7.9 -- ICMPv6消息类型__
 
 > __注意：__ 在上述选项中，DAD和无状态自动配置会在本章的稍后进行说明。PMTUD是超出当前CCNA考试要求范围的，在本模块及本教程中不会对其进行任何细节上的说明。
 
-###IPv6邻居发现协议
+__IPv6邻居发现协议__
 
 __The IPv6 Neighbor Discovery Protocol, NDP__
 
@@ -519,5 +519,17 @@ __图7.16 -- IPv6邻居通告消息__
 
 ![IPv6邻居通告消息](images/0717.png)
 __图7.17 -- IPv6邻居通告消息__
+
+最后，路由器重定向（router redirect）使用的是消息类型为137的ICMPv6重定向消息（ICMPv6 Redirect messages），路由器重定向用于告知网络主机，网络上存在一台路由器，该路由器有着前往预计的目的主机更优路径。ICMPv6的路由器重定向与ICMPv4的工作方式一样，而ICMPv4的路由器重定向就是用来对当前IPv4网络中的流量进行重定向的。
+
+###IPv6的有状态自动配置
+
+__IPv6 Stateful Autoconfiguration__
+
+如同本模块先前指出的那样，有状态自动配置允许网络主机从某台网络服务器（比如通过DHCP）上收到其地址信息。IPv4和IPv6都支持这种方式。在IPv6网络中，使用DHCPv6来提供给IPv6主机有状态（及无状态）自动配置服务。在IPv6的部署中，当某台IPv6主机收到来自本地网络网段上的路由器的RA消息后，该主机就会检查这些数据包，以判定是否可以使用DHCPv6。RA消息通过将那些M（受管理的，Managed）或O（其它方式，Other）位设置为1的方式，提供是否可以使用DHCPv6的信息。
+
+在DHCP下，客户端设定为从DHCP服务器取得有关信息。而在DHCPv6下，客户端却不并知道从哪里得到这些信息，因为可以从SLAAC，也可以从有状态的DHCPv6, 抑或从联合了SLAAC及DHCPv6二者的方式取得。
+
+路由器通告消息中的M位，指的是管理的地址配置标志位（the Managed Address Configuration Flag bit）。在此为设置了时（也就是说该位的值为1时）， 它指示IPv6主机要取得一个由DHCPv6服务器所提供有状态的地址。而路由器通告消息中的O位，指的是其它有状态配置标志位（the Other Stateful Configuration Flag bit）。当该位设置了（也就是说该位的值为1）后，指示IPv6主机要使用DHCPv6取得更多的配置设置项，比如DNS及WINS服务器等。
 
 

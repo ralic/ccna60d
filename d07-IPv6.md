@@ -532,4 +532,6 @@ __IPv6 Stateful Autoconfiguration__
 
 路由器通告消息中的M位，指的是管理的地址配置标志位（the Managed Address Configuration Flag bit）。在此为设置了时（也就是说该位的值为1时）， 它指示IPv6主机要取得一个由DHCPv6服务器所提供有状态的地址。而路由器通告消息中的O位，指的是其它有状态配置标志位（the Other Stateful Configuration Flag bit）。当该位设置了（也就是说该位的值为1）后，指示IPv6主机要使用DHCPv6取得更多的配置设置项，比如DNS及WINS服务器等。
 
+如某台主机未曾配置了一个IPv6地址，它就可以采用三种方法之一，来获得一个IPv6地址，以及诸如DNS服务器地址等的其他网络设置。
 
++ SLAAC -- 

@@ -441,4 +441,15 @@ __表7.9 -- ICMPv6消息类型__
 <tr><td>129</td><td>Echo回应</td></tr>
 </table>
 
+> __注意：__ ICMPv4也是使用的这些消息类型。
+
+紧接着类型字段，8为的代码字段（the 8-bit Code field）提供了有关发出的消息的细节。表7.10演示了该字段的常用值，也是ICMPv4所共用的。
+
+<table>
+<tr><th>ICMPv6代码</th><th>说明</th></tr>
+<tr><td>0</td><td>Echo回应</td></tr>
+<tr><td>3</td><td>目的主机不可达</td></tr>
+<tr><td>8</td><td>Echo</td></tr>
+<tr><td>11</td><td>发生了超时</td></tr>
+</table>
 

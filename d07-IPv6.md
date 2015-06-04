@@ -340,4 +340,49 @@ IPv6中的多播数据包，不会使用TTL值，将其限制在本地网络网�
 ![IPv6多播分址](images/0708.png)
 __图7.8 -- IPv6多播分址__
 
+如同图7.8中所演示的那样，IPv6多播地址格式与其它之前学到的IPv6地址略有不同。IPv6多播地址的前8位表示多播前缀FF::/8。IPv6多播地址的标志字段（the Flag field）用于指明多播地址的类型 -- 是永久的还是临时的。
+
+__IPv6永久多播地址是由IANA分配的，而IPv6临时地址则可用多播预部署的测试__(Permanent IPv6 Multicast addresses are assigned by IANA, while temporary IPv6 Multicast addresses can be used in pre-deployment Multicast testing)。标志字段所包含的值可以是表7.6中所示的两个。
+
+__表7.6 -- IPv6永久及临时多播地址__
+
+<table>
+<tr><th>多播地址类型</th><th>二进制表示法</th><th>十六进制值</th></tr>
+<tr><td>永久</td><td>0000</td><td>0</td></tr>
+<tr><td>临时</td><td>0001</td><td>1</td></tr>
+</table>
+
+多播地址中接下来的4位表示__多播范围__。在IPv6多播分址中，该__字段是一个用于限制多播数据包发往网络其它区域的_强制_字段__（this field is a mandatory field that restricts Multicast packets from being sent to other areas in the network）。该字段只是提供了与IPv4中所用到的TTL字段一样的功能。但是，__在IPv6中，范围的类型有好几种__，下表7.7中列出了这些类型。
+
+__表7.7 -- IPv6多播地址范围的类型__
+
+<table>
+<tr><th>范围类型</th><th>二进制表示法</th><th>十六进制值</th></tr>
+<tr><td>本地接口，Interface-Local</td>0001<td></td><td>1</td></tr>
+<tr><td>本地链路，Link-Local</td><td>0010</td><td>2</td></tr>
+<tr><td>本地子网, Subnet-Local</td><td>0011</td><td>3</td></tr>
+<tr><td>本地管理域，Admin-Local</td><td>0100</td><td>4</td></tr>
+<tr><td>本地站点，Site-Local</td><td>0101</td><td>5</td></tr>
+<tr><td>组织范围，Organization</td><td>1000</td><td>8</td></tr>
+<tr><td>全球范围，Global</td><td>1110</td><td>E</td></tr>
+</table>
+
+__在IPv6多播前缀中，又保留了一些地址__。这些保留的地址称作多播指定地址（Multicast Assigned addresses）, 如下表7.8中所示。
+
+<table>
+<tr><th>地址</th><th>范围</th><th>说明</th></tr>
+<tr><td>`FF01::1`</td><td>主机</td><td>所有在本地接口范围内的主机</td></tr>
+<tr><td>`FF01::2`</td><td>主机</td><td>所有在本地接口范围内的路由器</td></tr>
+<tr><td>`FF02::1`</td><td>本地链路</td><td>所有在本地链路范围内的主机</td></tr>
+<tr><td>`FF02::2`</td><td>本地链路</td><td>所有在本地链路范围内的路由器</td></tr>
+<tr><td>`FF05::2`</td><td>站点</td><td>所有在本地站点范围内的路由器</td></tr>
+</table>
+
+除了这些地址外，在路由器接口和网络主机上配置的每个单播和任意播地址，都自动启用了一个节点询问多播地址（a Solicited-Node Multicast address）。此地址有着一个本地链路范围，就是说该地址绝不会超出本地网段之外（this address has a Link-Local scope, which means that it will never traverse farther than the local network segment）。节点询问多播地址用于以下两个目的：取代IPv4的ARP和DAD。
+
+由于IPv6不会用到ARP，那么节点询问多播地址就被网络主机和路由器用来获悉邻居设备的数据链路地址（the Data Link address）。这样就可以实现IPv6数据包的转换，以及作为帧来发往IPv6主机和路由器了。DAD是IPv6邻居发现协议（Neighbor Discovery Protocol, NDP）的一部分, 在本模块的稍后会详细说明这个协议。DAD就是设备在采用自动配置方法时，将某个IPv6地址配置为其自己的地址之前，检查该地址是否在本地网段上已被使用的方法。本质上，DAD提供与IPv4中用到的无故ARP（Gratuitous ARP）相似的功能。这些节点询问多播地址是有IPv6前缀`FF02::1:FF00:0000/104`定义出来的。它们的构成为前缀`FF02::1:FF00:0000/104`, 与单播或任意播地址低位序的24位结合而成。图7.9演示了这些节点询问多播地址的格式。
+
+![IPv6节点询问多播地址](images/0709.png)
+__图7.9 -- IPv6节点询问多播地址__
+
 

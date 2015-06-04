@@ -419,7 +419,7 @@ __IPv6 Protocols and Mechanisms__
 + IPv6的有状态自动配置机制（IPv6 stateful autoconfiguration）
 + IPv6的无状态自动配置机制（IPv6 stateless autoconfiguration）
 
-##IPv6下的ICMP
+###IPv6下的ICMP
 
 __ICMP for IPv6__
 
@@ -452,4 +452,44 @@ __表7.9 -- ICMPv6消息类型__
 <tr><td>8</td><td>Echo</td></tr>
 <tr><td>11</td><td>发生了超时</td></tr>
 </table>
+
+在代码字段后面，16位的校验和字段（the 16-bit Checksum field）包含的是一个用于检测ICMPv6中的数据错误的运算值。ICMPv6数据包的最后就是消息或数据字段（the Message or Data field）, 它是一个可选的、可变长度字段，包含了由类型及代码字段指明的消息类型特定数据。在用到消息或数据字段时，该字段提供发给目的主机的信息。__ICMPv6是IPv6的一个核心部件__。在IPv6中，ICMPv6有以下用途。
+
++ 重复地址探测，Duplicate Address Detection, DAD
++ ARP的替代，the replacement of ARP
++ IPv6无状态自动配置, IPv6 stateless autoconfiguration
++ IPv6前缀重新编号, IPv6 prefix renumbering
++ 路径MTU发现，Path MTU Discovery, PMTUD
+
+> __注意：__ 在上述选项中，DAD和无状态自动配置会在本章的稍后进行说明。PMTUD是超出当前CCNA考试要求范围的，在本模块及本教程中不会对其进行任何细节上的说明。
+
+###IPv6邻居发现协议
+
+__The IPv6 Neighbor Discovery Protocol, NDP__
+
+__IPv6邻居发现协议带来IPv6的即插即用特性__。它是在RFC 2461中定义的，是IPv6的固有部分。__NDP运行在链路层，负责发现链路上的其它节点、确定其它节点的链路层地址、发现可用的路由器，以及维护有关到其它邻居节点路径的可达性信息__。NDP实现的是IPv6的类似于IPv4的ARP（这正是其取代的功能）、ICMP路由器发现(ICMP Router Discovery)以及路由器重定向协议（Router Redirect Protocols）等的功能。尽管如此，要记住NDP提供了相较于IPv4中用到的诸多机制，都更为了不起的功能。在与ICMPv6配合使用是，NDP可以完成以下任务。
+
++ 动态邻居和路由器发现，dynamic neighbor and router discovery
++ 取代ARP，the replacement of ARP
++ IPv6无状态自动配置，IPv6 stateless autoreconfiguration
++ 路由器重定向，router redirection
++ 主机参数发现，host parameter discovery
++ IPv6地址解析，IPv6 address resolution
++ 确定下一跳路由器，next-hop router determination
++ 邻居不可达探测，Neighbor Unreachablitiy Detection, NUD
++ 重复地址探测，Duplicate Address Detection, DAD
+
+> __注意：__ 并不要求对上面列出的每个优势进行细节上的探究。
+
+邻居发现协议又定义了五种ICMPv6数据包类型，在下表7.11中有列出和说明。
+
+<table>
+<tr><th>ICMPv6类型</th><th>说明</th></tr>
+<tr><td>133</td><td>用于路由器询问消息，used for Router Solicitation(RS) messages</td></tr>
+<tr><td>134</td><td>用于路由器通告消息，used for Router Advertisement(RA) messages</td></tr>
+<tr><td>135</td><td>用于邻居询问消息，used for Neighbor Solicitation(NS) messages</td></tr>
+<tr><td>136</td><td>用于邻居通告消息，used for Neighbor Advertisement(NA) messages</td></tr>
+<tr><td>137</td><td>用于路由器重定向消息, used for Router Redirect messages</td></tr>
+</table>
+
 

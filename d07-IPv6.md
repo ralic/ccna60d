@@ -380,9 +380,14 @@ __在IPv6多播前缀中，又保留了一些地址__。这些保留的地址称
 
 除了这些地址外，在路由器接口和网络主机上配置的每个单播和任意播地址，都自动启用了一个节点询问多播地址（a Solicited-Node Multicast address）。此地址有着一个本地链路范围，就是说该地址绝不会超出本地网段之外（this address has a Link-Local scope, which means that it will never traverse farther than the local network segment）。节点询问多播地址用于以下两个目的：取代IPv4的ARP和DAD。
 
-由于IPv6不会用到ARP，那么节点询问多播地址就被网络主机和路由器用来获悉邻居设备的数据链路地址（the Data Link address）。这样就可以实现IPv6数据包的转换，以及作为帧来发往IPv6主机和路由器了。DAD是IPv6邻居发现协议（Neighbor Discovery Protocol, NDP）的一部分, 在本模块的稍后会详细说明这个协议。DAD就是设备在采用自动配置方法时，将某个IPv6地址配置为其自己的地址之前，检查该地址是否在本地网段上已被使用的方法。本质上，DAD提供与IPv4中用到的无故ARP（Gratuitous ARP）相似的功能。这些节点询问多播地址是有IPv6前缀`FF02::1:FF00:0000/104`定义出来的。它们的构成为前缀`FF02::1:FF00:0000/104`, 与单播或任意播地址低位序的24位结合而成。图7.9演示了这些节点询问多播地址的格式。
+由于IPv6不会用到ARP，那么节点询问多播地址就被网络主机和路由器用来获悉邻居设备的数据链路地址（the Data Link address）。这样就可以实现IPv6数据包的转换，以及作为帧来发往IPv6主机和路由器了。DAD是IPv6邻居发现协议（Neighbor Discovery Protocol, NDP）的一部分, 在本模块的稍后会详细说明这个协议。DAD就是设备在采用自动配置方法时，将某个IPv6地址配置为其自己的地址之前，检查该地址是否在本地网段上已被使用的方法。本质上，DAD提供与IPv4中用到的无故ARP（Gratuitous ARP）相似的功能。这些节点询问多播地址是由IPv6前缀`FF02::1:FF00:0000/104`定义出来的。它们的构成为前缀`FF02::1:FF00:0000/104`, 与单播或任意播地址低位序的24位结合而成。图7.9演示了这些节点询问多播地址的格式。
 
 ![IPv6节点询问多播地址](images/0709.png)
 __图7.9 -- IPv6节点询问多播地址__
+
+而作为与IPv4以太网多播映射的一个类似方案，IPv6提供了一个独特的方法，来将三层IPv6多播地址，映射到二层多播地址。IPv6中的多播映射是通过在某多播地址的后32位加上一个16位前缀`33:33`，这个前缀就是IPv6网络中定义的多播以太网前缀（the defined Multicast Ethernet prefix for IPv6 Networks）。其在下图7.10中，演示了所有位于本地接口范围前缀`FF02::2`上的路由器的以太网映射多播地址。
+
+![IPv6多播地址](images/0710.png)
+__图7.2 -- IPv6多播地址__
 
 

@@ -400,5 +400,45 @@ __Anycast Addresses__
 
 __Loopback Address__
 
+IPv6中的环回地址，用法和IPv4中的一样。与IPv4中用到的环回地址`127.0.0.1`相比，每台设备也都有一个IPv6环回地址，且该地址有设备自身使用。IPv6环回地址用的是前缀`::1`, 用首选地址格式表示为`0000:0000:0000:0000:0000:0000:0000:0001`。也就是说，在环回地址中，除了最后一位总是1外，其它所有位都设置为0。当设备开启IPv6时，总是会自动分配上这些地址，且这些地址绝不会发生变化。
+
+###未指定地址
+
+__Unspecified Addresses__
+
+在IPv6分址里，未指定地址就是那些没有指派带任何接口上的单播地址。这些地址表明设备缺少一个IPv6地址，同时这些地址还用于某些诸如IPv6 DHCP和DAD等的用途。未指定地址是以IPv6地址中的全0值表示的，可以使用前缀`::`进行书写。在首选格式下，这些地址表示为`0000:0000:0000:0000:0000:0000:0000:0000`。
+
+##一些IPv6的协议和机制
+
+__IPv6 Protocols and Mechanisms__
+
+尽管互联网协议版本6与版本4是相似的，但在具体运作上，前者与后者相比仍然有着显著的不同。本节对以下的一些IPv6协议和机制进行了说明。
+
++ IPv6的ICMP
++ IPv6邻居发现协议（the IPv6 Neighbor Discovery Protocol, NDP）
++ IPv6的有状态自动配置机制（IPv6 stateful autoconfiguration）
++ IPv6的无状态自动配置机制（IPv6 stateless autoconfiguration）
+
+##IPv6下的ICMP
+
+__ICMP for IPv6__
+
+ICMP用于将有关发往预期目的主机的IP数据的错误和其他信息，汇报给源主机。在RFC 2463中，作为58号协议定义的ICMPv6，支持ICMPv4的各种消息，还包含了ICMPv6的一些额外消息。__ICMPv6作为一个如同TCP一样的，较高级别的协议，意味着ICMPv6在IPv6数据包中，是放在所有尽可能的扩展头部之后的__。下图7.11演示了ICMPv6数据包中所包含的字段。
+
+![ICMPv6数据包头部](images/0711.png)
+__图7.11 -- ICMPv6数据包头部__
+
+在ICMPv6数据包头部，其8位类型字段（the 8-bit Type field）用于表明或区分ICMPv6消息的类型。该字段用于提供错误消息和信息性消息。表7.9列出并说明了一些可在此字段发现的常见值。
+
+__表7.9 -- ICMPv6消息类型__
+
+<table>
+<tr><th>ICMPv6 类型</th><th>说明</th></tr>
+<tr><td>1</td><td>目的主机不可达</td></tr>
+<tr><td>2</td><td>数据包太大</td></tr>
+<tr><td>3</td><td>发生了超时</td></tr>
+<tr><td>128</td><td>Echo请求</td></tr>
+<tr><td>129</td><td>Echo回应</td></tr>
+</table>
 
 

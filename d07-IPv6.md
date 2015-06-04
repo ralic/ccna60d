@@ -534,4 +534,37 @@ __IPv6 Stateful Autoconfiguration__
 
 如某台主机未曾配置了一个IPv6地址，它就可以采用三种方法之一，来获得一个IPv6地址，以及诸如DNS服务器地址等的其他网络设置。
 
-+ SLAAC -- 
++ SLAAC -- 无状态自动配置（Stateless Autoconfiguration） 。M和O位设置为0, 也就是没有DHCPv6信息。主机从一条RA收到所有必要信息。
++ 有状态DHCPv6 -- M标志位设置为1, 告诉主机使用DHCPv6取得所有地址和网络信息。
++ 无状态DHCPv6 -- M标志位设置为0, O标志位设置为1, 意味着主机将采用SLAAC来得到地址（从一条RA），而同时从DNS服务器处取得其它信息。
+
+尽管无状态自动配置能力是IPv6的一项优势，有状态自动配置仍然有着许多好处，包括以下这些。
+
++ 相较无状态自动配置所提供的那些项目，有状态自动配置有着更大的控制权
++ 在无状态自动配置可用的网络上，同样可以使用有状态自动配置
++ 在缺少路由器的情形下，仍然可以为网络主机提供分址
++ 通过分配新的前缀给主机，而用来对网络重新编号
++ 可用于将全部子网发布给用户侧设备（can be used to issue entire subnets to customer premise equipment）
+
+###IPv6无状态自动配置
+
+__IPv6 Stateless Autoconfiguration__
+
+IPv6容许设备为自己配置一个IP地址，以便进行主机到主机的通信。有状态自动配置需要一台服务器来分配地址信息，对于IPv6来说，就要用到DHCPv6。有状态就是说，信息交换的细节在服务器（或路由器）上是有所保存的，那么无状态就说的是没有服务器来保存这些细节了。DHCPv6既可以是有状态的，也可以是无状态的。
+
+在IPv6中，无状态自动配置允许主机，依据自本地网络网段上的路由器发出的前缀通告，来自己配置它们的单播IPv6地址。所需的其它信息（比如DNS服务器的地址等）可从DHCPv6服务器获取。IPv6中无状态自动配置所允许的三种机制，如下所示。
+
++ 前缀通告，prefix advertisement
++ 重复地址检测，DAD
++ 前缀重编号，prefix renumbering
+
+IPv6地址前缀通告用到了ICMPv6路由器通告消息，而ICMPv6 RA是发往链路上的所有主机（all-hosts-on-the-local-link）IPv6多播地址`FF02::1`的ICMPv6数据包。根据IPv6的设计，仅有路由器才被允许在本地链路上通告前缀。在采行了无状态自动配置后，就务必要记住，所用到的前缀长度必须要是64位（比如`2001:1a2b::/64`）。
+
+在前缀配置之后，IPv6无状态自动配置用到的RA消息还包含了以下信息。
+
++ IPv6前缀，the IPv6 prefix
++ 生命期，the lifetime
++ 默认路由器信息，default router information
++ 标志和/或选项字段，Flags and/or Options fields
+
+

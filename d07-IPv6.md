@@ -325,7 +325,7 @@ __表7.4 -- IPv6可聚合全球单播地址__
 <tr><td>`3FFE::/16`</td><td>0010 1111 1111 1110</td><td>6bone前缀</td></tr>
 </table>
 
->__注意：__6to4迁移地址和6bone前缀将在本课程的后面说明。
+>__注意：__6to4迁移地址和6bone前缀将在本课程的后面说明__。
 
 在IPv6全球可聚合单播地址范围，保留了一个叫做__ORCHID__（RFC 4843中定义的覆盖可路由加密散列标识、Overlay Routable Cryptographic Hash Identifiers defined in RFC 4843）特别的实验范围。ORCHID是用于加密散列标识的不可路由IPv6地址。这些地址使用IPv6前缀`2001:10::/28`。关于ORCHID地址的细节，是超出当前CCNA考试要求范围的，本模块或本课程都不会包含。
 

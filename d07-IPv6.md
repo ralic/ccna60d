@@ -567,4 +567,50 @@ IPv6地址前缀通告用到了ICMPv6路由器通告消息，而ICMPv6 RA是发�
 + 默认路由器信息，default router information
 + 标志和/或选项字段，Flags and/or Options fields
 
+就像刚才指出的那样，__IPv6前缀必须是64位__。此外，__在本地网段上还可以通告多个的IPv6前缀__。在该网络网段上的主机收到IPv6前缀后，就将它们的MAC地址以EUI-64格式，追加到前缀后面，这在本模块的先前部分已有说明，从而自动地配置上他们的IPv6单播地址。这样就为该网段上的每台主机，都提供了一个唯一的128位IPv6地址。
+
+而每个通告的前缀的生命期数值，同样提供给了这些节点，而该字段可以是从0到无穷的值。在节点收到前缀后，就对生命期值进行检查，从而在生命期数值到0时停用该前缀。此外，如收到某个特定前缀的生命期值为无穷，网络主机就绝不会停用那个前缀。又每个通告的前缀带有两个生命期值：有效的生命期值及首选的生命期值。
+
+有效的生命期值用于确定出该主机地址将保持多长时间的有效期。在该值超时后（也就是说到值为0时），此主机地址就成为无效的了。而首选生命期值则是用于确定经由无状态自动配置的某个地址将保持多长时间的有效期。此值必须小于或等于在有效生命期中指定的值，同时该值通常用于前缀的重编号。
+
+默认路由器提供了它自己的IPv6地址的存在情况和生命期。默认情况下，用于默认路由器的那个地址是本地链路地址（`FE80::/10`）。这样做就可以在全球单播地址发生改变时，也不会像在IPv4中那样，在某个网络被重新编号时，导致网络服务中断。
+
+最后，一些标志和选项字段可被用作指示网络主机采行无状态自动配置或有状态自动配置。这些字段在图7.13中的RA线路捕获中有包含。
+
+重复地址探测（DAD）是一种用在无状态自动配置中的，在某个网络网段上的主机启动时，用到的NDP机制。DAD要求某台网络主机在启动期间永久地配置它自己的IPv6地址之前，先要确保没有别的网络主机已经使用了它打算使用的那个地址。
+
+DAD通过使用邻居询问（135类型的ICMPv6）及节点询问多播地址（Solicited-Node Multicast addresses）来完成这个验证。主机使用一个未指明IPv6地址（an unspecified IPv6 address, 也就是地址`::`）作为消息数据包的源地址，并将其打算使用的那个IPv6单播地址作为目的地址，在本地网段上发送一个邻居询问ICMPv6消息数据包。如有其它主机使用着该同样地址，那么该主机就不会自动将此地址配置为自己的地址；而如没有其他设备使用这个地址，则该主机就自动配置并开始使用这个IPv6地址了。
+
+最后，前缀重编号（prefix renumbering）允许在IPv6中，当网络从一个前缀变为另一个时，进行前缀的透明重编号。与IPv4中同样的全球IP地址可由多个服务提供商进行通告不同，IPv6地址空间的严格聚合阻止了服务提供商对不属于其组织的前缀进行通告（Unlike in IPv4, where the same global IP address can be advertised by multiple providers, the strict aggregation of the IPv6 address space prevents providers from advertising prefixes that do not belong to their organization）。
+
+在网络发生从一家IPv6服务提供商迁移至另一家时，IPv6前缀重编号机制，就提供了一种自一个前缀往另一前缀平滑和透明的过渡。前缀重编号使用与在前缀通告中同样的ICMPv6消息和多播地址。而前缀重编号可经由运用RA消息中包含的时间参数完成。
+
+在思科IOS软件中，路由器可配置通告带有被减少到接近0的有效和首选生命期的当前前缀，这就令到这些前缀能够更快地成为无效前缀。此时再将这些路由器配置为在本地网段上通告心的前缀。这样做会允许旧的前缀和新的前缀在同样的网段上并存。
+
+在过渡时期，本地网段上的主机用着两个单播地址：一个来自旧的前缀，一个来自新的前缀。那些使用旧前缀的当前连接仍被处理着；但所有自主机发出的新的连接，都是使用新的前缀的。在旧前缀超时后，就只使用新的前缀了。
+
+###配置无状态DHCPv6
+
+__Configuring Stateless DHCPv6__
+
+为在某台路由器上配置无状态的DHCPv6, 需要完成一些简单的步骤。
+
++ 创建地址池名称和其它参数, create the pool name and other parameters
++ 在某个借口上开启它, enable it on an interface
++ 修改RA设置，modify Router Advertisement settings
+
+一个身份关联是分配给客户端的地址集合（an Identity Association is a collection of addresses assigned to the client）。使用到DHCPv6的每个借口都必须要有至少一个的身份关联（IA）。这里不会有CCNA考试的配置示例。
+
+###在思科IOS软件中开启IPv6路由
+
+现在，你就对IPv6基础知识有了扎实的掌握，本模块剩下的部分将会专注于思科IOS软件中IPv6的配置了。默认下，思科IOS软件中的IPv6路由功能是关闭的。那么就必须通过使用`ipv6 unicast-routing`这个全局配置命令来开启IPv6路由功能。
+
+在全局开启IPv6路由之后，接口配置命令`ipv6 address [ipv6-address/prefix-length | prefix-name sub-bits/prefix-length | anycast | autoconfig <default> | dhcp | eui-64 | link-local]`就可以用于配置接口的IPv6分址了。关键字`[ipv6-address/prefix-length]`用于指定分配给该接口的IPv6前缀和前缀长度。下面的配置演示了如何为一个路由器接口配置子网`3FFF:1234:ABCD:5678::/64`上的第一个地址。
+
+```
+R1(config)#ipv6 unicast-routing
+R1(config)#interface FastEthernet0/0
+R1(config-if)#ipv6 address 3FFF:1234:ABCD:5678::/64
+R1(config-if)#exit
+```
 

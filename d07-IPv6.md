@@ -359,13 +359,13 @@ __表7.7 -- IPv6多播地址范围的类型__
 
 <table>
 <tr><th>范围类型</th><th>二进制表示法</th><th>十六进制值</th></tr>
-<tr><td>本地接口，Interface-Local</td><pre>0001</pre><td></td><td>1</td></tr>
-<tr><td>本地链路，Link-Local</td><td><pre>0010</pre></td><td>2</td></tr>
-<tr><td>本地子网, Subnet-Local</td><td><pre>0011</pre></td><td>3</td></tr>
-<tr><td>本地管理域范围，Admin-Local</td><td><pre>0100</pre></td><td>4</td></tr>
-<tr><td>本地站点范围，Site-Local</td><td><pre>0101</pre></td><td>5</td></tr>
-<tr><td>组织范围，Organization</td><td><pre>1000</pre></td><td>8</td></tr>
-<tr><td>全球范围，Global</td><td><pre>1110</pre></td><td>E</td></tr>
+<tr><td><pre>本地接口，Interface-Local</pre></td><td><pre>0001</pre></td><td>1</td></tr>
+<tr><td><pre>本地链路，Link-Local</pre></td><td><pre>0010</pre></td><td>2</td></tr>
+<tr><td><pre>本地子网, Subnet-Local</pre></td><td><pre>0011</pre></td><td>3</td></tr>
+<tr><td><pre>本地管理域范围，Admin-Local</pre></td><td><pre>0100</pre></td><td>4</td></tr>
+<tr><td><pre>本地站点范围，Site-Local</pre></td><td><pre>0101</pre></td><td>5</td></tr>
+<tr><td><pre>组织范围，Organization</pre></td><td><pre>1000</pre></td><td>8</td></tr>
+<tr><td><pre>全球范围，Global</pre></td><td><pre>1110</pre></td><td>E</td></tr>
 </table>
 
 __在这些IPv6多播前缀中，又保留了一些地址__。这些保留的地址称作多播指定地址（Multicast Assigned addresses）, 如下表7.8中所示。

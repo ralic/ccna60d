@@ -312,8 +312,8 @@ __表7.4 -- IPv6可聚合全球单播地址__
 
 <table>
 <tr><th>说明</th><th>地址</th><tr>
-<tr><td>范围中的第一个地址</td><td>`2000:0000:0000:0000:0000:0000:0000:0000`</td></tr>
-<tr><td>范围中的最后一个地址</td><td>`3FFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF`</td></tr>
+<tr><td>范围中的第一个地址</td><td><pre>2000:0000:0000:0000:0000:0000:0000:0000</pre></td></tr>
+<tr><td>范围中的最后一个地址</td><td><pre>3FFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF</pre></td></tr>
 <tr><td>二进制标记</td><td>高位序的三位被设置为001</td></tr>
 </table>
 
@@ -321,9 +321,9 @@ __表7.4 -- IPv6可聚合全球单播地址__
 
 <table>
 <tr><th>IPv6全球前缀</th><th>二进制表示法</th><th>说明</th></tr>
-<tr><td>`2001::/16`</td><td>0010 0000 0000 0001</td><td>全球IPv6互联网(单播)</td></tr>
-<tr><td>`2002::/16`</td><td>0010 0000 0000 0000</td><td>6to4迁移前缀</td></tr>
-<tr><td>`3FFE::/16`</td><td>0010 1111 1111 1110</td><td>6bone前缀</td></tr>
+<tr><td><pre>2001::/16</pre></td><td><pre>0010 0000 0000 0001</pre></td><td>全球IPv6互联网(单播)</td></tr>
+<tr><td><pre>2002::/16</pre></td><td><pre>0010 0000 0000 0000</pre></td><td>6to4迁移前缀</td></tr>
+<tr><td><pre>3FFE::/16</pre></td><td><pre>0010 1111 1111 1110</pre></td><td>6bone前缀</td></tr>
 </table>
 
 >__注意：__ 6to4迁移地址和6bone前缀将在本课程的后面说明。
@@ -349,8 +349,8 @@ __表7.6 -- IPv6永久及临时多播地址__
 
 <table>
 <tr><th>多播地址类型</th><th>二进制表示法</th><th>十六进制值</th></tr>
-<tr><td>永久</td><td>0000</td><td>0</td></tr>
-<tr><td>临时</td><td>0001</td><td>1</td></tr>
+<tr><td>永久</td><td><pre>0000</pre></td><td>0</td></tr>
+<tr><td>临时</td><td><pre>0001</pre></td><td>1</td></tr>
 </table>
 
 多播地址中接下来的4位表示__多播范围__。在IPv6多播分址中，该__字段是一个用于限制多播数据包发往网络其它区域的_强制_字段__（this field is a mandatory field that restricts Multicast packets from being sent to other areas in the network）。该字段只是提供了与IPv4中所用到的TTL字段一样的功能。但是，__在IPv6中，范围的类型有好几种__，下表7.7中列出了这些类型。
@@ -359,24 +359,24 @@ __表7.7 -- IPv6多播地址范围的类型__
 
 <table>
 <tr><th>范围类型</th><th>二进制表示法</th><th>十六进制值</th></tr>
-<tr><td>本地接口，Interface-Local</td>0001<td></td><td>1</td></tr>
-<tr><td>本地链路，Link-Local</td><td>0010</td><td>2</td></tr>
-<tr><td>本地子网, Subnet-Local</td><td>0011</td><td>3</td></tr>
-<tr><td>本地管理域，Admin-Local</td><td>0100</td><td>4</td></tr>
-<tr><td>本地站点，Site-Local</td><td>0101</td><td>5</td></tr>
-<tr><td>组织范围，Organization</td><td>1000</td><td>8</td></tr>
-<tr><td>全球范围，Global</td><td>1110</td><td>E</td></tr>
+<tr><td>本地接口，Interface-Local</td><pre>0001</pre><td></td><td>1</td></tr>
+<tr><td>本地链路，Link-Local</td><td><pre>0010</pre></td><td>2</td></tr>
+<tr><td>本地子网, Subnet-Local</td><td><pre>0011</pre></td><td>3</td></tr>
+<tr><td>本地管理域，Admin-Local</td><td><pre>0100</pre></td><td>4</td></tr>
+<tr><td>本地站点，Site-Local</td><td><pre>0101</pre></td><td>5</td></tr>
+<tr><td>组织范围，Organization</td><td><pre>1000</pre></td><td>8</td></tr>
+<tr><td>全球范围，Global</td><td><pre>1110</pre></td><td>E</td></tr>
 </table>
 
 __在IPv6多播前缀中，又保留了一些地址__。这些保留的地址称作多播指定地址（Multicast Assigned addresses）, 如下表7.8中所示。
 
 <table>
 <tr><th>地址</th><th>范围</th><th>说明</th></tr>
-<tr><td>`FF01::1`</td><td>主机</td><td>所有在本地接口范围内的主机</td></tr>
-<tr><td>`FF01::2`</td><td>主机</td><td>所有在本地接口范围内的路由器</td></tr>
-<tr><td>`FF02::1`</td><td>本地链路</td><td>所有在本地链路范围内的主机</td></tr>
-<tr><td>`FF02::2`</td><td>本地链路</td><td>所有在本地链路范围内的路由器</td></tr>
-<tr><td>`FF05::2`</td><td>站点</td><td>所有在本地站点范围内的路由器</td></tr>
+<tr><td><pre>FF01::1</pre></td><td>主机</td><td>所有在本地接口范围内的主机</td></tr>
+<tr><td><pre>FF01::2</pre></td><td>主机</td><td>所有在本地接口范围内的路由器</td></tr>
+<tr><td><pre>FF02::1</pre></td><td>本地链路</td><td>所有在本地链路范围内的主机</td></tr>
+<tr><td><pre>FF02::2</pre></td><td>本地链路</td><td>所有在本地链路范围内的路由器</td></tr>
+<tr><td><pre>FF05::2</pre></td><td>站点</td><td>所有在本地站点范围内的路由器</td></tr>
 </table>
 
 除了这些地址外，在路由器接口和网络主机上配置的每个单播和任意播地址，都自动启用了一个节点询问多播地址（a Solicited-Node Multicast address）。此地址有着一个本地链路范围，就是说该地址绝不会超出本地网段之外（this address has a Link-Local scope, which means that it will never traverse farther than the local network segment）。节点询问多播地址用于以下两个目的：取代IPv4的ARP和DAD。

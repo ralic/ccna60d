@@ -470,7 +470,7 @@ __IPv6邻居发现协议__
 
 __The IPv6 Neighbor Discovery Protocol, NDP__
 
-__IPv6邻居发现协议带来IPv6的即插即用特性__。它是在RFC 2461中定义的，是IPv6的固有部分。__NDP运行在链路层，负责发现链路上的其它节点、确定其它节点的链路层地址、发现可用的路由器，以及维护有关到其它邻居节点路径的可达性信息__。NDP实现的是IPv6的类似于IPv4的ARP（这正是其取代的功能）、ICMP路由器发现(ICMP Router Discovery)以及路由器重定向协议（Router Redirect Protocols）等的功能。尽管如此，要记住NDP提供了相较于IPv4中用到的诸多机制，都更为了不起的功能。在与ICMPv6配合使用是，NDP可以完成以下任务。
+__IPv6邻居发现协议带来IPv6的即插即用特性__。它是在RFC 2461中定义的，是IPv6的一个必不可少的组成部分。__NDP运行在链路层__，负责__发现链路上的其它节点__、__确定其它节点的链路层地址__、__发现可用的路由器__，以及__维护有关到其它邻居节点路径的可达性信息__。NDP实现了IPv6的__类似于IPv4的ARP__（这正是其取代的功能）、__ICMP路由器发现__(ICMP Router Discovery)以及__路由器重定向协议（Router Redirect Protocols）等__功能。尽管如此，要记住NDP提供了比起IPv4中用到诸多机制，都更为了不起的功能。在与ICMPv6配合使用时，NDP可以完成以下任务。
 
 + 动态邻居和路由器发现，dynamic neighbor and router discovery
 + 取代ARP，the replacement of ARP

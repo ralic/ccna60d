@@ -334,16 +334,16 @@ __表7.4 -- IPv6可聚合全球单播地址__
 
 __Multicast Addresses__
 
-IPv6中用到的多播地址，是从FF00::/8这个IPv6前缀中得到的。IPv6中的多播和IPv4中的多播，运行的方式是不一样的。IPv6中重度使用到IP多播，并替换了一些诸如地址解析协议（Address Resolution Protocol, ARP）这样的IPv4协议。此外IPv6中还用多播来完成前缀通告及重编号（prefix advertisements and renumbering）, 以及用来完成重复地址侦测（Duplicate Address Detection, DAD）等。本模块后面会对这些概念进行说明。
+IPv6中用到的多播地址，是从`FF00::/8`这个IPv6前缀中得到的。IPv6中的多播和IPv4中的多播，运行的方式是不一样的。IPv6中重度使用到IP多播，并替换了一些诸如地址解析协议（Address Resolution Protocol, ARP）这样的IPv4协议。此外IPv6中还用多播来完成前缀通告及其重编号（prefix advertisements and renumbering）, 以及用来完成重复地址侦测（Duplicate Address Detection, DAD）等。本模块后面会对这些概念进行说明。
 
-IPv6中的多播数据包，不会使用TTL值，将其限制在本地网络网段上。代之以使用多播地址内部的范围字段（the Scope filed），定义出其范围。网络网段上的那些IPv6节点，都侦听着多播包，甚至也会发出多播包来交换信息。这样就可以让IPv6网段上的所有节点，都知道在其同一网段上所有其它邻居。下图7.8中掩饰了IPv6网络中用到的多播地址的格式。
+IPv6中的多播数据包，不是通过使用TTL值来将其限制在本地网段上。代之以使用多播地址内部的范围字段（the Scope filed），定义出其范围。网段上的IPv6节点，都侦听着多播包，甚至也会发出多播包来交换信息。这样就可以让IPv6网段上的所有节点，都知道在其同一网段上所有其它邻居。下图7.8中演示了IPv6网络中用到的多播地址的格式。
 
 ![IPv6多播分址](images/0708.png)
 __图7.8 -- IPv6多播分址__
 
 如同图7.8中所演示的那样，IPv6多播地址格式与其它之前学到的IPv6地址略有不同。IPv6多播地址的前8位表示多播前缀FF::/8。IPv6多播地址的标志字段（the Flag field）用于指明多播地址的类型 -- 是永久的还是临时的。
 
-__IPv6永久多播地址是由IANA分配的，而IPv6临时地址则可用多播预部署的测试__(Permanent IPv6 Multicast addresses are assigned by IANA, while temporary IPv6 Multicast addresses can be used in pre-deployment Multicast testing)。标志字段所包含的值可以是表7.6中所示的两个。
+__IPv6永久多播地址是由IANA分配的，而IPv6临时地址则可用于多播预部署的测试__(Permanent IPv6 Multicast addresses are assigned by IANA, while temporary IPv6 Multicast addresses can be used in pre-deployment Multicast testing)。标志字段所包含的值可以是表7.6中所示的两个。
 
 __表7.6 -- IPv6永久及临时多播地址__
 

@@ -348,7 +348,7 @@ __IPv6永久多播地址是由IANA分配的，而IPv6临时地址则可用于多
 __表7.6 -- IPv6永久及临时多播地址__
 
 <table>
-<tr><th>多播地址类型</th><th>二进制表示法</th><th>十六进制值</th></tr>
+<tr><th><pre>多播地址类型</pre></th><th><pre>二进制表示法</pre></th><th><pre>十六进制值</pre></th></tr>
 <tr><td>永久</td><td><pre>0000</pre></td><td>0</td></tr>
 <tr><td>临时</td><td><pre>0001</pre></td><td>1</td></tr>
 </table>
@@ -358,7 +358,7 @@ __表7.6 -- IPv6永久及临时多播地址__
 __表7.7 -- IPv6多播地址范围的类型__
 
 <table>
-<tr><th>范围类型</th><th>二进制表示法</th><th>十六进制值</th></tr>
+<tr><th><pre>范围类型</pre></th><th><pre>二进制表示法</pre></th><th><pre>十六进制值</pre></th></tr>
 <tr><td><pre>本地接口，Interface-Local</pre></td><td><pre>0001</pre></td><td>1</td></tr>
 <tr><td><pre>本地链路，Link-Local</pre></td><td><pre>0010</pre></td><td>2</td></tr>
 <tr><td><pre>本地子网, Subnet-Local</pre></td><td><pre>0011</pre></td><td>3</td></tr>

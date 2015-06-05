@@ -454,7 +454,9 @@ __表7.9 -- ICMPv6消息类型__
 <tr><td>11</td><td>发生了超时</td></tr>
 </table>
 
-在代码字段后面，16位的校验和字段（the 16-bit Checksum field）包含的是一个用于检测ICMPv6中的数据错误的运算值。ICMPv6数据包的最后就是消息或数据二选一的字段（the Message or Data field is an optional）, 它是一个可变长度字段，包含了由类型及代码字段指明的消息类型特定数据。在用到消息或数据字段时，该字段提供发给目的主机的信息。__ICMPv6是IPv6的一个核心部件__。在IPv6中，ICMPv6有以下用途。
+在代码字段后面，16位的校验和字段（the 16-bit Checksum field）包含的是一个用于检测ICMPv6中的数据错误的运算值。ICMPv6数据包的最后就是消息或数据二选一的字段（the Message or Data field is an optional）, 它是一个可变长度字段，包含了由类型及代码字段指明的消息类型特定数据。在用到消息或数据字段时，该字段提供发给目的主机的信息。
+
+__ICMPv6是IPv6的一个核心部件__。在IPv6中，ICMPv6有以下用途。
 
 + 重复地址探测，Duplicate Address Detection, DAD
 + ARP的替代，the replacement of ARP
@@ -462,7 +464,7 @@ __表7.9 -- ICMPv6消息类型__
 + IPv6前缀重新编号, IPv6 prefix renumbering
 + 路径MTU发现，Path MTU Discovery, PMTUD
 
-> __注意：__ 在上述选项中，DAD和无状态自动配置会在本章的稍后进行说明。PMTUD是超出当前CCNA考试要求范围的，在本模块及本教程中不会对其进行任何细节上的说明。
+> __注意：__ 在上述用途中，DAD和无状态自动配置会在本章的稍后进行说明。PMTUD是超出当前CCNA考试要求范围的，在本模块及本教程中不会对其进行任何细节上的说明。
 
 __IPv6邻居发现协议__
 

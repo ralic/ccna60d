@@ -353,7 +353,7 @@ __表7.6 -- IPv6永久及临时多播地址__
 <tr><td>临时</td><td><pre>0001</pre></td><td>1</td></tr>
 </table>
 
-多播地址中接下来的4位表示__多播范围__。在IPv6多播分址中，该__字段是一个用于限制多播数据包发往网络其它区域的_强制_字段__（this field is a mandatory field that restricts Multicast packets from being sent to other areas in the network）。该字段只是提供了与IPv4中所用到的TTL字段一样的功能。但是，__在IPv6中，范围的类型有好几种__，下表7.7中列出了这些类型。
+多播地址中接下来的4位表示__多播范围__。在IPv6多播分址中，该__字段是一个用于限制多播数据包发往网络其它区域的_强制_字段__（this field is a mandatory field that restricts Multicast packets from being sent to other areas in the network）。该字段本质上提供了与IPv4中所用到的TTL字段一样的功能。但是，__在IPv6中，范围的类型有好几种__，下表7.7中列出了这些类型。
 
 __表7.7 -- IPv6多播地址范围的类型__
 
@@ -362,13 +362,13 @@ __表7.7 -- IPv6多播地址范围的类型__
 <tr><td>本地接口，Interface-Local</td><pre>0001</pre><td></td><td>1</td></tr>
 <tr><td>本地链路，Link-Local</td><td><pre>0010</pre></td><td>2</td></tr>
 <tr><td>本地子网, Subnet-Local</td><td><pre>0011</pre></td><td>3</td></tr>
-<tr><td>本地管理域，Admin-Local</td><td><pre>0100</pre></td><td>4</td></tr>
-<tr><td>本地站点，Site-Local</td><td><pre>0101</pre></td><td>5</td></tr>
+<tr><td>本地管理域范围，Admin-Local</td><td><pre>0100</pre></td><td>4</td></tr>
+<tr><td>本地站点范围，Site-Local</td><td><pre>0101</pre></td><td>5</td></tr>
 <tr><td>组织范围，Organization</td><td><pre>1000</pre></td><td>8</td></tr>
 <tr><td>全球范围，Global</td><td><pre>1110</pre></td><td>E</td></tr>
 </table>
 
-__在IPv6多播前缀中，又保留了一些地址__。这些保留的地址称作多播指定地址（Multicast Assigned addresses）, 如下表7.8中所示。
+__在这些IPv6多播前缀中，又保留了一些地址__。这些保留的地址称作多播指定地址（Multicast Assigned addresses）, 如下表7.8中所示。
 
 <table>
 <tr><th>地址</th><th>范围</th><th>说明</th></tr>
@@ -381,7 +381,7 @@ __在IPv6多播前缀中，又保留了一些地址__。这些保留的地址称
 
 除了这些地址外，在路由器接口和网络主机上配置的每个单播和任意播地址，都自动启用了一个节点询问多播地址（a Solicited-Node Multicast address）。此地址有着一个本地链路范围，就是说该地址绝不会超出本地网段之外（this address has a Link-Local scope, which means that it will never traverse farther than the local network segment）。节点询问多播地址用于以下两个目的：取代IPv4的ARP和DAD。
 
-由于IPv6不会用到ARP，那么节点询问多播地址就被网络主机和路由器用来获悉邻居设备的数据链路地址（the Data Link address）。这样就可以实现IPv6数据包的转换，以及作为帧来发往IPv6主机和路由器了。DAD是IPv6邻居发现协议（Neighbor Discovery Protocol, NDP）的一部分, 在本模块的稍后会详细说明这个协议。DAD就是设备在采用自动配置方法时，将某个IPv6地址配置为其自己的地址之前，检查该地址是否在本地网段上已被使用的方法。本质上，DAD提供与IPv4中用到的无故ARP（Gratuitous ARP）相似的功能。这些节点询问多播地址是由IPv6前缀`FF02::1:FF00:0000/104`定义出来的。它们的构成为前缀`FF02::1:FF00:0000/104`, 与单播或任意播地址低位序的24位结合而成。图7.9演示了这些节点询问多播地址的格式。
+由于IPv6不会用到ARP，那么节点询问多播地址就被网络主机和路由器用来获悉邻居设备的数据链路地址（the Data Link address）。这样就可以实现IPv6数据包向帧的转换，并将帧发往IPv6主机和路由器了。DAD是IPv6邻居发现协议（Neighbor Discovery Protocol, NDP）的一部分, 在本模块的稍后会详细说明这个协议。DAD就是在设备在采用自动配置方法时，将某个IPv6地址配置为其自己的地址之前，检查该地址是否在本地网段上已被使用的方法。本质上，DAD提供与IPv4中用到的无故ARP（Gratuitous ARP）相似的功能。这些__节点询问多播地址__, 是由IPv6前缀`FF02::1:FF00:0000/104`定义出来的。它们的构成为前缀`FF02::1:FF00:0000/104`, 与单播或任意播地址低位序的24位结合而成。图7.9演示了这些节点询问多播地址的格式。
 
 ![IPv6节点询问多播地址](images/0709.png)
 __图7.9 -- IPv6节点询问多播地址__
@@ -389,13 +389,13 @@ __图7.9 -- IPv6节点询问多播地址__
 而作为与IPv4以太网多播映射的一个类似方案，IPv6提供了一个独特的方法，来将三层IPv6多播地址，映射到二层多播地址。IPv6中的多播映射是通过在某多播地址的后32位加上一个16位前缀`33:33`，这个前缀就是IPv6网络中定义的多播以太网前缀（the defined Multicast Ethernet prefix for IPv6 Networks）。其在下图7.10中，演示了所有位于本地接口范围前缀`FF02::2`上的路由器的以太网映射多播地址。
 
 ![IPv6多播地址](images/0710.png)
-__图7.2 -- IPv6多播地址__
+__图7.10 -- IPv6多播地址__
 
 ###任意播地址
 
 __Anycast Addresses__
 
-本章节的早前引入了任意播，其可被简单地说成是一对最近的通信（one-to-nearest communication）, 这是因为给予路由协议度量值的那个最近的公共地址（the nearest common address），总是会为本地设备所优先选用。在IPv6中，并没有为任意播特别分配的地址范围，因为任意播地址使用的是全球单播地址、站点本地地址，甚或本地链路地址。尽管如此，仍然保留一个作为特殊用途的任意播地址。该特别地址被称为__子网路由器任意播地址__(the Subnet-Router Anycast address)，是由前面的该子网64位单播前缀，及将后64位全部设置为0（比如`2001:1a2b:1111:d7e5::`）构成的。__任意播地址是绝对不能作为某个IPv6数据包的源地址的__。它们典型地用于诸如移动IPv6(Mobile IPv6）等的协议中，任意播地址的用途，超出CCNA考试范围。
+本章节的早前引入了任意播，其可被简单地说成是一对最近的通信（one-to-nearest communication）, 这是因为基于路由协议度量值的那个最近的公共地址（the nearest common address），总是会为本地设备所优先选用。在IPv6中，并没有为任意播特别分配的地址范围，因为任意播地址使用的是全球单播地址、站点本地地址，甚或本地链路地址。尽管如此，仍然保留一个作为特殊用途的任意播地址。该特别地址被称为__子网路由器任意播地址__(the Subnet-Router Anycast address)，是由前面的该子网64位单播前缀，及将后64位全部设置为0（比如`2001:1a2b:1111:d7e5::`）构成的。__任意播地址是绝对不能作为某个IPv6数据包的源地址的__。它们典型地用于诸如移动IPv6(Mobile IPv6）等的协议中，任意播地址的用途，超出CCNA考试范围。
 
 ###环回地址
 
@@ -403,11 +403,11 @@ __Loopback Address__
 
 IPv6中的环回地址，用法和IPv4中的一样。与IPv4中用到的环回地址`127.0.0.1`相比，每台设备也都有一个IPv6环回地址，且该地址有设备自身使用。IPv6环回地址用的是前缀`::1`, 用首选地址格式表示为`0000:0000:0000:0000:0000:0000:0000:0001`。也就是说，在环回地址中，除了最后一位总是1外，其它所有位都设置为0。当设备开启IPv6时，总是会自动分配上这些地址，且这些地址绝不会发生变化。
 
-###未指定地址
+###未指明地址
 
 __Unspecified Addresses__
 
-在IPv6分址里，未指定地址就是那些没有指派带任何接口上的单播地址。这些地址表明设备缺少一个IPv6地址，同时这些地址还用于某些诸如IPv6 DHCP和DAD等的用途。未指定地址是以IPv6地址中的全0值表示的，可以使用前缀`::`进行书写。在首选格式下，这些地址表示为`0000:0000:0000:0000:0000:0000:0000:0000`。
+在IPv6分址里，未指明地址就是那些没有指派到任何接口上的单播地址。这些地址表明设备缺少一个IPv6地址，同时这些地址还用于某些诸如IPv6 DHCP和DAD等的用途。未指定地址是以IPv6地址中的全0值表示的，可以使用前缀`::`进行书写。在首选格式下，这些地址表示为`0000:0000:0000:0000:0000:0000:0000:0000`。
 
 ##一些IPv6的协议和机制
 
@@ -424,7 +424,7 @@ __IPv6 Protocols and Mechanisms__
 
 __ICMP for IPv6__
 
-ICMP用于将有关发往预期目的主机的IP数据的错误和其他信息，汇报给源主机。在RFC 2463中，作为58号协议定义的ICMPv6，支持ICMPv4的各种消息，还包含了ICMPv6的一些额外消息。__ICMPv6作为一个如同TCP一样的，较高级别的协议，意味着ICMPv6在IPv6数据包中，是放在所有尽可能的扩展头部之后的__。下图7.11演示了ICMPv6数据包中所包含的字段。
+ICMP用于将有关发往预期目的主机的IP数据的错误和其他信息，汇报给源主机。在RFC 2463中，作为58号协议定义的ICMPv6，支持ICMPv4的各种消息，还包含了ICMPv6的一些额外消息。__ICMPv6作为一个如同TCP一样的，较高级别的协议，意味着在IPv6数据包中，ICMPv6是放在所有尽可能的扩展头部之后的__。下图7.11演示了ICMPv6数据包中所包含的字段。
 
 ![ICMPv6数据包头部](images/0711.png)
 __图7.11 -- ICMPv6数据包头部__
@@ -453,6 +453,8 @@ __表7.9 -- ICMPv6消息类型__
 <tr><td>8</td><td>Echo</td></tr>
 <tr><td>11</td><td>发生了超时</td></tr>
 </table>
+
+> __注意：__ 这些消息类型在ICMPv4中同样有使用。
 
 在代码字段后面，16位的校验和字段（the 16-bit Checksum field）包含的是一个用于检测ICMPv6中的数据错误的运算值。ICMPv6数据包的最后就是消息或数据二选一的字段（the Message or Data field is an optional）, 它是一个可变长度字段，包含了由类型及代码字段指明的消息类型特定数据。在用到消息或数据字段时，该字段提供发给目的主机的信息。__ICMPv6是IPv6的一个核心部件__。在IPv6中，ICMPv6有以下用途。
 

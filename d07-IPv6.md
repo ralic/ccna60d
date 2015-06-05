@@ -386,7 +386,7 @@ __在这些IPv6多播前缀中，又保留了一些地址__。这些保留的地
 ![IPv6节点询问多播地址](images/0709.png)
 __图7.9 -- IPv6节点询问多播地址__
 
-而作为与IPv4以太网多播映射的一个类似方案，IPv6提供了一个独特的方法，来将三层IPv6多播地址，映射到二层多播地址。IPv6中的多播映射是通过在某多播地址的后32位加上一个16位前缀`33:33`，这个前缀就是IPv6网络中定义的多播以太网前缀（the defined Multicast Ethernet prefix for IPv6 Networks）。其在下图7.10中，演示了所有位于本地接口范围前缀`FF02::2`上的路由器的以太网映射多播地址。
+而作为与IPv4到二层以太网的多播映射的一个类似方案，IPv6提供了一种独特的方法，来将三层IPv6多播地址，映射到二层多播地址。IPv6中的多播映射是通过在某多播地址的后32位加上一个16位前缀`33:33`，这个前缀就是IPv6网络中定义的多播以太网前缀（the defined Multicast Ethernet prefix for IPv6 Networks）。其在下图7.10中，演示了所有位于本地接口范围前缀`FF02::2`上的路由器的以太网映射多播地址。
 
 ![IPv6多播地址](images/0710.png)
 __图7.10 -- IPv6多播地址__
@@ -407,7 +407,7 @@ IPv6中的环回地址，用法和IPv4中的一样。与IPv4中用到的环回�
 
 __Unspecified Addresses__
 
-在IPv6分址里，未指明地址就是那些没有指派到任何接口上的单播地址。这些地址表明设备缺少一个IPv6地址，同时这些地址还用于某些诸如IPv6 DHCP和DAD等的用途。未指定地址是以IPv6地址中的全0值表示的，可以使用前缀`::`进行书写。在首选格式下，这些地址表示为`0000:0000:0000:0000:0000:0000:0000:0000`。
+在IPv6分址里，未指明地址就是那些没有指派到任何接口上的单播地址。这些地址表明设备缺少一个IPv6地址，同时这些地址还用于某些诸如IPv6 DHCP和DAD等的用途。未指明地址是以IPv6地址中的全0值表示的，可以使用前缀`::`进行书写。在首选格式下，这些地址表示为`0000:0000:0000:0000:0000:0000:0000:0000`。
 
 ##一些IPv6的协议和机制
 
@@ -424,14 +424,14 @@ __IPv6 Protocols and Mechanisms__
 
 __ICMP for IPv6__
 
-ICMP用于将有关发往预期目的主机的IP数据的错误和其他信息，汇报给源主机。在RFC 2463中，作为58号协议定义的ICMPv6，支持ICMPv4的各种消息，还包含了ICMPv6的一些额外消息。__ICMPv6作为一个如同TCP一样的，较高级别的协议，意味着在IPv6数据包中，ICMPv6是放在所有尽可能的扩展头部之后的__。下图7.11演示了ICMPv6数据包中所包含的字段。
+ICMP用于将有关发往预期目的主机的IP数据的错误和其他信息，汇报给源主机。在RFC 2463中，作为58号协议定义的ICMPv6，支持ICMPv4的各种报文，还包含了ICMPv6的一些额外报文。__ICMPv6作为一个如同TCP一样的，较高级别的协议，意味着在IPv6数据包中，ICMPv6是放在所有尽可能的扩展头部之后的__。下图7.11演示了ICMPv6数据包中所包含的字段。
 
 ![ICMPv6数据包头部](images/0711.png)
 __图7.11 -- ICMPv6数据包头部__
 
-在ICMPv6数据包头部，其8位类型字段（the 8-bit Type field）用于表明或区分ICMPv6消息的类型。该字段用于提供错误消息和信息性消息。表7.9列出并说明了一些可在此字段发现的常见值。
+在ICMPv6数据包头部，其8位类型字段（the 8-bit Type field）用于表明或区分ICMPv6报文的类型。该字段用于提供错误报文和信息性报文。表7.9列出并说明了一些可在此字段发现的常见值。
 
-__表7.9 -- ICMPv6消息类型__
+__表7.9 -- ICMPv6报文类型__
 
 <table>
 <tr><th>ICMPv6 类型</th><th>说明</th></tr>
@@ -442,9 +442,9 @@ __表7.9 -- ICMPv6消息类型__
 <tr><td>129</td><td>Echo回应</td></tr>
 </table>
 
-> __注意：__ ICMPv4也是使用的这些消息类型。
+> __注意：__ ICMPv4也是使用的这些报文类型。
 
-紧接着类型字段，8为的代码字段（the 8-bit Code field）提供了有关发出的消息的细节。表7.10演示了该字段的常用值，也是ICMPv4所共用的。
+紧接着类型字段的8位代码字段（the 8-bit Code field），提供了有关发出报文的细节。表7.10演示了该字段的常用值，也是ICMPv4所共用的。
 
 <table>
 <tr><th>ICMPv6代码</th><th>说明</th></tr>
@@ -454,11 +454,11 @@ __表7.9 -- ICMPv6消息类型__
 <tr><td>11</td><td>发生了超时</td></tr>
 </table>
 
-在代码字段后面，16位的校验和字段（the 16-bit Checksum field）包含的是一个用于检测ICMPv6中的数据错误的运算值。ICMPv6数据包的最后就是消息或数据二选一的字段（the Message or Data field is an optional）, 它是一个可变长度字段，包含了由类型及代码字段指明的消息类型特定数据。在用到消息或数据字段时，该字段提供发给目的主机的信息。
+在代码字段后面的16位校验和字段（the 16-bit Checksum field），包含的是一个用于检测ICMPv6中数据错误的运算值。ICMPv6数据包的最后，就是报文或数据二选一的字段（the Message or Data field is an optional）, 它是一个可变长度字段，包含了由类型及代码字段指明的报文类型特定数据。在用到报文或数据字段时，该字段提供了发送给目的主机的信息。
 
 __ICMPv6是IPv6的一个核心部件__。在IPv6中，ICMPv6有以下用途。
 
-+ 重复地址探测，Duplicate Address Detection, DAD
++ 重复地址检测，Duplicate Address Detection, DAD
 + ARP的替代，the replacement of ARP
 + IPv6无状态自动配置, IPv6 stateless autoconfiguration
 + IPv6前缀重新编号, IPv6 prefix renumbering
@@ -470,7 +470,7 @@ __IPv6邻居发现协议__
 
 __The IPv6 Neighbor Discovery Protocol, NDP__
 
-__IPv6邻居发现协议带来IPv6的即插即用特性__。它是在RFC 2461中定义的，是IPv6的一个必不可少的组成部分。__NDP运行在链路层__，负责__发现链路上的其它节点__、__确定其它节点的链路层地址__、__发现可用的路由器__，以及__维护有关到其它邻居节点路径的可达性信息__。NDP实现了IPv6的__类似于IPv4的ARP__（这正是其取代的功能）、__ICMP路由器发现__(ICMP Router Discovery)以及__路由器重定向协议（Router Redirect Protocols）等__功能。尽管如此，要记住NDP提供了比起IPv4中用到诸多机制，都更为了不起的功能。在与ICMPv6配合使用时，NDP可以完成以下任务。
+__IPv6邻居发现协议带来IPv6的即插即用特性__。它是在RFC 2461中定义的，是IPv6的一个必不可少的组成部分。__NDP运行在链路层__，负责__发现链路上的其它节点__、__确定其它节点的链路层地址__、__发现可用的路由器__，以及__维护有关到其它邻居节点路径的可达性信息__。NDP实现了IPv6的__类似于IPv4的ARP__（这正是其取代的功能）、__ICMP路由器发现__(ICMP Router Discovery)以及__路由器重定向协议（Router Redirect Protocols）等__功能。尽管如此，要记住NDP提供了比起IPv4中用到的诸多机制，都更为了不起的功能。在与ICMPv6配合使用时，NDP可以完成以下任务。
 
 + 动态邻居和路由器发现，dynamic neighbor and router discovery
 + 取代ARP，the replacement of ARP
@@ -479,8 +479,8 @@ __IPv6邻居发现协议带来IPv6的即插即用特性__。它是在RFC 2461中
 + 主机参数发现，host parameter discovery
 + IPv6地址解析，IPv6 address resolution
 + 确定下一跳路由器，next-hop router determination
-+ 邻居不可达探测，Neighbor Unreachablitiy Detection, NUD
-+ 重复地址探测，Duplicate Address Detection, DAD
++ 邻居不可达检测，Neighbor Unreachablitiy Detection, NUD
++ 重复地址检测，Duplicate Address Detection, DAD
 
 > __注意：__ 并不要求对上面列出的每个优势进行细节上的探究。
 
@@ -488,52 +488,52 @@ __IPv6邻居发现协议带来IPv6的即插即用特性__。它是在RFC 2461中
 
 <table>
 <tr><th>ICMPv6类型</th><th>说明</th></tr>
-<tr><td>133</td><td>用于路由器询问消息，used for Router Solicitation(RS) messages</td></tr>
-<tr><td>134</td><td>用于路由器通告消息，used for Router Advertisement(RA) messages</td></tr>
-<tr><td>135</td><td>用于邻居询问消息，used for Neighbor Solicitation(NS) messages</td></tr>
-<tr><td>136</td><td>用于邻居通告消息，used for Neighbor Advertisement(NA) messages</td></tr>
-<tr><td>137</td><td>用于路由器重定向消息, used for Router Redirect messages</td></tr>
+<tr><td>133</td><td>用于路由器询问报文，used for Router Solicitation(RS) messages</td></tr>
+<tr><td>134</td><td>用于路由器通告报文，used for Router Advertisement(RA) messages</td></tr>
+<tr><td>135</td><td>用于邻居询问报文，used for Neighbor Solicitation(NS) messages</td></tr>
+<tr><td>136</td><td>用于邻居通告报文，used for Neighbor Advertisement(NA) messages</td></tr>
+<tr><td>137</td><td>用于路由器重定向报文, used for Router Redirect messages</td></tr>
 </table>
 
-__路由器询问消息__是在主机的接口开启IPv6时，由主机所发出的。这些消息用于请求位于本地网段上的路由器立即生成RA消息，而不要等到下一个计划的RA时间间隔才生成RA消息。下图7.2演示了一条在线路上捕获到的RS消息。
+__路由器询问报文__是在主机的接口开启IPv6时，由主机所发出的。这些报文用于请求位于本地网段上的路由器立即生成RA报文，而不要等到下一个计划的RA时间间隔才生成RA报文。下图7.2演示了一条在线路上捕获到的RS报文。
 
-![IPv6路由器询问消息](images/0712.png)
-__图7.12 -- IPv6路由器询问消息__
+![IPv6路由器询问报文](images/0712.png)
+__图7.12 -- IPv6路由器询问报文__
 
-路由器收到该RS消息后，紧接着就使用RS消息通告其的存在，RS消息通常包含了本地链路的前缀信息，以及其它任何的额外配置，诸如建议的跳数限制等。RA中包含的信息在下图7.13中进行了演示。
+路由器收到该RS报文后，紧接着就使用RS报文通告其的存在，RS报文通常包含了本地链路的前缀信息，以及其它任何的额外配置，诸如建议的跳数限制等。RA中包含的信息在下图7.13中进行了演示。
 
-![IPv6路由器通告消息](images/0713.png)
-__图7.13 -- IPv6路由器通告消息__
+![IPv6路由器通告报文](images/0713.png)
+__图7.13 -- IPv6路由器通告报文__
 
-这里重申一点，__RS和RA消息，都是路由器到主机(route-to-host)或主机到路由器(host-to-router)的信息交换__, 如下图所示。
+这里重申一点，__RS和RA报文，都是路由器到主机(route-to-host)或主机到路由器(host-to-router)的信息交换__, 如下图所示。
 
-![IPv6的RS和RA消息](images/0714.png)
-__图7.14 -- IPv6的RS和RA消息__
+![IPv6的RS和RA报文](images/0714.png)
+__图7.14 -- IPv6的RS和RA报文__
 
-IPv6的NS消息，则是位处本地网络网段上的IPv6路由器, 所发出的多播消息，用于确定某个邻居的数据链路地址，或是用于检查某个邻居是否仍然可达（因此NS消息取代的是ARP的功能）。这些消息也用于重复地址探测(DAD)目的。尽管对NS消息的深入探究超出了CCNA考试要求的范围，下面的图7.15仍然演示了一个在线路上捕获到的IPv6邻居询问消息数据包。
+IPv6的NS报文，则是位处本地网络网段上的IPv6路由器, 所发出的多播报文，用于确定某个邻居的数据链路地址，或是用于检查某个邻居是否仍然可达（因此NS报文取代的是ARP的功能）。这些报文也用于重复地址检测(DAD)目的。尽管对NS报文的深入探究超出了CCNA考试要求的范围，下面的图7.15仍然演示了一个在线路上捕获到的IPv6邻居询问报文数据包。
 
-![IPv6邻居询问消息](images/0715.png)
-__图7.15 -- IPv6邻居询问消息__
+![IPv6邻居询问报文](images/0715.png)
+__图7.15 -- IPv6邻居询问报文__
 
-而邻居通告消息（Neighbor Advertisement messages）通常也是由位处本地网络网段上的路由器发出的，用于对收到的NS消息进行回应。此外，__在某个IPv6前缀发生改变时，路由器也会发出一条无询问的NS消息__，以此来告知本地网络网段上的其它设备，发生了这个变化。在NA消息上，对NA消息中的格式或包含的字段的细节探究，也是超出CCNA考试要求范围之外的。图7.16和图7.17演示了一条在线路上捕获的邻居通告消息，__邻居通告消息也是通过IPv6多播发出的__。
+而邻居通告报文（Neighbor Advertisement messages）通常也是由位处本地网络网段上的路由器发出的，用于对收到的NS报文进行回应。此外，__在某个IPv6前缀发生改变时，路由器也会发出一条无询问的NS报文__，以此来告知本地网络网段上的其它设备，发生了这个变化。在NA报文上，对NA报文中的格式或包含的字段的细节探究，也是超出CCNA考试要求范围之外的。图7.16和图7.17演示了一条在线路上捕获的邻居通告报文，__邻居通告报文也是通过IPv6多播发出的__。
 
-![IPv6邻居通告消息](images/0716.png)
-__图7.16 -- IPv6邻居通告消息__
+![IPv6邻居通告报文](images/0716.png)
+__图7.16 -- IPv6邻居通告报文__
 
-![IPv6邻居通告消息](images/0717.png)
-__图7.17 -- IPv6邻居通告消息__
+![IPv6邻居通告报文](images/0717.png)
+__图7.17 -- IPv6邻居通告报文__
 
-最后，路由器重定向（router redirect）使用的是消息类型为137的ICMPv6重定向消息（ICMPv6 Redirect messages），路由器重定向用于告知网络主机，网络上存在一台路由器，该路由器有着前往预计的目的主机更优路径。ICMPv6的路由器重定向与ICMPv4的工作方式一样，而ICMPv4的路由器重定向就是用来对当前IPv4网络中的流量进行重定向的。
+最后，路由器重定向（router redirect）使用的是报文类型为137的ICMPv6重定向报文（ICMPv6 Redirect messages），路由器重定向用于告知网络主机，网络上存在一台路由器，该路由器有着前往预计的目的主机更优路径。ICMPv6的路由器重定向与ICMPv4的工作方式一样，而ICMPv4的路由器重定向就是用来对当前IPv4网络中的流量进行重定向的。
 
 ###IPv6的有状态自动配置
 
 __IPv6 Stateful Autoconfiguration__
 
-如同本模块先前指出的那样，有状态自动配置允许网络主机从某台网络服务器（比如通过DHCP）上收到其地址信息。IPv4和IPv6都支持这种方式。在IPv6网络中，使用DHCPv6来提供给IPv6主机有状态（及无状态）自动配置服务。在IPv6的部署中，当某台IPv6主机收到来自本地网络网段上的路由器的RA消息后，该主机就会检查这些数据包，以判定是否可以使用DHCPv6。RA消息通过将那些M（受管理的，Managed）或O（其它方式，Other）位设置为1的方式，提供是否可以使用DHCPv6的信息。
+如同本模块先前指出的那样，有状态自动配置允许网络主机从某台网络服务器（比如通过DHCP）上收到其地址信息。IPv4和IPv6都支持这种方式。在IPv6网络中，使用DHCPv6来提供给IPv6主机有状态（及无状态）自动配置服务。在IPv6的部署中，当某台IPv6主机收到来自本地网络网段上的路由器的RA报文后，该主机就会检查这些数据包，以判定是否可以使用DHCPv6。RA报文通过将那些M（受管理的，Managed）或O（其它方式，Other）位设置为1的方式，提供是否可以使用DHCPv6的信息。
 
 在DHCP下，客户端设定为从DHCP服务器取得有关信息。而在DHCPv6下，客户端却不并知道从哪里得到这些信息，因为可以从SLAAC，也可以从有状态的DHCPv6, 抑或从联合了SLAAC及DHCPv6二者的方式取得。
 
-路由器通告消息中的M位，指的是管理的地址配置标志位（the Managed Address Configuration Flag bit）。在此为设置了时（也就是说该位的值为1时）， 它指示IPv6主机要取得一个由DHCPv6服务器所提供有状态的地址。而路由器通告消息中的O位，指的是其它有状态配置标志位（the Other Stateful Configuration Flag bit）。当该位设置了（也就是说该位的值为1）后，指示IPv6主机要使用DHCPv6取得更多的配置设置项，比如DNS及WINS服务器等。
+路由器通告报文中的M位，指的是管理的地址配置标志位（the Managed Address Configuration Flag bit）。在此为设置了时（也就是说该位的值为1时）， 它指示IPv6主机要取得一个由DHCPv6服务器所提供有状态的地址。而路由器通告报文中的O位，指的是其它有状态配置标志位（the Other Stateful Configuration Flag bit）。当该位设置了（也就是说该位的值为1）后，指示IPv6主机要使用DHCPv6取得更多的配置设置项，比如DNS及WINS服务器等。
 
 如某台主机未曾配置了一个IPv6地址，它就可以采用三种方法之一，来获得一个IPv6地址，以及诸如DNS服务器地址等的其他网络设置。
 
@@ -561,9 +561,9 @@ IPv6容许设备为自己配置一个IP地址，以便进行主机到主机的�
 + 重复地址检测，DAD
 + 前缀重编号，prefix renumbering
 
-IPv6地址前缀通告用到了ICMPv6路由器通告消息，而ICMPv6 RA是发往链路上的所有主机（all-hosts-on-the-local-link）IPv6多播地址`FF02::1`的ICMPv6数据包。根据IPv6的设计，仅有路由器才被允许在本地链路上通告前缀。在采行了无状态自动配置后，就务必要记住，所用到的前缀长度必须要是64位（比如`2001:1a2b::/64`）。
+IPv6地址前缀通告用到了ICMPv6路由器通告报文，而ICMPv6 RA是发往链路上的所有主机（all-hosts-on-the-local-link）IPv6多播地址`FF02::1`的ICMPv6数据包。根据IPv6的设计，仅有路由器才被允许在本地链路上通告前缀。在采行了无状态自动配置后，就务必要记住，所用到的前缀长度必须要是64位（比如`2001:1a2b::/64`）。
 
-在前缀配置之后，IPv6无状态自动配置用到的RA消息还包含了以下信息。
+在前缀配置之后，IPv6无状态自动配置用到的RA报文还包含了以下信息。
 
 + IPv6前缀，the IPv6 prefix
 + 生命期，the lifetime
@@ -580,13 +580,13 @@ IPv6地址前缀通告用到了ICMPv6路由器通告消息，而ICMPv6 RA是发�
 
 最后，一些标志和选项字段可被用作指示网络主机采行无状态自动配置或有状态自动配置。这些字段在图7.13中的RA线路捕获中有包含。
 
-重复地址探测（DAD）是一种用在无状态自动配置中的，在某个网络网段上的主机启动时，用到的NDP机制。DAD要求某台网络主机在启动期间永久地配置它自己的IPv6地址之前，先要确保没有别的网络主机已经使用了它打算使用的那个地址。
+重复地址检测（DAD）是一种用在无状态自动配置中的，在某个网络网段上的主机启动时，用到的NDP机制。DAD要求某台网络主机在启动期间永久地配置它自己的IPv6地址之前，先要确保没有别的网络主机已经使用了它打算使用的那个地址。
 
-DAD通过使用邻居询问（135类型的ICMPv6）及节点询问多播地址（Solicited-Node Multicast addresses）来完成这个验证。主机使用一个未指明IPv6地址（an unspecified IPv6 address, 也就是地址`::`）作为消息数据包的源地址，并将其打算使用的那个IPv6单播地址作为目的地址，在本地网段上发送一个邻居询问ICMPv6消息数据包。如有其它主机使用着该同样地址，那么该主机就不会自动将此地址配置为自己的地址；而如没有其他设备使用这个地址，则该主机就自动配置并开始使用这个IPv6地址了。
+DAD通过使用邻居询问（135类型的ICMPv6）及节点询问多播地址（Solicited-Node Multicast addresses）来完成这个验证。主机使用一个未指明IPv6地址（an unspecified IPv6 address, 也就是地址`::`）作为报文数据包的源地址，并将其打算使用的那个IPv6单播地址作为目的地址，在本地网段上发送一个邻居询问ICMPv6报文数据包。如有其它主机使用着该同样地址，那么该主机就不会自动将此地址配置为自己的地址；而如没有其他设备使用这个地址，则该主机就自动配置并开始使用这个IPv6地址了。
 
 最后，前缀重编号（prefix renumbering）允许在IPv6中，当网络从一个前缀变为另一个时，进行前缀的透明重编号。与IPv4中同样的全球IP地址可由多个服务提供商进行通告不同，IPv6地址空间的严格聚合阻止了服务提供商对不属于其组织的前缀进行通告（Unlike in IPv4, where the same global IP address can be advertised by multiple providers, the strict aggregation of the IPv6 address space prevents providers from advertising prefixes that do not belong to their organization）。
 
-在网络发生从一家IPv6服务提供商迁移至另一家时，IPv6前缀重编号机制，就提供了一种自一个前缀往另一前缀平滑和透明的过渡。前缀重编号使用与在前缀通告中同样的ICMPv6消息和多播地址。而前缀重编号可经由运用RA消息中包含的时间参数完成。
+在网络发生从一家IPv6服务提供商迁移至另一家时，IPv6前缀重编号机制，就提供了一种自一个前缀往另一前缀平滑和透明的过渡。前缀重编号使用与在前缀通告中同样的ICMPv6报文和多播地址。而前缀重编号可经由运用RA报文中包含的时间参数完成。
 
 在思科IOS软件中，路由器可配置通告带有被减少到接近0的有效和首选生命期的当前前缀，这就令到这些前缀能够更快地成为无效前缀。此时再将这些路由器配置为在本地网段上通告心的前缀。这样做会允许旧的前缀和新的前缀在同样的网段上并存。
 

@@ -312,9 +312,9 @@ __表7.4 -- IPv6可聚合全球单播地址__
 
 <table>
 <tr><th>说明</th><th>地址</th><tr>
-<tr><td>范围中的第一个地址</td><td><pre>2000:0000:0000:0000:0000:0000:0000:0000</pre></td></tr>
-<tr><td>范围中的最后一个地址</td><td><pre>3FFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF</pre></td></tr>
-<tr><td>二进制标记</td><td>高位序的三位被设置为001</td></tr>
+<tr><td><pre>范围中的第一个地址</pre></td><td><pre>2000:0000:0000:0000:0000:0000:0000:0000</pre></td></tr>
+<tr><td><pre>范围中的最后一个地址</pre></td><td><pre>3FFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF</pre></td></tr>
+<tr><td><pre>二进制标记</pre></td><td><pre>高位序的三位被设置为001</pre></td></tr>
 </table>
 
 在本模块编写时，`2000::/3`IPv6地址块中，仅分配使用了3个子网。这三个子网如下表7.5所示。

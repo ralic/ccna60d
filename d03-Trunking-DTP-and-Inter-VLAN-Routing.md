@@ -362,6 +362,7 @@ VTP-Server-1(config)#ip default-gateway 10.30.30.1
 <pre>
 R1(config)#interface FastEthernet0/0
 R1(config-if)#no ip address
+<b>R1(config-if)#no shut </b> <- 这一步相当重要，否则子接口也会处于 down down 状态
 R1(config-if)#exit
 R1(config)#interface FastEthernet0/0.10
 R1(config-subitf)#description ‘Subinterface For VLAN 10’

@@ -11,7 +11,7 @@ __Access Control Lists__
 + 阅读ICND1记诵指南
 + 在[subnetting.org](http://www.subnetting.org)上花15分钟
 
-和子网划分及VLSM一样，访问控制清单（access control lists, ACL）对于新CCNA学员来说，也是一大难点（one of the bugbear subjects）。有关ACL的问题有，学习有关的IOS配置命令、理解ACL规则（包括隐式的“deny all”规则），以及端口号和协议类型的学习。
+和子网划分及VLSM一样，访问控制清单（access control lists, ACL）对于新CCNA学员来说，也是一大难点（one of the bugbear subjects）。有关ACL的问题包括，学习相关的IOS配置命令、理解ACL规则（包括隐式的“deny all”规则），以及掌握端口号及协议类型。
 
 与其它CCNA科目一样，应该在学习过程中一次完成一个小部分，在路由器上使用所见到的每个命令，并完成许多实验。
 
@@ -235,12 +235,12 @@ ACLs的基本规则就是保持简短且只专注于做一件事情。许多新�
 
 ###ACL规则九 -- 尽可能将ACL放在接近源的地方
 
-思科文档建议将扩展ACL尽量放在源处，而将标准ACL尽量放在目的处，因为这可以避免不必要的开销，又能放行那些合法流量。
+思科文档建议将扩展ACL尽量放在离源近的地方，而将标准ACL尽量放在离目的近的地方，因为这可以避免不必要的开销，又能放行那些合法流量。
 
 ![将ACL尽量放在离源近的地方](images/0904.png)
 __图9.4 -- 将ACL尽量放在离源近的地方__
 
->Farai 指出 -- “思科官方建议是扩展ACL尽量里源近，而标准ACL尽量离目的近”。
+>Farai 指出 -- “思科官方建议是扩展ACL尽量离源近，而标准ACL尽量离目的近”。
 
 ##反掩码
 
@@ -669,4 +669,240 @@ __单个接口上的ACL统计信息__
 
 __Per Interface ACL Statistics__
 
-在想要查看单个接口上的ACL匹配情况，不管是进还是出方向时，
+在想要查看单个接口上的ACL匹配情况，不管是进还是出方向时，可以使用命令`show ip access-list interface <interface_name> [in|out]`，如下面所示。
+
+```
+Router#show ip access-list interface FastEthernet0/1 in
+Extended IP access list 100 in
+	10 permit ip host 10.10.10.1 any (5 matches)
+	30 permit ip host 10.10.10.2 any (31 matches)
+```
+
+如未有指定方向，则应用到该特定接口上的任何进或出方向的ACL都将显示出来。此特性也叫做“ACL可管理能力（ACL Manageability）”，自IOS 12.4开始可用。
+
+###检查那些放行的网络
+
+__Verifying the Permitted Networks__
+
+有的时候，特别实在那些必须配置很多ACLs的大型网络中，在配置ACL条目是就会犯下一些书写错误，而这就会导致不同接口上有错误的流量被阻止。为了检查那些正确的ACL条目（也就是permit及deny语句），可以照前面章节中讲到的那样，使用`show run | section access-list`或者`show ip access-list`命令。
+
+###检查ACL的接口和方向
+
+__Verifying the ACL Interface and Direction__
+
+在将某条ACL应用到某个接口上时，一个常见的错误就是将其应用到了错误的方向，也就是本应在进方向的，却应用到了出方向，或者本应在出方向的，却应用到了进方向。这会导致功能上和安全方面的很多问题。于是在ACL故障排除上的最先几步之一，就是检查ACL应用到正确的接口及正确的方向。
+
+为此，可以使用多种命令，包括`show run`及`show ip access-list interface <interface> | [in|out]`命令。
+
+##第九天的问题
+
+1. You can have a named, extended, and standard ACL on one incoming interface. True or false?
+2. You want to test why your ping is blocked on your Serial interface. You ping out from the router but it is permitted. What went wrong? (Hint: See ACL Rule 4.)
+3. Write a wildcard mask to match subnet mask `255.255.224.0`.
+4. What do you type to apply an IP access control list to the Telnet lines on a router?
+5. How can you verify ACL statistics per interface (name the command)?
+6. How do you apply an ACL to an interface?
+
+##第九天问题的答案
+
+1. False. You can only configure a single ACL on an interface per direction.
+2. A router won’t filter traffic it generated itself.
+3. `0.0.31.255`.
+4. access-class .
+5. Issue the show ip access-list interface command.
+6. Issue the `ip access-group <ACL_name> [in|out]` command.
+
+##第九天的实验
+
+###标准ACL实验
+
+__Standard ACL Lab__
+
+__拓扑图__
+
+![标准ACL实验拓扑图](images/0909.png)
+
+标准ACL实验拓扑图
+
+__实验目的__
+
+学习如何配置一条标准ACL。
+
+__实验步骤__
+
+1. 配置上面的网络。在两台路由器上加入一条静态路由，领导到任何网络的任何流量都从串行接口发出。这么做的原因是，尽管这不是一个路由实验，仍然需要路由的流量。把.1地址加到路由器A的串行接口，.2地址加到路由器B的串行接口。
+
+```
+RouterA(config)#ip route 0.0.0.0 0.0.0.0 s0/1/0
+RouterB(config)#ip route 0.0.0.0 0.0.0.0 s0/1/0
+```
+
+2. 在路由器A上配置一条标准ACL，放行192.168.1.0/10网络。默认情况下，其它所有网络都将被阻止。
+
+```
+RouterA(config)#access-list 1 permit 192.168.1.0 0.0.0.63
+RouterA(config)#int Serial0/1/0
+RouterA(config-if)#ip access-group 1 in
+RouterA(config-if)#exit
+RouterA(config)#exit
+RouterA#
+```
+
+3. 从路由器B上测试该条ACL，默认将使用10.0.0.1地址。
+
+```
+RouterB#ping 10.0.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.0.0.1, timeout is 2 seconds:
+UUUUU
+Success rate is 0 percent (0/5)
+```
+
+4. 以源地址192.168.1.1来做另一个ping测试，这将没有问题。
+
+```
+RouterB#ping
+Protocol [ip]:
+Target IP address: 10.0.0.1
+Repeat count [5]:Datagram size [100]:
+Timeout in seconds [2]:
+Extended commands [n]: y
+Source address or interface: 192.168.1.1
+Type of service [0]:
+Set DF bit in IP header? [no]:
+Validate reply data? [no]:
+Data pattern [0xABCD]:
+Loose, Strict, Record, Timestamp, Verbose[none]:
+Sweep range of sizes [n]:
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.0.0.1, timeout is 2 seconds:
+Packet sent with a source address of 192.168.1.1
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 31/31/32 ms
+```
+
+###扩展ACL实验
+
+__拓扑图__
+
+![扩展ACL实验的拓扑图](images/0910.png)
+
+扩展ACl实验的拓扑图
+
+__实验目的__
+
+学习如何配置一条扩展ACL。
+
+__实验步骤__
+
+1. 配置上述网络。在路由器B上加入一条静态路由，令到前往所有网络的所有流量都从串行接口上发出。这么做是因为，尽管这不是一个路由实验，仍然需要路由流量。
+
+`RouterB(config)#ip route 0.0.0.0 0.0.0.0 s0/1/0`
+
+2. 在路由器A上配置一条扩展ACL。仅允许往环回接口上发起Telnet流量。
+
+```
+RouterA(config)#access-list 100 permit tcp any host 172.20.1.1 eq 23
+RouterA(config)#int s0/1/0
+RouterA(config-if)#ip access-group 100 in
+RouterA(config-if)#line vty 0 15
+RouterA(config-line)#password cisco
+RouterA(config-line)#login
+RouterA(config-line)#^Z
+RouterA#
+```
+
+上面的那条ACL编号为100, 这就告诉路由器，它是一条扩展ACL。所要允许的是TCP。该条ACL允许来自任何网络的，目的地址为172.20.1.1的Telnet端口，端口号为23。在执行`show run`命令时，就会看到，路由器实际上会将端口号替换为其对应的名称，就像下面演示的这样。
+
+`access-list 100 permit tcp any host 172.20.1.1 eq telnet`
+
+3. 现在，从路由器B上做一个Telnet测试。首先往路由器A的串行接口上Telnet，将会被阻止。接着测试环回接口。
+
+<pre>
+RouterB#telnet 10.0.0.1
+Trying 10.0.0.1 ...
+% Connection timed out; remote host not responding
+RouterB#telnet 172.20.1.1
+Trying 172.20.1.1 ...Open
+User Access Verification <b>←password won’t show when you type it</b>
+Password:
+RouterA> <b>←Hit Control+Shift+6 together and then let go and press the X key to quit.</b>
+</pre>
+
+>__注意：__我们会在其它实验中涉及ACLs，但你真的需要完全地掌握这些内容。为此，要尝试其它的TCP端口，比如80、25等等。另外，要试试那些UDP端口，比如53。如没有将一台PC接上路由器，则是无法对这些其它端口进行测试的。
+
+##命名ACL实验
+
+__拓扑图__
+
+![命名ACL实验拓扑图](images/0911.png)
+命名ACL实验拓扑图
+
+__实验目的__
+
+学习如何配置一条命名ACL。
+
+__实验步骤__
+
+1. 配置上面的网络。在两台路由器上加入一条静态路由，领导到任何网络的任何流量都从串行接口发出。这么做的原因是，尽管这不是一个路由实验，仍然需要路由的流量。
+
+```
+RouterA(config)#ip route 0.0.0.0 0.0.0.0 s0/1/0
+RouterB(config)#ip route 0.0.0.0 0.0.0.0 s0/1/0
+```
+
+2. 在路由器B上加入一条扩展的命名ACL。只放行主机172.20.1.1，阻止其它任何主机或网络。
+
+```
+RouterB(config)#ip access-list extended blockping
+RouterB(config-ext-nacl)#permit icmp host 172.20.1.1 any
+RouterB(config-ext-nacl)#exit
+RouterB(config)#int s0/1/0
+RouterB(config-if)#ip access-group blockping in
+RouterB(config-if)#
+```
+
+3. 现在分别从路由器A的串行接口和换回接口发出ping来测试该条ACL。
+
+```
+RouterA#ping 192.168.1.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+UUUUU
+Success rate is 0 percent (0/5)
+RouterA#ping
+Protocol [ip]:
+Target IP address: 192.168.1.1
+Repeat count [5]:
+Datagram size [100]:
+Timeout in seconds [2]:
+Extended commands [n]: y
+Source address or interface: 172.20.1.1
+Type of service [0]:
+Set DF bit in IP header? [no]:
+Validate reply data? [no]:
+Data pattern [0xABCD]:
+Loose, Strict, Record, Timestamp, Verbose[none]:
+Sweep range of sizes [n]:
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+Packet sent with a source address of 172.20.1.1
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 31/34/47 ms
+```
+
+>__注意：__你需要搞清楚各种服务，以及各种服务所用到的端口。否则，要配置ACL就会非常棘手。本条ACL相当简单，因此可以仅用一行完成。在有着路由协议运行时，需要放行它们。
+
+要放行RIP，就要像这样指定。
+
+`access-list 101 permit udp any any eq rip`
+
+要放行OSPF，要像这样指定。
+
+`access-list 101 permit ospf any any`
+
+要放行EIGRP，要像这样指定。
+
+`access-list 101 permit eigrp any any`
+
+

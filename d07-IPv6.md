@@ -617,3 +617,40 @@ R1(config-if)#ipv6 address 3FFF:1234:ABCD:5678::/64
 R1(config-if)#exit
 ```
 
+按照此配置，`show ipv6 interface [name]`命令就可用于验证配置的IPv6地址子网（即`3FFF:1234:ABCD:5678::/64`）, 如下面的输出所示。
+
+```
+R1#show ipv6 interface FastEthernet0/0
+FastEthernet0/0 is up, line protocol is up
+	IPv6 is enabled, link-local address is FE80::20C:CEFF:FEA7:F3A0
+	Global unicast address(es):
+		3FFF:1234:ABCD:5678::1, subnet is 3FFF:1234:ABCD:5678::/64
+	Joined group address(es):
+		FF02::1
+		FF02::2
+		FF02::1:FF00:1
+		FF02::1:FFA7:F3A0
+...
+[Truncated Output]
+```
+
+就如在本模块早先指出的那样，IPv6允许在同一接口上配置多个前缀。而如过在同一借口上配置了多个前缀，`show ipv6 interface [name] prefix`命令，就可以用来查看所有分配的前缀，以及它们各自的有效和首选生命期数值。下面的输出显示了在一个配置了多个IPv6前缀的路由器接口上，该命令所打印出的信息。
+
+<pre>
+R1#show ipv6 interface FastEthernet0/0 prefix
+<b>IPv6 Prefix Advertisements FastEthernet0/0</b>
+Codes:	A - Address, P - Prefix-Advertisement, O - Pool
+		U - Per-user prefix, D - Default
+		N - Not advertised, C - Calendar
+	default [LA] Valid lifetime 2592000, preferred lifetime 604800
+AD	<b>3FFF:1234:ABCD:3456::/64</b> [LA] Valid lifetime 2592000, preferred lifetime 604800
+AD	<b>3FFF:1234:ABCD:5678::/64</b> [LA] Valid lifetime 2592000, preferred lifetime 604800
+AD	<b>3FFF:1234:ABCD:7890::/64</b> [LA] Valid lifetime 2592000, preferred lifetime 604800
+AD	<b>3FFF:1234:ABCD:9012::/64</b> [LA] Valid lifetime 2592000, preferred lifetime 604800
+</pre>
+
+> __注意：__ 和早前指出的一样，有效和首选生命期数值可自默认值进行修改，以实现在应用前缀重编号时的平滑过渡。但此配置是超出CCNA范围的，所以本教程不会对其进行演示。
+
+跟着借口配置命令`ipv6 prefix`的使用之后，关键字`[prefix-name sub-bits/prefix-length]`用于配置一个通用前缀（a general prefix），通用前缀指定要配置到该接口上的子网的那些前导位。这个配置也是超出当前CCNA考试要求的，本模块不会对其进行演示。
+
+

@@ -651,6 +651,55 @@ AD	<b>3FFF:1234:ABCD:9012::/64</b> [LA] Valid lifetime 2592000, preferred lifeti
 
 > __注意：__ 和早前指出的一样，有效和首选生命期数值可自默认值进行修改，以实现在应用前缀重编号时的平滑过渡。但此配置是超出CCNA范围的，所以本教程不会对其进行演示。
 
-跟着借口配置命令`ipv6 prefix`的使用之后，关键字`[prefix-name sub-bits/prefix-length]`用于配置一个通用前缀（a general prefix），通用前缀指定要配置到该接口上的子网的那些前导位。这个配置也是超出当前CCNA考试要求的，本模块不会对其进行演示。
+跟着接口配置命令`ipv6 prefix`的使用之后，关键字`[prefix-name sub-bits/prefix-length]`用于配置一个通用前缀（a general prefix），通用前缀指定要配置到该接口上的子网的那些前导位。这个配置也是超出当前CCNA考试要求的，本模块不会对其进行演示。
 
+关键字`[anycast]`用于配置一个IPv6任意播地址。和先前指出的那样，任意播分址允许将同一个公共地址（the same common address）分配到多个路由器接口。主机使用从路由协议度量值上看离它们最近的任意播地址。任意播配置超出CCNA考试要求范围，不会在本模块进行演示。
 
+`[autoconfig <default>]`关键字开启无状态自动配置（SLAAC）。如用到该关键字，路由器将动态学习链路上的前缀，之后将EUI-64地址加到所有学习到的前缀上。`[default]`关键字是一个允许安装一条默认路由的可选关键字（the `<default>` keyword is an optional keyword that allows a default route to be installed）。下面的配置样例，演示了如何在某个路由器接口上开启无状态自动配置，同时额外地允许安装上默认路由。
+
+```
+R2(config)#ipv6 unicast-routing
+R2(config)#interface FastEthernet0/0
+R2(config-if)#ipv6 address autoconfig default
+R2(config-if)#exit
+```
+
+按照这个配置，路由器R2将会监听FastEthernet0/0接口所在本地网段上的RA报文。该路由器将会对每个学习到的前缀，动态地配置一个EUI-64地址，并接着安装上指向该RA通告路由器本地链路地址的默认路由。使用`show ipv6 interface [name]`命令，即可对动态地址配置进行验证，如下面的输出所示。
+
+<pre>
+R2#show ipv6 interface FastEthernet0/0
+FastEthernet0/0 is up, line protocol is up
+	IPv6 is enabled, link-local address is FE80::213:19FF:FE86:A20
+	Global unicast address(es):
+		<b>3FFF:1234:ABCD:3456:213:19FF:FE86:A20, subnet is 3FFF:1234:ABCD:3456::/64 [PRE]</b>
+			valid lifetime 2591967 preferred lifetime 604767
+		<b>3FFF:1234:ABCD:5678:213:19FF:FE86:A20, subnet is 3FFF:1234:ABCD:5678::/64 [PRE]</b>
+			valid lifetime 2591967 preferred lifetime 604767
+		<b>3FFF:1234:ABCD:7890:213:19FF:FE86:A20, subnet is 3FFF:1234:ABCD:7890::/64 [PRE]</b>
+			valid lifetime 2591967 preferred lifetime 604767
+		<b>3FFF:1234:ABCD:9012:213:19FF:FE86:A20, subnet is 3FFF:1234:ABCD:9012::/64 [PRE]</b>
+			valid lifetime 2591967 preferred lifetime 604767
+		<b>FEC0:1111:1111:E000:213:19FF:FE86:A20, subnet is FEC0:1111:1111:E000::/64 [PRE]</b>
+			valid lifetime 2591967 preferred lifetime 604767
+	  Joined group address(es):
+		FF02::1
+		FF02::2
+		FF02::1:FF86:A20
+	  MTU is 1500 bytes
+...
+[Truncated Output]
+</pre>
+
+在上面的输出中，注意到尽管接口上没有配置显式的IPv6地址，还是动态地为该路由器经由侦听RA报文所发现的子网，配置了一个EUI-64地址。每个这些前缀的计时器，都继承自通告RA报文的那台路由器。为了进一步验证无状态自动配置，可以使用`show ipv6 route`命令，来验证到首选通告路由器本地链路地址的默认路由，如下面所演示的那样。
+
+<pre>
+R2#show ipv6 route ::/0
+IPv6 Routing Table - 13 entries
+Codes:	C - Connected, L - Local, S - Static, R - RIP, B - BGP
+		U - Per-user Static route
+		I1 - ISIS L1, I2 - ISIS L2, IA - ISIS inter area, IS - ISIS summary
+		O - OSPF intra, OI - OSPF inter, OE1 - OSPF ext 1, OE2 - OSPF ext 2
+		ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2
+<b>S	::/0 [1/0]
+	via FE80::20C:CEFF:FEA7:F3A0, FastEthernet0/0</b>
+</pre>

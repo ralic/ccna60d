@@ -703,3 +703,19 @@ Codes:	C - Connected, L - Local, S - Static, R - RIP, B - BGP
 <b>S	::/0 [1/0]
 	via FE80::20C:CEFF:FEA7:F3A0, FastEthernet0/0</b>
 </pre>
+
+在命令`ipv6 address`之后，关键字`[dhcp]`用于配置该路由器接口使用有状态自动配置（也就是DHPCv6），来请求该接口的分址配置。在此配置下，有着一个额外的关键字，`[rapid-commit]`, 同样可以追加到此命令之后，以允许地址分配及其它配置信息的二报文交换快速方式（the two-message exchange method）。
+
+再回到讨论主题，在`ipv6 address`命令下，关键字`[eui-64]`用于为某个接口配置一个IPv6地址，并在地址的低64位使用一个EUI-64地址而在该接口上开启IPv6处理。默认情况下，__本地链路、站点本地以及IPv6无状态自动配置都用到EUI-64格式来构造其各自的IPv6地址__。EUI-64分址__将48位MAC地址扩展到一个64位地址__。通过两步实现该扩展，这两步将在下一段进行说明。该过程就叫作无状态自动配置（stateless autoconfiguration），或SLAAC。
+
+构造EUI-64地址的第一步，将值`FFEE`插入到MAC地址的中间，就将12个十六进制字符的48位MAC地址扩展到16个十六进制字符的64位了。下图7.18演示了48位MAC地址到64位EUI地址的转换。
+
+![创建EUI-64地址](images/0718.png)
+__图7.18 -- 创建EUI-64地址__
+
+EUI-64分址的下一步涉及64位地址的第七位的设置。此第七位用于区分该MAC地址是否是唯一的。如该位设置为1, 就表明该MAC地址是一个全球受管理MAC地址（a globally managed MAC address）-- 也就是说该MAC地址是有某厂商分配的。如该位设置为0, 就表明该MAC地址是本地分配的--就意味着该MAC地址有可能是由管理员添加的。为更进一步搞清楚此声明，MAC地址实例`02:1F:3C:59:D6:3B`就被认为是一个全球分配的MAC地址（a globally-assigned MAC address）, 而MAC地址`00:1F:3C:59:D6:3B`则被看作是一个本地地址。下图7.19有演示。
+
+![确定本地及全球MAC地址](images/0719.png)
+__图7.19 -- 确定本地及全球MAC地址__
+
+

@@ -718,4 +718,79 @@ EUI-64分址的下一步涉及64位地址的第七位的设置。此第七位用
 ![确定本地及全球MAC地址](images/0719.png)
 __图7.19 -- 确定本地及全球MAC地址__
 
+按照这样的配置，命令`show ipv6 interface`就可用于验证验证分配到接口FastEthernet0/0上的IPv6接口ID， 如下面的输出所示。
+
+<pre>
+R2#show ipv6 interface FastEthernet0/0
+FastEthernet0/0 is up, line protocol is up
+	IPv6 is enabled, link-local address is FE80::213:19FF:FE86:A20
+	<b>Global unicast address(es):
+	  	3FFF:1A2B:3C4D:5E6F:213:19FF:FE86:A20, subnet is 3FFF:1A2B:3C4D:5E6F::/64 [EUI]</b>
+	Joined group address(es):
+		FF02::1
+		FF02::2
+	FF02::1:FF86:A20
+	MTU is 1500 bytes
+...
+[Truncated Output]
+</pre>
+
+要验证该EUI-64地址的构造过程，同样可以通过使用`show interface`命令，查看指定接口的MAC地址的方式，来检查该完整的IPv6地址。
+
+<pre>
+R2#show interface FastEthernet0/0
+FastEthernet0/0 is up, line protocol is up
+	<b>Hardware is AmdFE, address is 0013.1986.0a20 (bia 0013.1986.0a20)</b>
+		Internet address is 10.0.1.1/30
+</pre>
+
+从上面的输出可以看出，该EUI-64地址实际上是有效的，且是基于该接口的MAC地址。此外，该地址是全球地址，因为那个第七位是开启的（也就是改为包含的是一个非零值）。
+
+最后的`[link-local]`关键字用于分配给接口一个本地链路地址。一定要记住在默认情况下，对于动态地创建出一个本地链路地址来说，接口上并不是非得要启用一个IPv6前缀。而是当在某个接口下执行了接口配置命令`ipv6 enable`时，就会以EUI-64分址方式，自动创建出那个接口的一个本地链路地址。
+
+而如果要手动配置一个本地链路地址，就必须分配一个本地链路地址块`FE80::/10`中的地址。下面的配置实例，演示了如何在某接口上配置一个本地链路地址。
+
+```
+R3(config)#interface FastEthernet0/0
+R3(config-if)#ipv6 address fe80:1234:abcd:1::3 link-local
+R3(config-if)#exit
+```
+
+按照该配置，就可用`show ipv6 interface [name]`命令验证这个手动配置的本地链路地址，如下面的输出所示。
+
+```
+R3#show ipv6 interface FastEthernet0/0
+FastEthernet0/0 is up, line protocol is up
+	IPv6 is enabled, link-local address is FE80:1234:ABCD:1::3
+	Global unicast address(es):
+		2001::1, subnet is 2001::/64
+	Joined group address(es):
+		FF02::1
+		FF02::2
+		FF02::1:FF00:1
+		FF02::1:FF00:1111
+	MTU is 1500 bytes
+...
+[Truncated Output]
+```
+
+> __注意：__ 在进行手动配置本地链路地址时，如思科IOS软件侦测到另一主机正在使用一个它的IPv6地址，控制台上就会打印出一条错误消息，同时该命令将被拒绝。所以在手动配置本地链路地址时，要小心仔细。
+
+###IPv6子网划分
+
+__Subnetting with IPv6__
+
+如你已经学到的，IPv6地址分配给机构的是一个前缀。而IPv6地址的主机部分总是64位的EUI-64, 同时标准的前缀通常又是48位或/48。那么剩下的16位，就可由网络管理员用来自主用于子网划分了。
+
+在考虑网络分址时，因为同样的规则对IPv4和IPv6都是适用的，那就是每个网段只能有一个网络。不能分离地址而将一部分主机位用在这个网络，另一部分主机位用在其它网络。
+
+如你看着下面图表中的分址，就能更清楚这个情况。
+
+<table>
+<tr><th>全球路由前缀</th><th>子网ID</th><th>接口ID</th></tr>
+<tr><td>48位或/48</td><td>16位（65535个可能的子网）</td><td>64位</td></tr>
+</table>
+
+绝不用担心会用完每个子网的主机位，因为每个子网有超过2的64次幂的主机。任何组织要用完这些子网都是不大可能的，而就算发生了这种情况，也可以轻易地从ISP那里要一个前缀。
+
 

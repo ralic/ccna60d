@@ -590,7 +590,7 @@ DAD通过使用邻居询问（135类型的ICMPv6）及节点询问多播地址�
 
 在思科IOS软件中，路由器可配置通告带有被减少到接近0的有效和首选生命期的当前前缀，这就令到这些前缀能够更快地成为无效前缀。此时再将这些路由器配置为在本地网段上通告心的前缀。这样做会允许旧的前缀和新的前缀在同样的网段上并存。
 
-在过渡时期，本地网段上的主机用着两个单播地址：一个来自旧的前缀，一个来自新的前缀。那些使用旧前缀的当前连接仍被处理着；但所有自主机发出的新的连接，都是使用新的前缀的。在旧前缀超时后，就只使用新的前缀了。
+迁移期间，本地网段上的主机用着两个单播地址：一个来自旧的前缀，一个来自新的前缀。那些使用旧前缀的当前连接仍被处理着；但所有自主机发出的新的连接，都是使用新的前缀的。在旧前缀超时后，就只使用新的前缀了。
 
 ###配置无状态DHCPv6
 
@@ -602,11 +602,11 @@ __Configuring Stateless DHCPv6__
 + 在某个借口上开启它, enable it on an interface
 + 修改RA设置，modify Router Advertisement settings
 
-一个身份关联是分配给客户端的地址集合（an Identity Association is a collection of addresses assigned to the client）。使用到DHCPv6的每个借口都必须要有至少一个的身份关联（IA）。这里不会有CCNA考试的配置示例。
+一个身份关联是分配给客户端的一些地址（an Identity Association is a collection of addresses assigned to the client）。使用到DHCPv6的每个借口都必须要有至少一个的身份关联（IA）。这里不会有CCNA考试的配置示例。
 
 ###在思科IOS软件中开启IPv6路由
 
-现在，你就对IPv6基础知识有了扎实的掌握，本模块剩下的部分将会专注于思科IOS软件中IPv6的配置了。默认下，思科IOS软件中的IPv6路由功能是关闭的。那么就必须通过使用`ipv6 unicast-routing`这个全局配置命令来开启IPv6路由功能。
+现在，你对IPv6基础知识有了扎实掌握，本模块剩下的部分将会专注于思科IOS软件中IPv6的配置了。默认下，思科IOS软件中的IPv6路由功能是关闭的。那么就必须通过使用__`ipv6 unicast-routing`这个全局配置命令__来开启IPv6路由功能。
 
 在全局开启IPv6路由之后，接口配置命令`ipv6 address [ipv6-address/prefix-length | prefix-name sub-bits/prefix-length | anycast | autoconfig <default> | dhcp | eui-64 | link-local]`就可以用于配置接口的IPv6分址了。关键字`[ipv6-address/prefix-length]`用于指定分配给该接口的IPv6前缀和前缀长度。下面的配置演示了如何为一个路由器接口配置子网`3FFF:1234:ABCD:5678::/64`上的第一个地址。
 

@@ -793,7 +793,7 @@ __Subnetting with IPv6__
 
 绝不用担心会用完每个子网的主机位，因为每个子网有超过2的64次幂的主机。任何组织要用完这些子网都是不大可能的，而就算发生了这种情况，也可以轻易地从ISP那里要一个前缀。
 
-比如我们说分得了全球路由前缀（the global routing prefix）`0:123:abc/48`。该地址占用了一个完整IPv6地址的三个区段，而每个区段或4个字节（quartet）则是16位，那么到目前为止就用了48位。主机部分则需要64位，留下16位用于子网的分配。
+比如我们说分得了全球路由前缀（the global routing prefix）`0:123:abc/48`。该地址占用了一个完整IPv6地址的三个区段，而每个区段或4位字节（quartet）则是16位，那么到目前为止就用了48位。主机部分则需要64位，留下16位用于子网的分配。
 
 可以简单的从零（子网零也是合法的）开始以十六进制数下去。对于主机来说，也可以这样做，除非想要将头几个地址留给网段上的服务器，比如说。
 
@@ -832,4 +832,10 @@ __Subnetting with IPv6__
 ![IPv6子网分配](images/0720.png)
 __图7.20 -- IPv6子网分配__
 
+就是那么容易吗？如回忆一下IPv4子网划分章节，要完成子网划分，以及算出有多少主机多少子网并记住要排除一些地址，简直就是一场噩梦。__IPv6子网划分就容易得多__。你分配到的不一定是一个48位前缀，可能是一个用于家庭网络的`/56`或更小的前缀，但原则是一样的。也可以自位界限以外进行子网划分，但这是很少见的，且如果思科要你用考试中的很段时间完成那么深的细节，也是不公平的（You can also subnet off the bit boundary, but this would be most unusual and unfair of Cisco to expect you to go into that amount of detail in the short amount of time you have in the exam）。还好的是，考试不是要你考不过，但谁又知道呢（Hopefully, the exam won't be a mean attempt to catch you out, but you never know）。为以防万一，这里给出一个有着`/56`前缀长度的地址示例。
 
+`2001:123:abc:8bbc:1221:cc32:8bcc:4231/56`
+
+该前缀是56位，转换一下就是14个十六进制数位（14x4=56）, 那么就知道了该前缀将带到一个4位字节（quartet）的中间。__这里有个坑__。在前缀终止前，必须要将该4位字节的第3和4位置为零。
+
+`2001:123:abc:_8b00_:0000:0000:0000:0000/56`

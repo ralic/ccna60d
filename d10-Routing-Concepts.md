@@ -124,4 +124,4 @@ __IP Addressing and Address Summarisation__
 ![采用思科设计模型的路由汇总](images/1009.png)
 __图10.9 -- 采用思科设计模型的路由汇总__
 
-
+通过图10.9可以看出，那些分支局（接入层）到地区局路由器（分布层）都是双线路接入（the branch offices<Access Layer> are dual-homed to the regional office routers<Distribution Layer>）。

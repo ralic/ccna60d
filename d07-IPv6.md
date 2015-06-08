@@ -793,4 +793,37 @@ __Subnetting with IPv6__
 
 绝不用担心会用完每个子网的主机位，因为每个子网有超过2的64次幂的主机。任何组织要用完这些子网都是不大可能的，而就算发生了这种情况，也可以轻易地从ISP那里要一个前缀。
 
+比如我们说分得了全球路由前缀（the global routing prefix）`0:123:abc/48`。该地址占用了一个完整IPv6地址的三个区段，而每个区段或4个字节（quartet）则是16位，那么到目前为止就用了48位。主机部分则需要64位，留下16位用于子网的分配。
 
+可以简单的从零（子网零也是合法的）开始以十六进制数下去。对于主机来说，也可以这样做，除非想要将头几个地址留给网段上的服务器，比如说。
+
+用一个更简单的前缀来打比方吧 -- `2001:123:abc/48`。第一个子网就是全零，当然，每个子网上的第一台主机也可以是全零，这也是合法的（只要不保留IPv6中的全0s和全1s地址）。又会将全零主机表示为缩写形式的`::`。那么这里就有开头的几个子网及主机地址。
+
+<table>
+<tr><th>全球前缀</th><th>子网</th><th>第一个地址</th></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0000</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0001</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0002</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0003</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0004</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0005</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0006</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0007</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0008</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0009</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>000A</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>000B</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>000C</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>000D</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>000E</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>000F</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0010</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0011</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0012</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0013</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0014</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0015</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0016</pre></td><td><pre>::</pre></td></tr>
+<tr><td><pre>2001:123:abc</pre></td><td><pre>0017</pre></td><td><pre>::</pre></td></tr>
+
+</table>

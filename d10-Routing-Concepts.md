@@ -1,0 +1,63 @@
+#第10天
+
+__路由的一些概念__
+
+__Routing Concepts__
+
+##第10天的任务
+
++ 阅读今天的课文
++ 回顾昨天的课文
++ 完成今天的实验
++ 阅读ICND1记诵指南
++ 在网站[subnetting.org](http://subnetting.org/)上花15分钟
+
+ICND1考试要求你对__基本路由__（basic routing）及__数据包流经某个网络的过程__(packet flow accross a network)，有所掌握。我们也会__对各种路由协议背后的技术有所了解__(take a look at the technology behind routing protocols)。
+
+今天将会学到以下知识。
+
++ 基本的路由, basic routing
++ 各种有类和无类协议，classful and classless protocols
++ 路由协议的分类，routing protocol classes
+
+本模块对应了CCNA大纲要求的以下方面。
+
++ 描述基本路由的一些概念
+	- CEF
+	- 包转发，packet forwarding
+	- 寻获路由器的过程，router lookup process
++ 区分不同路由和路由协议的方式
+	- 链路状态对距离矢量，Link State vs. Distance Vector
+	- 下一跳，next hop
+	- IP路由表，IP routing table
+	- 被动接口(它们的工作方式)，passive interfaces（how they work）
+
+##基本路由
+
+__Basic Routing__
+
+路由协议的角色，一是__动态地学习其它网络__，二是__与其它设备交换路由信息__，三就是__连接上内部和/或外部网络__。
+
+务必要清楚，路由协议__不会__跨越网络发送数据包。它们是用来确定路由的最佳路径（their role is to determaine the best path for routing）。受路由的那些协议（routed protocols）才真正发出数据，而一个最常见的受路由协议实例，就是IP。
+
+不同路由协议采用不同方式来确定到某个网络或网络节点的最优路径。一些类型的路由协议，在静态环境或者说几乎没有变化的环境中运行最好，但却在这些环境发生变化后，需要很长时间进行收敛（converge）。另一些协议，则能够对网络中发生的变化迅速反应而能快速地进行收敛。
+
+当网络中所有路由器有着同样的视图（view）并对那些最优路由达成一致时，就实现了网络收敛（network convergence）。在要很长时间才能实现收敛时，将会发生远端网络之间间歇性的丢包及连通性丢失。除了这些问题之外，慢速的收敛还会导致网络路由循环（network routing loops）及完全的网络中断（outright network outages）。__所用到的路由协议算法确定了收敛情况__。
+
+因为这些路由协议有着不同特征，而在其各自的伸缩性（scalability）和性能上有所不同。一些路由协议适合于小型网络，而其它协议则既可用于小型、中型网络，又可在大型网络中使用。
+
+###包转发
+
+__Packet Forwarding__
+
+包转发涉及两个过程。
+
++ 确定最优路径, determining the best path
++ 发出数据包（交换），sending the packet(switching)
+
+当路由器接收到一个发往其直接连接网络的数据包时，该路由器就检查其路由表并将该数据包转发到那个网络，如图10.1所示。
+
+![直连网络](images/1001.png)
+__图10.1 -- 直连网络__
+
+

@@ -825,5 +825,11 @@ __Subnetting with IPv6__
 <tr><td><pre>2001:123:abc</pre></td><td><pre>0015</pre></td><td><pre>::</pre></td></tr>
 <tr><td><pre>2001:123:abc</pre></td><td><pre>0016</pre></td><td><pre>::</pre></td></tr>
 <tr><td><pre>2001:123:abc</pre></td><td><pre>0017</pre></td><td><pre>::</pre></td></tr>
-
 </table>
+
+我肯定你已经注意到这与IPv4分址规则有所不同，不同之处就在与__可以使用全零子网，同时子网的第一个地址总是全零__。请看看下面这个简单的网络拓扑，可以照这种方式进行子网分配。
+
+![IPv6子网分配](images/0720.png)
+__图7.20 -- IPv6子网分配__
+
+

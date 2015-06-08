@@ -839,3 +839,93 @@ __图7.20 -- IPv6子网分配__
 该前缀是56位，转换一下就是14个十六进制数位（14x4=56）, 那么就知道了该前缀将带到一个4位字节（quartet）的中间。__这里有个坑__。在前缀终止前，必须要将该4位字节的第3和4位置为零。
 
 <pre>2001:123:abc:<b>8b00</b>:0000:0000:0000:0000/56</pre>
+
+上面对位界限分离的地方进行了加粗（I've blod the quartet where the bit boundary is broken）。在匆忙中及考试中时间上的压力下，可能会完全忘记这重要的一步。请记住也要将下面这个地址（第一个子网上的第一台主机）写作这样。
+
+<pre>2001:123:abc:<b>8b00</b>::/56</pre>
+
+如他们硬要在考试中把你赶出去，就可能会试着让你把那两个零从位界限分离处之前的4位字节中去掉（If they do try to catch you out in the exam, it would probably be an attempt to have you remove the trailing zeros from the quartet before the bit boundary is broken）。
+
+<pre>2001:123:abc:<b>8b</b>::/56</pre>
+
+那么上面这个缩写就是非法的了。
+
+也可以从主机部分借用位来用于子网划分，但绝没有理由这么做，同时这么做也会破坏采行发明IPv6而带来的可资利用的那些众多特性的能力，包括无状态自动配置（You can steal bits from the host portion to use for subnets, but there should never be a reason to and it would break the ability to use many of the features IPv6 was invented to utilise, including stateless autoconfiguration）。
+
+##IPv6和IPv4的比较
+
+__IPv6 Compared to IPv4__
+
+一名网络工程师应有一幅IPv6比起IPv4所带来众多优势的图景。看着IPv6的增强，可以总结出下面这些优势。
+
++ IPv6有着一个扩展的地址空间，从32位扩展到了128位, IPv6 has an expanded address space, from 32 bits to 128bits
++ IPv6使用十六进制表示法，而不是IPv4中的点分十进制表示法, IPv6 uses hexadecimal notation instead of dotted-decimal notation(as in IPv4)
++ 因为采用了扩展的地址空间，IPv6地址是全球唯一地址，从而消除了NAT的使用需求, IPv6 addresses are globally unique due to the extended address space, eliminating the need for NAT
++ IPv6有着一个固定的头部长度（40字节），允许厂商在交换效率上进行提升, IPv6 has a fixed header length(40 bytes), allowing vendors to improve switching efficiency
++ IPv6通过在IPv6头部和传输层之间放入扩展头部，而实现对一些增强选项（这可以提供新特性）的支持, IPv6 supports enhanced options(that offer new features)by placing extension headers between the IPv6 header and the Transport Layer header
++ IPv6具备地址自动配置的能力，提供无需DHCP服务器的IP地址动态分配, IPv6 offers address autoconfiguration, providing for dynamic assignment of IP addresses even without a DHCP server
++ IPv6具备对流量打标签的支持, IPv6 offers support for labeling traffic flows
++ IPv6有着内建的安全功能，包括经由IPSec实现的认证和隐私保护功能等, IPv6 has security capabilities built in, including authentication and privacy via IPSec
++ IPv6具备在往目的主机发送数据包之前的路径MTU发现功能，从而消除碎片的需求, IPv6 offers MTU path discovery before sending packets to a destination, eliminating the need for fragmentation
++ IPv6支持站点多处分布，IPv6 supports site multi-homing
++ IPv6使用ND（邻居发现，Neighbor Discovery）协议取代ARP，IPv6 uses the ND protocol instead of ARP
++ IPv6使用AAAA DNS记录，取代IPv4中的A记录, IPv6 uses AAA DNS records instead of A records (as in IPv4)
++ IPv6使用站点本地分址，取代IPv4中的RFC 1918， IPv6 uses Site-Local addressing instead of RFC 1918(as in IPv4)
++ IPv4和IPv6使用不同的路由协议, IPv4 and IPv6 use different routing protocols
++ IPv6提供了任意播分址, IPv6 provides for Anycast addressing
+
+##第七天的问题
+
+1. IPv6 addresses must always be used with a subnet mask. True or false?
+2. Name the three types of IPv6 addresses.
+3. Which command enables IPv6 on your router?
+4. The `0002` portion of an IPv6 address can be shortened to just 2. True or false?
+5. How large is the IPv6 address space?
+6. With IPv6, every host in the world can have a unique address. True or false?
+7. IPv6 does not have natively integrated security features. True or false?
+8. IPv6 implementations allow hosts to have multiple addresses assigned. True or false?
+9. How can the broadcast functionality be simulated in an IPv6 environment?
+10. How many times can the double colon (`::`) notation appear in an IPv6 address?
+
+##第七天问题答案
+
+1. False.
+2. Unicast, Multicast, and Anycast.
+3. The `ipv6 unicast-routing`
+4. True.
+5. 128 bits.
+6. True.
+7. False.
+8. True.
+9. By using Anycast.
+10. One time.
+
+##第七天实验
+
+###IPv6概念实验
+
+__IPv6 概念实验__
+
+在一对直接连接的思科路由器上，对在本模块中提到的IPv6概念和命令，进行测试。
+
++ 在两台路由器上都开启IPv6全球单播路由
++ 在每个连接的接口上手动配置一个IPv6地址，比如下面这样。
+	- 在路由器R1的连接接口上配置`2001:100::1/64`
+	- 在路由器R2的连接接口上配置`2001:100::2/64`
++ 使用命令`show ipv6 interface`和`show ipv6 interface prefix`对配置进行验证
++ 测试直接ping的连通性
++ 使用IPv6无状态自动配置（`ipv6 address autoconfig default`）进行重新测试
++ 使用EUI-64地址（IPv6地址`2001::/64` EUI-64）进行重新测试
++ 硬编码一个借口本地链路地址: `ipv6 address fe80:1234:adcd:1::3 link-local`
++ 查看IPv6路由表
+
+###十六进制转换及子网划分练习
+
+__Hex Conversion and Subnetting Practice__
+
+请把今天剩下的时间用于练习这些重要的题目上。
+
++ 将十进制转换成十六进制（随机数字）
++ 将十六进制转换成十进制（随机数字）
++ IPv6子网划分（随机网络和场景）
+

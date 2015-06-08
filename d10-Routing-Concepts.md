@@ -32,7 +32,7 @@ ICND1考试要求你对__基本路由__（basic routing）及__数据包流经�
 	- IP路由表，IP routing table
 	- 被动接口(它们的工作方式)，passive interfaces（how they work）
 
-##基本路由
+##路由基础知识
 
 __Basic Routing__
 
@@ -96,5 +96,32 @@ __图10.7 -- 离开路由器A的数据包__
 
 ![离开路由器C的数据包](images/1008.png)
 __图10.8 -- 离开路由器C的数据包__
+
+###互联网协议路由基础知识
+
+__Internet Protocol Routing Fundamentals__
+
+正是某种路由协议，才令到路由器实现如何达到其它网络的动态学习。路由协议还令到路由器实现与其它路由器或主机，就学习到的网络信息进行交换。这些路由协议可用于连接内部园区网络（connecting interior/internal campus networks），也用于连接不同企业或路由域（connecting different enterprises or __routing domains__）。因此，不光要掌握这些路由协议的复杂之处，还要牢固掌握何时在何种情况下要用这种路由协议，而不用另一种的原因。
+
+###平坦及层次化路由算法
+
+__Flat and Hierarchical Routing Algorithms__
+
+路由协议算法要么以平坦路由系统运作，要么就以层次化路由系统运作（routing protocol algorithms operate using either a flat routing system or a hierarchical routing system）。层次化路由系统在路由器纳入到被称作域、分区或自治系统的逻辑分组中时，采用的是层次化方法（a hierarchical routing system uses a layered approach wherein routers are placed in logical groupings referred to as domains, areas, or autonomous systems）。这样做允许网络中的不同路由器完成各自特定任务，从而优化在这些层上完成的功能。层次化系统中的一些路由器可与其它域或区域的路由器通信，而其他路由器只能与同一域或区域中的路由器进行通信。这样做可以减少该域中路由器必须处理信息的数量，从而实现网络内的快速收敛。
+
+平坦路由系统没有层次。在此类系统中，路由器一般都要连接到网络中的其它所有路由器，且每台路由器基本上都有着同样的功能。在甚小型网络中，此类算法可以工作得很好；但是，这些算法不是可伸缩的。此外，伴随网络增长，故障排除就变得更为棘手，因为比如原本只需努力解决确切的几个区域的问题，现在却不得不面对整个网络的问题。
+
+由层次化路由系统所带来的主要优势，就是这类系统的可伸缩性。层次化路由系统还令到对网络改变十分容易，这和包含了核心、分布和接入层的传统层次化网络设计带来的优势十分相似。此外，层次化算法可用于在网络的一些区域减少路由更新流量，并减小路由表大小，同时仍然保证完整的网络连通性。
+
+###IP分址和地址汇总
+
+__IP Addressing and Address Summarisation__
+
+一个IP地址是分作两部分的。第一部分指明了网络地址，而第二部分指明的是主机地址。在设计某个网络时，就会用到某种IP分址方案，来将网络中的主机及设备进行唯一区分。该IP分址方案应是层次化的，且应建立在传统的逻辑的层次化模型上。这样做就能实现该分址方案于网络中提供出一些指定点位，在该点位处完成有效的路由汇总。
+
+汇总（summarisation）减少路由器所必须处理信息的数量，以此就可以实现网络的快速收敛。汇总还通过隐藏网络中某些区域的详细拓扑信息，从而令到因网络发生改变而受影响区域的大小受限。此概念在下图10.9中进行了演示。
+
+![采用思科设计模型的路由汇总](images/1009.png)
+__图10.9 -- 采用思科设计模型的路由汇总__
 
 

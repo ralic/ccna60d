@@ -182,6 +182,6 @@ Routing Protocol is “isis”
 		Serial0/0
 	Routing Information Sources:
 		Gateway		Distance	Last Update
-		10.0.0.2	     <b>115</b>	00:06:53
+		10.0.0.2	     <b>115</b>		00:06:53
 Distance: (default is 115 )
 </pre>

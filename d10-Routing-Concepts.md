@@ -270,6 +270,89 @@ __表10.3 -- 匹配最长前缀__
 <tr><td>0.0.0.0/0</td><td>第五</td><tr>
 </table>
 
-> __注意：__ 尽管在表10.3中默认路由是位列路由选择顺序最后的，但要记住一条默认路由并非总是出现在路由表中的。如路由表中没有默认路由，同时也没有到地址1.1.1.1的路由条目，那么路由器就会简单地丢弃到那个目的地的数据包。大多数情况下，路由器会发给源主机一条ICMP消息，告知其目的主机不可达。而一条默认路由就是用于将目的网络未在路由表中显式列出的数据包，导向默认路由。
+> __注意：__ 尽管在表10.3中默认路由是位列路由选择顺序最后的，但要记住一条默认路由并非总是出现在路由表中的。如路由表中没有默认路由，同时也没有到地址`1.1.1.1`的路由条目，那么路由器就会简单地丢弃到那个目的地的数据包。大多数情况下，路由器会发给源主机一条ICMP消息，告知其目的主机不可达。而一条默认路由就是用于将目的网络未在路由表中显式列出的数据包，导向默认路由。
 
+###IP路由表的建立
 
+__Building the IP Routing Table__
+
+如没有一张包含远端网络路由条目的路由表，或称之为路由信息库，路由器就不能将数据包转发到这些远端网络（without a populated routing table, or Routing Information Base(RIB), that contains entries for remote networks, routers will not be able to forward packets to those remote networks）。路由表可能包含了一些特定网络的条目或简单的一条默认路由。转发进程（the forwarding process）使用路由表中的信息将流量转发到目的网络或主机。路由表本身不会去实际转发流量。
+
+思科路由器使用管理距离、路由协议度量值及前缀长度，来决定哪些路由要实际放入到路由表中，这就允许路由器建立其路由表。通过下面的一般步骤，建立起路由表。
+
+1. 如路由表中当前不存在该路由条目，就将该条目加入到路由表。
+2. 如某路由条目比起一条既有路由更为具体，就将其加入到路由表。应注意原较不具体的条目在路由表中仍有留存。
+3. 如某路由条目与一条既有条目一样，但其是从一个更为首选的路由源处收到的，就用该新条目替换旧条目。
+4. 如该路由条目与一条既有条目一样，又是从同一协议收到的，就做以下处理。
+	- 如其比既有路由有着更高的度量值，就丢弃新路由；或
+	- 如新路由的度量值更低，就替换既有路由；或
+	- 新旧路由的度量值一样时，将两条路由用作负载均衡
+
+默认情况下建立路由信息库，当路由器在决定哪些路由要放入路由表时，总会选用有着最低管理距离值的路由协议。比如，某台路由器收到经由__外部的EIGRP__、OSPF及内部BGP给出的`10.0.0.0/8`前缀时，OSPF的路由将被放入到路由表中。而在那条路由被移除，或是不再收到时，外部EIGRP路由将被放入路由表中。最后如果OSPF和外部EIGRP路由都不再出现时，内部BGP路由就被用到。
+
+一旦路由已放入到路由表，默认情况下比起那些较不具体的路由，最为具体或有着最长匹配前缀的路由总是优先选用的。这在下面的实例中进行了演示，该实例展示了包含有`80.0.0.0/8`、`80.1.0.0/16`及`80.1.1.0/24`前缀路由条目的一个路由表。这三条路由前缀分别通过EIGRP、OSPF及RIP路由协议接收到。
+
+```
+R1#show ip route
+Codes:	C - connected, S - static, R - RIP, M - mobile, B - BGP
+		D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+		N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+		E1 - OSPF external type 1, E2 - OSPF external type 2
+		i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+		* - candidate default, U - per-user static route, o - ODR
+		P - periodic downloaded static route
+Gateway of last resort is not set
+R		 80.1.1.0/24 [120/1] via 10.1.1.2, 00:00:04, Ethernet0/0.1
+D		 80.0.0.0/8 [90/281600] via 10.1.1.2, 00:02:02, Ethernet0/0.1
+O E2	 80.1.0.0/16 [110/20] via 10.1.1.2, 00:00:14, Ethernet0/0.1
+```
+
+从上面的输出看出，第一条路由是`80.1.1.0/24`。该路由是经由RIP学习到的，因此有着默认的管理距离值120。第二条路由是`80.0.0.0/8`。该路由是经由__内部的EIGRP__学习到的，因此有着默认管理距离值90。第三条路由是`80.1.0.0/16`。该路由是通过OSPF学习到的，且是一条有着管理距离110的__外部的OSPF__路由。
+
+> __注意：__ 因为这些路由协议度量值各不相同，在有着来自不同协议的路由安装到路由表时，这些__度量值是在决定要使用的最佳路由时的非要素__。下面的部分将说明思科IOS软件是如何来建立路由表的。
+
+基于该路由表的内容，如路由器收到一个目的为`80.1.1.1`的数据包，就会使用那条RIP路由，因为这是最为具体的条目，尽管EIGRP和OSPF都有着更好的管理距离值而是更为优先的路由来源。`show ip route 80.1.1.1`命令可用于检验这点。
+
+```
+R1#show ip route 80.1.1.1
+Routing entry for 80.1.1.0/24
+	Known via “rip”, distance 120, metric 1
+	Redistributing via rip
+	Last update from 10.1.1.2 on Ethernet0/0.1, 00:00:15 ago
+	Routing Descriptor Blocks:
+	* 10.1.1.2, from 10.1.1.2, 00:00:15 ago, via Ethernet0/0.1
+		Route metric is 1, traffic share count is 1
+```
+
+##有类和无类协议
+
+__Classful and Classless Protocols__
+
+有类协议无法使用VLSM（也就是RIPv1和IGRP，它们都已不在CCNA大纲中了）。这是因为它们不会去识别除了默认网络掩码外的其它任何东西。
+
+<pre>
+Router#debug ip rip
+RIP protocol debugging is on
+01:26:59: RIP: sending v1 update to 255.255.255.255 via Loopback0
+<b>192.168.1.1</b>
+</pre>
+
+有类协议用到VLSM（也就是RIPv2和EIGRP）。
+
+<pre>
+Router#debug ip rip
+RIP protocol debugging is on
+01:29:15: RIP: received v2 update from 172.16.1.2 on Serial0
+01:29:15:<b>192.168.2.0/24</b> via 0.0.0.0
+</pre>
+
+##被动接口
+
+__Passive Interfaces__
+
+路由协议设计和配置的一个重要考虑，就是要限制不必要的数据交换（an important routing protocol design and configuration consideration is to limit unnecessary peerings）, 如下图10.10所示。这是通过使用被动接口实现的, 其可以阻止路由器在指定接口上形成路由邻接关系。此功能的使用，基于特定路由协议，会有所不同，但做法通常有以下两类。
+
++ 路由器不再被动接口上发出路由更新
++ 路由器不再该接口上发送Hello数据包，这样做就不会形成邻居关系
+
+被动接口通常能接收到路由更新及Hello数据包，但不被允许发出任何种类的路由协议信息出去。

@@ -141,5 +141,27 @@ __Administrative Distance__
 
 管理距离用于决定一个路由信息來源对另一个的可靠性（administrative distance is used to determine the reliability of one source of routing information from another）。一些路由信息来源被认为相较其它源更为可靠；那么，当自两种或更多不同路由协议得出两种或更多到同一目的的路径时，管理距离就可用于决定到某个目的网络或网络节点的最优或首选路径。
 
-在思科IOS软件中，所有路由信息来源都分配了一个默认的管理距离数值。该默认
->>>>>>> e5cd698e79f1656e4b56aad9720d0ede40152929
+在思科IOS软件中，__所有路由信息来源都分配了一个默认管理距离值__。该默认值是一个0到255之间的整数，其中值0分配给最可靠的路由信息来源，值255分配给最不可靠的来源。任何分配了管理距离值255的路由，都被认为是不受信任的，且不会被放入到路由表中。
+
+__管理距离是一个仅影响本地路由器的本地有意义值__。该值不会在路由域中传播（this value is not propagated throughout the routing domain）。因此，对一台路由器上某个或某些路由来源默认管理距离的修改，仅影响那台路由器对路由信息来源的选用。表10.1展示了思科IOS软件中所用到的默认管理值（考试要求掌握这些值）。
+
+__表10.1 -- 路由器管理距离__
+
+__Router Administrative Distances(ADs)__
+
+<table>
+<tr><th>路由来源</th><th>管理距离（AD）</th></tr>
+<tr><td>连接的接口，Connected Interfaces</td><td>0</td></tr>
+<tr><td>静态路由，Static Routes</td><td>1</td></tr>
+<tr><td>增强内部网关路由协议汇总路由，Enhanced Interior Gateway Routing Protocol(EIGRP) Summary Routes</td><td>5</td></tr>
+<tr><td>外部边界网关协议路由，External Border Gateway Protocol(eBGP) Routes</td><td>20</td></tr>
+<tr><td>内部的增强内部网关路由协议路由，Internal Enhanced Interior Gateway Routing Protocol(EIGRP) Routes</td><td>90</td></tr>
+<tr><td>开放最短路径优先的内部和外部路由，Open Shortest Path First(OSPF) Internal and External Routes</td><td>110</td></tr>
+<tr><td>中间系统到中间系统的内部和外部路由，Intermediate System-to-Intermediate System(IS-IS) Internal and External Routes</td><td>115</td></tr>
+<tr><td>路由信息协议路由，Routing Information Protocol(RIP) Routes</td><td>120</td></tr>
+<tr><td>外部网关协议路由，Exterior Gateway Protocol(EGP) Routes</td><td>140</td></tr>
+<tr><td>按需路由的路由，On-Demand Routing(ODR) Routes</td><td>160</td></tr>
+<tr><td>外部的增强内部网关路由协议路由，External Enhanced Interior Gateway Routing Protocol(EIGRP) Routes</td><td>170</td></tr>
+<tr><td>内部的边界网关协议路由，Internal Border Gateway Protocol(iBGP) Routes</td><td>200</td></tr>
+<tr><td>不可达或未知路由，Unreachable or Unknown Routes</td><td>255</td></tr>
+</table>

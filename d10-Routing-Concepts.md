@@ -165,3 +165,23 @@ __Router Administrative Distances(ADs)__
 <tr><td>内部的边界网关协议路由，Internal Border Gateway Protocol(iBGP) Routes</td><td>200</td></tr>
 <tr><td>不可达或未知路由，Unreachable or Unknown Routes</td><td>255</td></tr>
 </table>
+
+默认路由来源管理距离会显示在`show ip protocols`命令的输出中。下面的输出演示了这点。
+
+<pre>
+R1#show ip protocols
+Routing Protocol is “isis”
+	Invalid after 0 seconds, hold down 0, flushed after 0
+	Outgoing update filter list for all interfaces is not set
+	Incoming update filter list for all interfaces is not set
+	Redistributing: isis
+	Address Summarization:
+		None
+	Maximum path: 4
+	Routing for Networks:
+		Serial0/0
+	Routing Information Sources:
+		Gateway		Distance	Last Update
+		10.0.0.2	     <b>115</b>	00:06:53
+Distance: (default is 115 )
+</pre>

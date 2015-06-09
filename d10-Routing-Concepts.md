@@ -185,3 +185,76 @@ Routing Protocol is “isis”
 		10.0.0.2	     <b>115</b>		00:06:53
 Distance: (default is 115 )
 </pre>
+
+###路由度量值
+
+__Routing Metrics__
+
+各种路由协议算法都会用到度量值，度量值是一个关联到特定路由的数值（routing protocol algorithms use metrics, which are numerical values that are associated with specific values）。使用这些数值来从路由协议学习到的路径中，从最优先到最不优先的顺序，进行优先选用（these values are used to prioritise or prefer routes learned by the routing protocol, from the most preferred to the least preferred）。本质上具有较低路由度量值的路由，就是该路由协议的较高优先顺序的路由。具有最低度量值的路由，通常就是到目的网络代价最小，或者说最优的路由。该条路由将被放入到路由表，并被用于将数据包转发到目的网络。
+
+不同路由算法用到不同变量来计算路由度量值。一些路由算法仅用到一个变量，而其他先进路由算法会用到多于一个变量来决定某条特定路由的度量值。多数情况下，由一种路由协议计算出的度量值，是不兼容于那些由另一种路由协议所使用的度量值的。不同路由协议的度量值都会基于下面变量的一种或几种。
+
++ 带宽，bandwidth
++ 成本，cost
++ 延迟，delay
++ 负载, Load
++ 路径长度，path length
++ 可靠性, reliability
+
+__带宽__
+
+带宽一词，指的是在给定时间内，从一点往另一点可以传输数据的数量。一些路由算法会用到带宽来决定何种链路类型较其它类型更为首选。比如，某种路由协议会首选GigabitEthernet而不是FastEthernet, 因为前者比起后者有着提升了的容量。
+
+在思科IOS软件中，接口配置命令__`bandwidth`可用于修改某个接口的默认带宽值，从而有效地操纵某种路由协议选择一个接口而不是另一个__。比如，在用接口配置命令`bandwidth 1000000`将FastEthernet接口进行配置后，那么FastEthernet和GigabitEthernet二者在路由协议看起来就具有了相同的传输容量，而会分配到同样的度量值。其中一条链路仍然是FastEthernet链路，而另一条是GigabitEthernet的事实，与路由协议不相关。
+
+从一名网络管理员的角度看，重要的是理解__`bandwidth`命令不会影响接口的物理容量__（因此该命令又是被成为是一个道具命令(a cosmetic command)）。也就是说，在FastEthernet接口上配置了更高的带宽，并不意味着其就具备了支持GigabitEthernet速率的能力。__开放路径优先（OSPF）和增强内部网关路由协议（EIGRP）都在度量值计算中用到了带宽变量__。
+
+###成本
+
+__Cost__
+
+在涉及路由算法时，成本指的是通信成本（the cost, as it pertains to routing algorithms, refers to communication cost）。比如，某公司选择按传输的数据、或按使用时间付费的私有链路，而不是公共链路，就会造成成本的使用。__中间系统到中间系统（IS-IS）路由协议支持一个可选的，度量链路使用成本的费用度量值__（an optional expense metric）。依据不同协议，配置成本会有所不同。
+
+__延迟__
+
+__Delay__
+
+延迟的类型有多种，所有的延迟又影响不同类型的流量。一般意义上的延迟，是指将一个数据包通过互联网络，从其源处移到目的处所需要的时间长度。在思科IOS软件中，接口延迟值以微秒（us）计算的。
+
+通过接口配置命令`delay`来配置接口的延迟值。在配置接口延迟值时，重要的是记住__这样做并不会影响到流量__（又是一个道具命令）。比如，配置了一个5000的延迟值，并不意味着从该接口发出的流量将有一个额外的5000us延迟。下表10.2展示了思科IOS软件中常见接口的默认延迟值。
+
+<table>
+<tr><th>接口类型</th><th>延迟（us）</th></tr>
+<tr><td>10Mbps Ethernet</td><td>1000</td></tr>
+<tr><td>FastEthernet</td><td>100</td></tr>
+<tr><td>GigabitEthernet</td><td>10</td></tr>
+<tr><td>T1串行线路</td><td>20000</td></tr>
+</table>
+
+__EIGRP将接口延迟数值用作其度量值计算的部分__。手动修改接口延迟值会造成EIGRP度量值的重新计算。
+
+__负载__
+
+__Load__
+
+负载对不同的人来说有不同的意思。例如，在一般计算术语中，负载是指某项计算资源，譬如CPU，当前的使用量。而在此处，负载是指某个特定路由器接口使用的比例（load, as it applies in this context, refers to the degree of use for a particular router interface）。接口上的负载是一个255的分数。比如，一个255/255的负载就表明该接口已完全饱和，而一个128/255的负载则表明该接口是50%饱和的。默认情况下，负载是按5分钟平均值计算的（真实世界中常使用__接口配置命令`load-interval 30`__将其修改为一个最小的30s）。__接口负载值可用于EIGRP中的度量值计算__。
+
+__路径长度__
+
+__Path Length__
+
+路径长度度量值是自本地路由器到目的网络所经过路径的总长度。不同路由算法在表示该值时有着不同的形式。比如路由信息协议（Routing Information Protocol, RIP）对在本地路由器和目的网络之间的__路由器__进行计数（跳数，hops）， 并使用该跳数作为度量值，而边界网关协议（Border Gateway Protocol, BGP）则对在本地路由器和目的网络之间__所经过的自治系统__进行计数，并使用该自治系统数来选择最优路径。
+
+__可靠性__
+
+__Reliability__
+
+和负载一样，可靠性一词，也是依据其所在上下文的不同，有着不同的意义。在这里，除非另有说明，总是可以假定可靠性是指网络链路或接口的可靠性、可信任性。在思科IOS软件中，某条链路或某个接口的可靠性表示为一个255的分数。比如，一个255/255的可靠性值表明接口是100%可靠的。与接口负载类似，某接口的默认可靠性是以过去5分钟平均值进行计算的。
+
+###前缀匹配
+
+__Prefix Matching__
+
+
+
+

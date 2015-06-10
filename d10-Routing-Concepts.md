@@ -354,7 +354,7 @@ __Passive Interfaces__
 被动接口通常能接收到路由更新或Hello数据包，但不被允许发出任何种类的路由协议信息出去。
 
 ![限制不必要的数据交换](images/1010.png)
-__图10.10 -- 限制不必要的数据交换__
+__图10.10 -- 限制不必要的对等数据交换__
 
 被动接口的一个用例实例就是用于防止路由协议数据自分布层对等传送（peerings）到接入层，就如同上面的图10.10所示。当留有三层跨越这些性质不同的接入层交换机的对等传输时（也就是在跨越交换机区块的不同交换机上有着多台主机），就只会增加内存负载、路由协议更新开销及更多的复杂性。同样，如发生了某条链路故障，流量会经由一台邻居接入交换机传输，而到达另一个VLAN成员处（by having Layer 3 switches across the different Access Layer switches(i.e., having multiple hosts on different switches across switch blocks) you are basically adding memory load, routing protocol update overhead, and more complexity. Also, if there is a link failure, the traffic may transit through a neighbouring Access Layer switch to get to another VLAN member）。
 
@@ -389,4 +389,21 @@ __The Shortest Path First Algorithms__
 
 __Distance Vector Routing Protocols__
 
-距离矢量是一种__用距离或跳数计数作为主要度量值__，来决定最佳转发路径的路由协议。
+距离矢量是一种__用距离或跳数计数作为主要度量值__，来决定最佳转发路径的路由协议。距离矢量路由协议又是主要建立在Bellman-Ford算法基础上。距离矢量路由协议发送其邻居路由器的完整路由表，以保持这些路由器有关网络状态的最新信息（Distance Vector routing protocols periodically send their neighbour routers copies of their entire routing tables to keep them up to date on the state of the network）。__在某个小型网络中这也许可以接受，而当网络增大时，通过网络发送的流量数量就会增长__。所有距离矢量路由协议都有着以下的特征。
+
++ 计数到无限大，counting to infinity
++ 水平分割, split horizon
++ 反向投毒，poison reverse
++ 保持计数器，hold-down timers
+
+对计数到无穷的运用，如某个目的网络远于路由协议所允许的最大跳数，该网络就认为其是不可达的。该网络的路由条目因此就不会安装到IP路由表中。
+
+水平分割特征指明路由信息再不能从其接收到的接口再发送出去。这样做就可以阻止路由信息再通告给学习到它的源路由器。尽管此特征是一种了不起的防止环回机制，但也有显著的不利之处，特别是在辐射状网络中。
+
+反向投毒（或路由投毒）是水平分割的拓展。在与水平分割配合使用时，反向投毒可令到自某个接口上收到的网络，再从同样接口通告出去。但反向投毒造成路由器将某网络以“不可达”度量值，通告回发出该网络的路由器，那么收到这些条目的路由器就不会将这些条目再加入到其路由表中了。
+
+保持计数器用于阻止那些先前通告的网络由于宕掉而被放回到路由表中（hold-down timers are used to prevent networks that were previously advertised as down from being placed back into the routing table）。在路由器收到一个某网络宕掉的更新时，就启动它的保持计数器。该计数器告诉路由器在接受任何那个网络的状态变化之前，等待一段指定的时间。
+
+在保持期间，路由器压制住该网络并阻止通告出无效信息（during the hold-down period, the router suppresses the network and prevents advertising false information）。就算路由器收到来自网络可达的其它路由器（它们可能没有收到网络宕掉的触发更新）的信息，也不会将数据包路由到该不可达网络。此机制设计用于阻止黑洞流量（the router also does not route to the unreachable network, even if it receives information from another router(that may not have recieved the triggered update)that the network is reachable. This mechanism is designed to prevent black-holing traffic）。
+
+两个最常见的距离矢量协议，就是__RIP__和__IGRP__。__EIGRP是一个高级距离矢量协议__，距离矢量和链路状态两方面的特性在EIGRP中都有用到（也就是说，它是一个__混合协议(hybrid protocol)__）。

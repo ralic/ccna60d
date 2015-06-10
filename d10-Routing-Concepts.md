@@ -346,7 +346,7 @@ RIP protocol debugging is on
 
 __Passive Interfaces__
 
-路由协议设计和配置的一个重要考虑，就是要限制不必要的数据传送（an important routing protocol design and configuration consideration is to limit unnecessary peerings）, 如下图10.10所示。这是通过使用被动接口实现的, 被动接口可以阻止路由器在指定接口上形成路由邻接关系。基于特定路由协议，此功能的使用会有所不同，但其做法通常有以下两类。
+路由协议设计和配置的一个重要考虑，就是要限制不必要的对等传送（an important routing protocol design and configuration consideration is to limit unnecessary peerings）, 如下图10.10所示。这是通过使用被动接口实现的, 被动接口可以阻止路由器在指定接口上形成路由邻接关系（routing adjacencies）。基于特定路由协议，此功能的使用会有所不同，但其做法通常有以下两类。
 
 + 路由器不在被动接口上发出路由更新
 + 路由器不在该接口上发送Hello数据包，这样做就不会形成邻居关系
@@ -356,4 +356,37 @@ __Passive Interfaces__
 ![限制不必要的数据交换](images/1010.png)
 __图10.10 -- 限制不必要的数据交换__
 
-被动接口的一个用例实例就是用于防止路由协议数据自分布层传送到接入层，就如同上面的图10.10所示。
+被动接口的一个用例实例就是用于防止路由协议数据自分布层对等传送（peerings）到接入层，就如同上面的图10.10所示。当留有三层跨越这些性质不同的接入层交换机的对等传输时（也就是在跨越交换机区块的不同交换机上有着多台主机），就只会增加内存负载、路由协议更新开销及更多的复杂性。同样，如发生了某条链路故障，流量会经由一台邻居接入交换机传输，而到达另一个VLAN成员处（by having Layer 3 switches across the different Access Layer switches(i.e., having multiple hosts on different switches across switch blocks) you are basically adding memory load, routing protocol update overhead, and more complexity. Also, if there is a link failure, the traffic may transit through a neighbouring Access Layer switch to get to another VLAN member）。
+
+也就是说，你想要消除不必要的路由对等邻接（unnecessary routing peering adjacencies）,那么就要将那些面向二层交换机的端口，配置为被动接口，以此来抑制路由更新通告（suppress routing updates advertisements）。如某台分布层交换机在这些接口之一上，一条都没有接收到来自一台潜在对等设备的路由更新，其就不必去处理这些更新，也就不会通过那个设备形成邻居邻接关系。达成此配置的命令通常就是路由进程配置模式（the Routing Process Configuration mode）中的`passive-interface [interface number]`命令。要获得更多有关思科设计模型（the Cisco design model）的信息，请阅读一份CCDA手册。
+
+##路由协议分类
+
+__Routing Protocol Classes__
+
+路由协议有两大分类 -- __距离矢量__和__链路状态__(Distance Vector and Link State)。距离矢量路由协议在决定通过网络的最优路径（一条或多条）时，传统上使用一个一维矢量（a one-dimensional vector），而链路状态路由协议在决定通过网络的最优路径（一条或多条）时，使用最短路径优先（the Shortest Path First, SPF）。在深入探究路由协议的这两种类别的具体细节之前，我们先看看不同矢量，以及难以搞懂的SPF算法。
+
+###理解矢量
+
+__Understanding Vectors__
+
+一个一维矢量就是一个有方向的量。它就是一个在特定方向或路线上的量（数字）。下图10.11演示了矢量这个概念。
+
+![理解矢量](images/1011.png)
+__图10.11 -- 理解矢量__
+
+在图10.11中，第一条线路从0开始，到9结束，同时第二条线路从8开始，在13处结束。那么第一条线路的矢量就是8, 第二条的矢量就是5。运用基础数学，就知道8+5=13。矢量的开始点和结束点是无关的。而是与矢量长度及其经过的距离有关。
+
+> __注意：__ 矢量亦可朝相反的方向通过（也就是以负数表示的矢量）。
+
+###最短路径优先算法
+
+__The Shortest Path First Algorithms__
+
+最短路径优先算法通过路由器创建出到某个区域或网络骨干中的所有主机的最短路径树，该路由器处于树的根部，并由该路由器完成树的生成计算。为让SPF算法以正确的方式工作，区域中的所有路由器都要有同样的数据库信息。在OSPF中，数据库信息同步是通过数据库交换过程实现的（the SPF algorithm creates a shortest-path tree to all hosts in an area or in the network backbone with the router that is performint the calculation at the root of that tree. In order for the SPF algorithm to work in the correct manner, all routers in the area should have the same database information. In OSPF, this is performed via the database exchange process）。
+
+###距离矢量路由协议
+
+__Distance Vector Routing Protocols__
+
+距离矢量是一种__用距离或跳数计数作为主要度量值__，来决定最佳转发路径的路由协议。

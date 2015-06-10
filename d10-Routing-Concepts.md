@@ -407,3 +407,41 @@ __Distance Vector Routing Protocols__
 在保持期间，路由器压制住该网络并阻止通告出无效信息（during the hold-down period, the router suppresses the network and prevents advertising false information）。就算路由器收到来自网络可达的其它路由器（它们可能没有收到网络宕掉的触发更新）的信息，也不会将数据包路由到该不可达网络。此机制设计用于阻止黑洞流量（the router also does not route to the unreachable network, even if it receives information from another router(that may not have recieved the triggered update)that the network is reachable. This mechanism is designed to prevent black-holing traffic）。
 
 两个最常见的距离矢量协议，就是__RIP__和__IGRP__。__EIGRP是一个高级距离矢量协议__，距离矢量和链路状态两方面的特性在EIGRP中都有用到（也就是说，它是一个__混合协议(hybrid protocol)__）。
+
+###链路状态路由协议
+
+__Link State Routing Protocols__
+
+链路状态路由协议属于层次化的路由协议，采用区域的概念（the concept of areas），在网络中对路由器进行分组。这样做令到链路状态协议比起距离矢量协议能够更好地伸缩并以一种效率更高的方式运行。运行链路状态路由协议的路由器，创建出一个包含了网络全部拓扑的数据库。这样做令到同一区域中的路由器，都有着网络的同样视图（the same view of the network）。
+
+由于网络中的路由器都有着网络的同样视图，用于在网络间转发数据包的路径就是最优的，且路由环回的可能性得以消除。因此，诸如水平分割和路由投毒这样的技巧对链路状态协议就不适用了，因为它们是用于距离矢量路由协议的。
+
+链路状态路由协议通过发送链路状态通告（Link State Advertisement），或者说链路状态数据包（Link State Packets）给位于同一区域内其它路由器的方式运作。这些数据包包含了有关链路所连接的接口、链路度量值及链路其它变量的信息。随着路由器对这些信息的积累，它们就运行SPF算法并计算出到各台路由器及目的网络的最短（最佳）路径。使用接收到的链路状态信息，路由器建立其链路状态数据库（the Link State Database, LSDB）。在相邻两台路由器的LSDBs同步了时，就说它们形成了邻接关系。
+
+与发送给其邻居的是它们的完整路由表的距离矢量路由协议不同，链路状态路由协议在探测到网络拓扑发生改变时，发送的是增量更新，这点令到链路状态路由协议在较大型的网络中效率更高。使用增量更新也令到链路状态路由协议对网络变化的响应更为迅速，因此比起距离矢量路由协议有着更短的收敛时间。表10.4列出了不同的内部网关协议及其所属类别。
+
+__表10.4 -- IGP类别__
+
+<table>
+<tr><th>协议名称</th><th>有类/无类</th><th>协议类别</th></tr>
+<tr><td>RIP(版本1)</td><td>有类</td><td>距离矢量</td></tr>
+<tr><td>IGRP</td><td>有类</td><td>距离矢量</td></tr>
+<tr><td>RIP（版本2）</td><td>无类</td><td>距离矢量</td></tr>
+<tr><td>EIGRP</td><td>无类</td><td>高级距离矢量</td></tr>
+<tr><td>IS-IS</td><td>无类</td><td>链路状态</td></tr>
+<tr><td>OSPF</td><td>无类</td><td>链路状态</td></tr>
+</table>
+
+##路由协议的各种目标
+
+__The Objectives of Routing Protocols__
+
+这些路由算法尽管生来就有所不同，但都有着同样的基本目标。虽然一些算法好于其它一些，但所有路由协议都有其优势和不足。这些路由算法的设计，都有着下面这些目标和目的。
+
++ 最优路由
++ 稳定性
++ 易于使用
++ 灵活性
++ 快速收敛
+
+

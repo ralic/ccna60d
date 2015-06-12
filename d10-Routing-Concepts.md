@@ -657,3 +657,9 @@ Router#show ip bgp ?
 	| 					Output modifiers
 	<cr>
 ```
+
+###检查路由表是否正确
+
+__Verifying That the Routing Table Is Valid__
+
+

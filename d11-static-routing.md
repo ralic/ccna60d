@@ -37,8 +37,8 @@ __Configuring Static Routes__
  配置一条静态路由（见下图11.1）需要以下这些命令。
 
 + `network address/prefix mask`
-+ <pre>address <b>or</b> exit interface</pre>
-+ <pre>distance<b>(optional)</b></pre>
++ `address` __or__ `exit interface`
++ `distance` __(optional)__
 
 这里是一个这些命令使用的实例。
 
@@ -80,4 +80,55 @@ R1(config)#ipv6 route 3FFF:1234:ABCD:0001::/64 Fa0/0 unicast
 R1(config)#ipv6 route 3FFF:1234:ABCD:0002::/64 Se0/0 FE80::2222 multicast
 R1(config)#ipv6 route ::/0 Serial0/1 FE80::3333
 ```
+
+依此配置，命令`show ipv6 route`可用于验证在本地路由器上应用的静态路由配置，如下所示。
+
+```
+R1#show ipv6 route static
+IPv6 Routing Table - 13 entries
+Codes: 	C - Connected, L - Local, S - Static, R - RIP, B - BGP
+		U - Per-user static route
+		I1 - ISIS L1, I2 - ISIS L2, IA - ISIS inter area, IS - ISIS summary
+		O - OSPF intra, OI - OSPF inter, OE1 - OSPF ext 1, OE2 - OSPF ext 2
+		ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2
+S	::/0 [1/0]
+	 via FE80::3333, Serial0/1
+S	3FFF:1234:ABCD:1::/64 [1/0]
+	 via ::, FastEthernet0/0
+S	3FFF:1234:ABCD:2::/64 [1/0]
+	 via FE80::2222, Serial0/0
+```
+
+除了使用`show ipv6 route`命令外，命令`show ipv6 static [prefix] [detail]`也可一用来对所有或仅是某条特定静态路由的细节信息进行查看。下面输出演示了如何使用这个命令。
+
+```
+R1#show ipv6 static 3FFF:1234:ABCD:1::/64 detail
+IPv6 static routes
+Code: * - installed in RIB
+* 3FFF:1234:ABCD:1::/64 via interface FastEthernet0/0, distance 1
+```
+
+##静态路由排错
+
+__Troubleshooting Satic Routes__
+
+排错总会涉及到某个配置问题（如果不是接口宕掉的话）。如流量没有到达目的地，就可以使用命令`traceroute`测试该路由。
+
+> __注意__ -- 今天内容很少，所以请前往第12天吧，因为那将是个非常充实的主题。
+
+##第11天问题
+
+1. Name the three parameters needed to configure a static route.
+2. What is the command used to configure a static route?
+3. What is the command used to configure a default static route?
+4. What is the command used to configure an IPv6 static route?
+5. What is the command used to view IPv6 static routes?
+
+##第11天答案
+
+1. Network address, subnet mask (prefix length), and next-hop address or exit interface.
+2. The `ip route` command.
+3. The `ip route 0.0.0.0 0.0.0.0` command.
+4. The `ipv6 route` command.
+5. The `show ipv6 route static` command.
 

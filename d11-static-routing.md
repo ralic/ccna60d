@@ -132,3 +132,56 @@ __Troubleshooting Satic Routes__
 4. The `ipv6 route` command.
 5. The `show ipv6 route static` command.
 
+##第11天实验
+
+###静态路由实验
+
+__Static Routes Lab__
+
+__拓扑图__
+
+![静态路由实验拓扑图](images/1103.png)
+
+__实验目的__
+
+学习如何以下一跳地址和出口接口方式，将静态路由指定给一台路由器。
+
+__实验步骤__
+
+1. 按照上面的拓扑图分配IP地址。Router A可以是192.168.1.1/30, Router B可以是.2。
+2. 通过串行链路进行ping操作，以确保该链路是工作的。
+3. 在Router A上指定一条静态路由，将到10.1.1.0/10网络的所有流量，从串行接口发送出去。当然要使用你自己的串行端口编号；不要只是拷贝我的配置，你的接口有不同编号！
+
+<pre>
+RouterA(config)#ip route 10.0.0.0 255.192.0.0 Serial0/1/0
+RouterA(config)#exit
+RouterA#ping 10.1.1.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.1.1.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 18/28/32 ms
+RouterA#
+RouterA#show ip route
+Codes: 	C - Connected, S - Static, I - IGRP, R - RIP, M - Mobile, B - BGP
+		D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+		N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+		E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+		i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+		* - Candidate default, U - Per-user static route, o - ODR
+		P - Periodic downloaded static route
+Gateway of last resort is not set
+	  10.0.0.0/10 is subnetted, 1 subnets
+S		  <b>10.0.0.0</b> is directly connected, Serial0/1/0
+	  172.16.0.0/24 is subnetted, 1 subnets
+C		  172.16.1.0 is directly connected, Loopback0
+	  192.168.1.0/30 is subnetted, 1 subnets
+C		  192.168.1.0 is directly connected, Serial0/1/0
+RouterA#
+RouterA#show ip route 10.1.1.1
+Routing entry for 10.0.0.0/10
+Known via “static”, distance 1, metric 0 (connected)
+  Routing Descriptor Blocks:
+  <b>* directly connected, via Serial0/1/0</b>
+		Route metric is 0, traffic share count is 1
+RouterA#
+</pre>

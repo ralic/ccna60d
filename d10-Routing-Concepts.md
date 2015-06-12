@@ -587,4 +587,73 @@ __Troubleshooting Routing Issues__
 + 检查路由表是否有效
 + 检查当前的路径选择
 
+###检查路由是否开启
 
+__Verifying that Routing is Enabled__
+
+路由排错的第一步，就是检查路由协议是否开启及正确配置。这既可以通过检查当前运行配置（也就是`show run`命令），又可以使用结合了每种特定路由协议的`show`命令。这些路由协议的选项有下面这些。
+
+```
+Router#show ip ospf ?
+	<1-65535> 				Process ID number
+	border-routers 			Border and boundary router information
+	database 				Database summary
+	flood-list				Link state flood list
+	interface 				Interface information
+	max-metric 				Max-metric origination information
+	mpls 					MPLS related information
+	neighbor 				Neighbor list
+	request-list 			Link state request list
+	retransmission-list 	Link state retransmission list
+	rib 					Routing information base (RIB)
+	sham-links 				Sham link information
+	statistics 				Various OSPF Statistics
+	summary-address 		Summary-address redistribution information
+	timers 					OSPF timers information
+	traffic					Traffic related statistics
+	virtual-links 			Virtual link information
+	|						Output modifiers
+	<cr>
+
+Router#show ip eigrp ?
+	<1-65535> 	Autonomous System
+	accounting 	IP-EIGRP accounting
+	interfaces 	IP-EIGRP interfaces
+	neighbors 	IP-EIGRP neighbors
+	topology 	IP-EIGRP topology table
+	traffic		IP-EIGRP traffic statistics
+	vrf			Select a VPN routing/forwarding instance
+
+Router#show ip bgp ?
+	A.B.C.D 			Network in the BGP routing table to display
+	A.B.C.D/nn 			IP prefix <network>/<length>, e.g., 35.0.0.0/8
+	all 				All address families
+	cidr-only 			Display only routes with non-natural netmasks
+	community 			Display routes matching the communities
+	community-list 		Display routes matching the community-list
+	dampening 			Display detailed information about dampening
+	extcommunity-list 	Display routes matching the extcommunity-list
+	filter-list			Display routes conforming to the filter-listinconsistent-as Display only routes with inconsistent origin ASs
+	injected-paths 		Display all injected paths
+	ipv4 				Address family
+	ipv6 				Address family
+	labels 				Display labels for IPv4 NLRI specific information
+	neighbors 			Detailed information on TCP and BGP neighbor connections
+	nsap 				Address family
+	oer-paths 			Display all oer controlled paths
+	paths 				Path information
+	peer-group 			Display information on peer-groups
+	pending-prefixes 	Display prefixes pending deletion
+	prefix-list 		Display routes matching the prefix-list
+	quote-regexp 		Display routes matching the AS path “regular expression”
+	regexp 				Display routes matching the AS path regular expression
+	replication 		Display replication status of update-group(s)
+	rib-failure 		Display bgp routes that failed to install in the routing table (RIB)
+	route-map 			Display routes matching the route-map
+	summary 			Summary of BGP neighbor status
+	template 			Display peer-policy/peer-session templates
+	update-group 		Display information on update-groups
+	vpnv4 				Address family
+	| 					Output modifiers
+	<cr>
+```

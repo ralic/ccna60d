@@ -662,4 +662,38 @@ Router#show ip bgp ?
 
 __Verifying That the Routing Table Is Valid__
 
+在成功确定已开启路由进程后，下一步就要对各协议的路由表进行分析，看看那里列出的信息是否正确。一些需要着重注意的地方有下面这些。
 
++ 验明经由正确的协议学习到正确的前缀
++ 验明学到的前缀条数
++ 验明这些路由的度量值及下一跳信息
+
+依据路由协议的不同，还要对从设备向外通告的那些前缀的正确性进行检查。
+
+###检查路径选择的正确性
+
+在检查了有关前缀在路由表中确有出现后，就应对这些前缀的属性值（译者注：其路由跳数及各条路由的度量值、下一跳等信息）及路径选择方式进行仔细分析。这些分析包括下面这些。
+
++ 检查通告了该前缀的所有路由协议（还要包括静态路由）
++ 对AD进行比较和修改，以令到优先选择某种指定的路由协议，而不是默认正确的
++ 检查并调整这些协议的度量值
+
+通过对网络中某台路由器的恰当配置，并在配置过程中对每一步都做好文档，以及对网络中两点自荐路径的持续监测，就能够对网络中流量是如何准确地流经那些设备，有扎实掌握。
+
+##第10天问题
+
+1. What is a routing protocol?
+2. `_______` is used to determine the reliability of one source of routing information from
+another.
+3. If a router learns a route from both EIGRP (internal) and OSPF, which one would it prefer?
+4. What is the RIP AD?
+5. What is the eBGP AD?
+6. Name at least four routing metrics.
+7. Once routes have been placed into the routing table, by default the most specific or
+longest match prefix will always be preferred over less specific routes. True or false?
+8. `_______` operates at the data plane and is a topology-driven proprietary switching
+mechanism that creates a forwarding table that is tied to the routing table (i.e., the
+control plane).
+9. CEF uses a `_______` to make IP destination prefix-based switching decisions.
+10. Link State routing protocols are those that use distance or hop count as its primary
+metric for determining the best forwarding path. True or false?

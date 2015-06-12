@@ -697,3 +697,49 @@ control plane).
 9. CEF uses a `_______` to make IP destination prefix-based switching decisions.
 10. Link State routing protocols are those that use distance or hop count as its primary
 metric for determining the best forwarding path. True or false?
+
+##第10天问题答案
+
+1. A protocol that allows a router to learn dynamically how to reach other networks.
+2. Administrative distance.
+3. EIGRP.
+4. 120.
+5. 20.
+6. Bandwidth, cost, delay, load, reliability, and hop count.
+7. True.
+8. CEF.
+9. FIB.
+10. False.
+
+##第10天的实验
+
+###路由概念实验
+
+采用两台直连的路由器，并测试本模块中提到的那些基本命令。RIP已不在CCNA考试中了，但其对于一个简单的实验来说，是十分简单易用的。
+
++ 给直连接口分配一个IPv4地址（10.10.10.1/24及10.10.10.2/24）
++ 用`ping`测试直连的连通性
++ 在两台路由器上都配置一个环回接口，并从两个不同范围为其分配上地址（11.11.11.1/32及12.12.12.2/32）
++ 配置标准RIP并通告所有本地网络
+
+<pre>
+<b>R1:</b>
+router rip
+version 2
+no auto
+network 10.10.10.0
+network 11.11.11.0
+
+<b>R2:</b>
+router rip
+version 2
+no auto
+network 10.10.10.0
+network 12.12.12.0
+</pre>
+
++ 自R1向R2的环回接口进行`ping`操作，以测试连通性
++ 执行一条`show ip route`命令，来检查经由RIP收到了那些路由
++ 执行一条`show ip protocols`命令，来检查有配置了RIP且RIP在设备上是允许着的
+
+

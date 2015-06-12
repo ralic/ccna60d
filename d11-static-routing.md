@@ -185,3 +185,21 @@ Known via “static”, distance 1, metric 0 (connected)
 		Route metric is 0, traffic share count is 1
 RouterA#
 </pre>
+
+4. 在Router B上配置一条静态路由，将到172.16.1.0/24网络的所有流量，发到下一跳地址192.168.1.1。
+
+<pre>
+RouterB(config)#ip route 172.16.1.0 255.255.255.0 192.168.1.1
+RouterB(config)#exit
+RouterB#ping 172.16.1.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 172.16.1.1, timeout is 2 seconds:
+!!!!!
+RouterB#show ip route 172.16.1.1
+Routing entry for 172.16.1.0/24
+Known via “static”, distance 1, metric 0
+  Routing Descriptor Blocks:
+  <b>* 192.168.1.1</b>
+	  Route metric is 0, traffic share count is 1
+RouterB#
+</pre>

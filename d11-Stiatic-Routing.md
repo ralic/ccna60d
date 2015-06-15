@@ -37,13 +37,8 @@ __Configuring Static Routes__
  配置一条静态路由（见下图11.1）需要以下这些命令。
 
 + `network address/prefix mask`
-<<<<<<< HEAD
-+ <pre>address <b>or</b> exit interface</pre>
-+ <pre>distance<b>(optional)</b></pre>
-=======
 + `address` __or__ `exit interface`
 + `distance` __(optional)__
->>>>>>> b0e61d354dc3f42d8c353ca9b7922b379a2eb339
 
 这里是一个这些命令使用的实例。
 
@@ -86,8 +81,6 @@ R1(config)#ipv6 route 3FFF:1234:ABCD:0002::/64 Se0/0 FE80::2222 multicast
 R1(config)#ipv6 route ::/0 Serial0/1 FE80::3333
 ```
 
-<<<<<<< HEAD
-=======
 依此配置，命令`show ipv6 route`可用于验证在本地路由器上应用的静态路由配置，如下所示。
 
 ```
@@ -210,4 +203,3 @@ Known via “static”, distance 1, metric 0
 	  Route metric is 0, traffic share count is 1
 RouterB#
 </pre>
->>>>>>> b0e61d354dc3f42d8c353ca9b7922b379a2eb339

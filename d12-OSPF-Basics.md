@@ -234,3 +234,77 @@ Serial0/0 is up, line protocol is up
 ...
 [Truncated Output]
 </pre>
+
+##配置OSPF
+
+__OSPF Configuration__
+
+本节对OSPF配置基础进行说明。
+
+###在思科IOS软件中开启OSPF
+
+__Enabling OSPF in Cisco IOS Software__
+
+在思科IOS软件中，通过使用全局配置命令`router ospf [process id]`开启OSPF。__关键字`[process id]`是本地有效的__(locally sinificant)，邻接关系的建立无需网络中所有路由器的进程号一致。运用本地有效的进程号，允许在同一台路由器上配置多个OSPF的实例。
+
+OSPF的进程号是一个1和65535之间的整数。每个OSPF进程都维护着其独自的链路状态数据库（LSDB）；但是，所有路由都放进的是同一IP路由表。也就是说，对配置在路由器上的各个单独OSPF进程，并没有各自唯一的IP路由表。
+
+在思科IOS软件早期版本中，如路由器上没有至少一个的接口配置了有效IP地址且处于up/up状态，就无法开启OSPF。此限制在当前版本的思科IOS软件中去除了。假如路由器没有接口配置了有效IP地址且处于up/up状态，那么思科IOS将创建出一个接近数据库（a Proximity Database, PDB）并允许创建出进程。但是，要记住除非选定下路由器ID，否则该进程就是非活动的进程，而__路由器ID的选定__，可通过下面两种方式完成。
+
++ 在某个接口上配置一个有效IP地址，并将该接口开启
++ 使用命令`router-id`为该路由器手动配置一个ID（见下）
+
+作为一个例子，看看下面的所有接口都关闭的路由器。
+
+```
+R3#show ip interface brief
+Interface		IP-Address	OK?	Method	Status					Protocol
+FastEthernet0/0	unassigned	YES	manual	administratively down	down
+Serial0/0		unassigned	YES	NVRAM	administratively down	down
+Serial0/1		unassigned	YES	unset	administratively down	down
+```
+
+接着，使用全局配置命令`router ospf [process id]`在该路由器上开启了OSPF， 如下面输出所示。
+
+```
+R3(config)#router ospf 1
+R3(config-router)#exit
+```
+
+基于此配置，思科IOS软件分配给该进程一个默认`0.0.0.0`的路由器ID，如下面`show ip protocols`命令的输出所示。
+
+<pre>
+R3#show ip protocols
+Routing Protocol is “ospf 1”
+	Outgoing update filter list for all interfaces is not set
+	Incoming update filter list for all interfaces is not set
+	<b>Router ID 0.0.0.0</b>
+	Number of areas in this router is 0. 0 normal 0 stub 0 nssa
+	Maximum path: 4
+	Routing for Networks:
+Reference bandwidth unit is 100 mbps
+	Routing Information Sources:
+	  Gateway	Distance	Last Update
+	Distance: (default is 110)
+```
+</pre>
+
+但是，命令`show ip ospf [process id]`揭示出该进程实际上并不是活动的，且表明需要配置一个路由器ID， 其输出如下面所示。
+
+```
+R3#show ip ospf 1
+%OSPF: Router process 1 is not running, please configure a router-id
+```
+
+###开启接口或网络的OSPF路由
+
+__Enabling OSPF Routing for Interfaces or Networks__
+
+在开启OSPF后，就可以执行两个操作，来为路由器上一个或更多的网络或接口开启OSPF路由。这两个操作如下。
+
++ 使用路由器配置命令(router configuration command)`[network] [wildcard] area [area id]`
++ 使用接口配置命令`ip ospf [process id] area [area id]`
+
+与EIGRP不同，OSPF强制使用反掩码且必须配置反掩码; 但与在EIGRP中的情况一样，该反掩码提供了同样的功能，也就是匹配指定范围中的接口（unlike EIGRP, the wildcard is mandatory in OSPF and must be configured; however, as is the case with EIGRP, it serves the same function in that it matches interfaces within the range specified）。比如，语句`network 10.0.0.0 0.255.255.255.255 area 0`，就会对位于10.0.0.1/30、10.5.5.1/24, 甚至10.10.10.1/25这样的IP地址和子网掩码组合的接口，开启OSPF路由。基于该OSPF组网配置，这些接口都会被分配到0号区域。
+
+

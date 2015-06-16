@@ -187,5 +187,26 @@ FastEthernet0/0 is up, line protocol is up
 
 关键字`[non-broadcast]`将该点对多点网络配置为非广播点对多点网络。这样做就要求静态的OSPF邻居配置，因为这样做后OSPF不会使用多播来动态地发现其邻居路由器。此外，这种网络类型不需要为指定网段的DR及/或BDR选举。此种网络的主要用途是允许将接收自所有邻居路由器的路由的邻居路由器开销，分配给邻居路由器，而不是使用使用分配给接口的开销作为邻居开销（the primary use of this network type is to allow neighbor costs to be assigned to neighbors instead of using the interface-assigned cost for routes recieived from all neighbors）。
 
-点对多点组网类型，典型地用于局部全通辐射状非广播多路访问（partial-mesh hub-and-spoke Non-Broadcast Multi-Access(NBMA)）网络。
+点对多点组网类型，典型地用于局部全通辐射状非广播多路访问（partial-mesh hub-and-spoke Non-Broadcast Multi-Access(NBMA)）网络。尽管如此，此种组网类型也可指定给诸如广播多路访问网络（比如以太网）等的其它网络类型。默认情况下，在点对多点网络上，OSPF每30秒发出一个Hello数据包。默认死亡间隔是Hello间隔的4倍，也就是120秒。
+
+下面的输出演示了在一个经手动配置为点对多点网络的帧中继串行接口上的`show ip ospf interface`命令的输出。
+
+<pre>
+R2#show ip ospf interface Serial0/0
+Serial0/0 is up, line protocol is up
+	Internet Address 150.1.1.2/24, Area 0
+	Process ID 2, Router ID 2.2.2.2, <b>Network Type POINT_TO_MULTIPOINT</b>, Cost: 64
+	Transmit Delay is 1 sec, <b>State POINT_TO_MULTIPOINT</b>
+	<b>Timer intervals configured, Hello 30, Dead 120,</b> Wait 120, Retransmit 5
+		oob-resync timeout 120
+		Hello due in 00:00:04
+	Supports Link-local Signaling (LLS)
+	Index 2/2, flood queue length 0
+	Next 0x0(0)/0x0(0)
+	Last flood scan length is 1, maximum is 2
+	Last flood scan time is 0 msec, maximum is 0 msec
+	<b>Neighbor Count is 1, Adjacent neighbor count is 1
+		Adjacent with neighbor 1.1.1.1</b>
+	Suppress Hello for 0 neighbor(s)
+</pre>
 

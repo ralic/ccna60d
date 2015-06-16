@@ -210,3 +210,27 @@ Serial0/0 is up, line protocol is up
 	Suppress Hello for 0 neighbor(s)
 </pre>
 
+OSPF要求链路上两台路由器的组网类型一致（一致的意思是两台路由器都要么进行选举要么不进行选举）的主要原因在于计时器的数值。就像上面的各个输出中演示的那样，不同组网类型采用了不同的Hello数据包发送及死亡计时器间隔。为成功建立一个OSPF邻接关系，这些数值在两台路由器上必须匹配。
+
+思科IOS软件允许通过使用接口配置命令`ip ospf hello-interval <1-65535>`及`ip ospf dead-interval [<1-65535>|minimal]`，对默认的OSPF Hello数据包及死亡计时器进行修改。`ip ospf hell0-interval <1-65535>`命令用于指定Hello间隔的秒数。在执行该命令后，软件会自动将死亡间隔配置为所配置的Hello包间隔的4倍。比如，假定某台路由器做了如下配置。
+
+```
+R2(config)#interface Serial0/0
+R2(config-if)#ip ospf hello-interval 1
+R2(config-if)#exit
+```
+
+通过在上面的R2上将Hello数据包间隔设置为1, 思科IOS软件就会自动的将默认死亡计时器调整为Hello间隔的4倍，就是4秒。下面的输出对此进行了演示。
+
+<pre>
+R2#show ip ospf interface Serial0/0
+Serial0/0 is up, line protocol is up
+	Internet Address 10.0.2.4/24, Area 2
+	Process ID 4, Router ID 4.4.4.4, Network Type POINT_TO_POINT, Cost: 64
+	Transmit Delay is 1 sec, State POINT_TO_POINT
+	<b>Timer intervals configured, Hello 1, Dead 4,</b> Wait 4, Retransmit 5
+		oob-resync timeout 40
+		Hello due in 00:00:00
+...
+[Truncated Output]
+</pre>

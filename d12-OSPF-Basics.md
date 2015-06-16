@@ -114,7 +114,7 @@ OSPF对不同传输介质，采用不同的默认组网类型，有下面这些�
 + 点对多点组网，Point-to-Multipoint
 + 环回组网（默认在环回接口上采用此种组网类型）， Loopback(default on Loopback interfaces)
 
-__非广播网络类型是那些没有原生支持广播或多播流量的网络类型__。非广播网络类型的最常见实例就是帧中继网络。非广播网络类型__需要额外配置，以实现广播和多播支持__。在这样的网络上，OSPF选举出一台指定路由器(a Designate Router, DR), 以及/或是一台备用指定路由器（a Backup Designated Router, BDR）。在本书后面会对这两台路由器进行说明。
+__非广播组网类型是那些没有原生支持广播或多播流量的网络类型__。非广播网络类型的最常见实例就是帧中继网络。非广播网络类型__需要额外配置，以实现广播和多播支持__。在这样的网络上，OSPF选举出一台指定路由器(a Designate Router, DR), 以及/或是一台备用指定路由器（a Backup Designated Router, BDR）。在本书后面会对这两台路由器进行说明。
 
 在思科IOS软件中，非广播网络类型上开启OSPF的路由器默认每30秒发出Hello数据包。若4个Hello间隔，也就是120秒中都没有收到Hello数据包，那么该邻居路由器就被认为”死了“。下面的输出掩饰了在一个帧中继串行接口上的`show ip ospf interface`命令的输出。
 
@@ -139,7 +139,7 @@ Serial0/0 is up, line protocol is up
 	Suppress Hello for 0 neighbor(s)
 </pre>
 
-一条点对点连接（a Point-to-Point(P2P) connection）, 就是一条简单的两个端结点之间的连接。P2P连接的实例包括采用HDLC及PPP封装的物理WAN接口，以及FR和ATM的点对点子接口。在OSPF点对点网络类型中，不会选举出DR和BDR。在P2P网络类型上，OSPF每10秒发出Hello数据包。在这些网络上，”死亡“间隔是Hello间隔的4倍，也就是40秒。下面的输出演示了在一条P2P链路上的‘show ip ospf interface’命令的输出。
+一条点对点连接（a Point-to-Point(P2P) connection）, 就是一条简单的两个端结点之间的连接。P2P连接的实例包括采用HDLC及PPP封装的物理WAN接口，以及FR和ATM的点对点子接口。在OSPF点对点组网类型中，不会选举出DR和BDR。在P2P网络类型上，OSPF每10秒发出Hello数据包。在这些网络上，”死亡“间隔是Hello间隔的4倍，也就是40秒。下面的输出演示了在一条P2P链路上的`show ip ospf interface`命令的输出。
 
 <pre>
 R2#show ip ospf interface Serial0/0
@@ -160,7 +160,7 @@ Serial0/0 is up, line protocol is up
 	Suppress Hello for 0 neighbor(s)
 </pre>
 
-广播网络类型，是那些原生支持广播和多播流量的网络，最常见的例子就是以太网了。就如同在非广播网络中一样，OSPF也会在广播网络上选举出一台DR及/或BDR。默认情况下，OSPF每隔10秒发出Hello数据包，而如在4倍的Hello间隔中没有受到Hello数据包，就宣告邻居”死亡“。下面的输出演示了在一个FastEthernet接口上的‘show ip ospf interface’命令的输出。
+广播组网类型，是那些原生支持广播和多播流量的网络，最常见的例子就是以太网了。就如同在非广播网络中一样，OSPF也会在广播网络上选举出一台DR及/或BDR。默认情况下，OSPF每隔10秒发出Hello数据包，而如在4倍的Hello间隔中没有受到Hello数据包，就宣告邻居”死亡“。下面的输出演示了在一个FastEthernet接口上的‘show ip ospf interface’命令的输出。
 
 <pre>
 R2#show ip ospf interface FastEthernet0/0
@@ -182,3 +182,10 @@ FastEthernet0/0 is up, line protocol is up
 		Adjacent with neighbor 192.168.1.3 (Designated Router)</b>
 	Suppress Hello for 0 neighbor(s)
 </pre>
+
+点对多点是一种非默认OSPF组网（a non-default OSPF network type）。也就是说，此种组网类型必须使用接口配置命令`ip ospf network point-to-point-multicast [non-broadcast]`手动进行配置。默认情况下，该命令默认用于一个广播型点对多点网络类型（this command defaults to a Broadcast Point-to-Point Multipoint network type）。该默认组网类型允许OSPF采用多播数据包来动态地发现其邻居路由器。此外在多播型点对多点网络类型上，不进行DR/BDR选举。
+
+关键字`[non-broadcast]`将该点对多点网络配置为非广播点对多点网络。这样做就要求静态的OSPF邻居配置，因为这样做后OSPF不会使用多播来动态地发现其邻居路由器。此外，这种网络类型不需要为指定网段的DR及/或BDR选举。此种网络的主要用途是允许将接收自所有邻居路由器的路由的邻居路由器开销，分配给邻居路由器，而不是使用使用分配给接口的开销作为邻居开销（the primary use of this network type is to allow neighbor costs to be assigned to neighbors instead of using the interface-assigned cost for routes recieived from all neighbors）。
+
+点对多点组网类型，典型地用于局部全通辐射状非广播多路访问（partial-mesh hub-and-spoke Non-Broadcast Multi-Access(NBMA)）网络。
+

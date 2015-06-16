@@ -94,4 +94,25 @@ OSPF骨干网自ABRs接收到汇总路由信息。该路由信息被散布到OSP
 ![一个多区域OSPF网络](images/1201.png)
 __图12.1 -- 一个多区域OSPF网络__
 
+图12.1演示了一个基本的多区域OSPF网络。1、2号区域连接到0号区域的OSPF骨干上。在1好区域中，路由器R1、R2和R3区域内（intra-area）路由信息，并维护着那个区域的详细拓扑。R3作为ABR，生成一条区域间汇总路由并将该路由通告给OSPF骨干。
+
+R4是2号区域的ABR，从0号区域接收到该汇总信息，并将其扩散到其邻接的区域。这样做就允许R5和R6知道位于其本地区域外、却在该OSPF域内部的那些路由了。同样概念也适用于2号区域内的路由信息。
+
+总的来讲，众多的ABRs都维护着所有其各自连接的区域的LSDB信息。而各个区域中的所有路由器，都有着属于其特定区域的详细拓扑信息。这些路由器交换着区域内路由信息。这些ABRs通告出来自它们所连接的区域的汇总信息，给其它OSPF区域，以实现域内区域间路由。
+
+> __注意：__ 本书后面会详细说明OSPF ABRs及其它OSPF路由器类型。
+
+###组网类型
+
+__Network Types__
+
+OSPF对不同传输介质，采用不同的默认组网类型，有下面这些组网类型。
+
++ 非广播组网（在多点非广播多路复用传输介质上，也就是帧中继和异步传输模式，默认采用此种组网类型）， Non-Broadcast(default on Multipoint Non-Broadcast Multi-Access(FR and ATM))
++ 点对点组网（在HDLC、PPP、FR及ATM的P2P子接口，以及ISDN上，默认采用此种组网类型）， Point-to-Point(default on HDLC, PPP, P2P subinterface on FR and ATM, and ISDN)
++ 广播组网（在以太网和令牌环上，默认采用此种组网类型）， Broadcast(default on Ethernet and Token Ring)
++ 点对多点组网，Point-to-Multipoint
++ 环回组网（默认在环回接口上采用此种组网类型）， Loopback(default on Loopback interfaces)
+
+
 

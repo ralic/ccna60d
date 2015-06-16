@@ -159,3 +159,26 @@ Serial0/0 is up, line protocol is up
 		Adjacent with neighbor 1.1.1.1</b>
 	Suppress Hello for 0 neighbor(s)
 </pre>
+
+广播网络类型，是那些原生支持广播和多播流量的网络，最常见的例子就是以太网了。就如同在非广播网络中一样，OSPF也会在广播网络上选举出一台DR及/或BDR。默认情况下，OSPF每隔10秒发出Hello数据包，而如在4倍的Hello间隔中没有受到Hello数据包，就宣告邻居”死亡“。下面的输出演示了在一个FastEthernet接口上的‘show ip ospf interface’命令的输出。
+
+<pre>
+R2#show ip ospf interface FastEthernet0/0
+FastEthernet0/0 is up, line protocol is up
+	Internet Address 192.168.1.2/24, Area 0
+	Process ID 2, Router ID 2.2.2.2, <b>Network Type BROADCAST</b>, Cost: 64
+	Transmit Delay is 1 sec, <b>State BDR</b>, Priority 1
+	<b>Designated Router (ID) 192.168.1.3, Interface address 192.168.1.3
+	Backup Designated Router (ID) 2.2.2.2, Interface address 192.168.1.2
+	Timer intervals configured, Hello 10, Dead 40, Wait 40,</b> Retransmit 5
+		oob-resync timeout 40
+		Hello due in 00:00:04
+	Supports Link-local Signaling (LLS)
+	Index 1/1, flood queue length 0
+	Next 0x0(0)/0x0(0)
+	Last flood scan length is 1, maximum is 1
+	Last flood scan time is 0 msec, maximum is 0 msec
+	<b>Neighbor Count is 1, Adjacent neighbor count is 1
+		Adjacent with neighbor 192.168.1.3 (Designated Router)</b>
+	Suppress Hello for 0 neighbor(s)
+</pre>

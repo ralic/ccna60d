@@ -139,3 +139,23 @@ Serial0/0 is up, line protocol is up
 	Suppress Hello for 0 neighbor(s)
 </pre>
 
+一条点对点连接（a Point-to-Point(P2P) connection）, 就是一条简单的两个端结点之间的连接。P2P连接的实例包括采用HDLC及PPP封装的物理WAN接口，以及FR和ATM的点对点子接口。在OSPF点对点网络类型中，不会选举出DR和BDR。在P2P网络类型上，OSPF每10秒发出Hello数据包。在这些网络上，”死亡“间隔是Hello间隔的4倍，也就是40秒。下面的输出演示了在一条P2P链路上的‘show ip ospf interface’命令的输出。
+
+<pre>
+R2#show ip ospf interface Serial0/0
+Serial0/0 is up, line protocol is up
+	Internet Address 150.1.1.2/24, Area 0
+	Process ID 2, Router ID 2.2.2.2, <b>Network Type POINT_TO_POINT,</b> Cost: 64
+	Transmit Delay is 1 sec, <b>State POINT_TO_POINT
+	Timer intervals configured, Hello 10, Dead 40, Wait 40,</b> Retransmit 5
+		oob-resync timeout 40
+		Hello due in 00:00:03
+	Supports Link-local Signaling (LLS)
+	Index 2/2, flood queue length 0
+	Next 0x0(0)/0x0(0)
+	Last flood scan length is 1, maximum is 1
+	Last flood scan time is 0 msec, maximum is 0 msec
+	<b>Neighbor Count is 1, Adjacent neighbor count is 1
+		Adjacent with neighbor 1.1.1.1</b>
+	Suppress Hello for 0 neighbor(s)
+</pre>

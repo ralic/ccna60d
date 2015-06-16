@@ -114,5 +114,28 @@ OSPF对不同传输介质，采用不同的默认组网类型，有下面这些�
 + 点对多点组网，Point-to-Multipoint
 + 环回组网（默认在环回接口上采用此种组网类型）， Loopback(default on Loopback interfaces)
 
+__非广播网络类型是那些没有原生支持广播或多播流量的网络类型__。非广播网络类型的最常见实例就是帧中继网络。非广播网络类型__需要额外配置，以实现广播和多播支持__。在这样的网络上，OSPF选举出一台指定路由器(a Designate Router, DR), 以及/或是一台备用指定路由器（a Backup Designated Router, BDR）。在本书后面会对这两台路由器进行说明。
 
+在思科IOS软件中，非广播网络类型上开启OSPF的路由器默认每30秒发出Hello数据包。若4个Hello间隔，也就是120秒中都没有收到Hello数据包，那么该邻居路由器就被认为”死了“。下面的输出掩饰了在一个帧中继串行接口上的`show ip ospf interface`命令的输出。
+
+<pre>
+R2#show ip ospf interface Serial0/0
+Serial0/0 is up, line protocol is up
+	Internet Address 150.1.1.2/24, Area 0
+	Process ID 2, Router ID 2.2.2.2, <b>Network Type NON_BROADCAST,</b> Cost: 64
+	Transmit Delay is 1 sec, <b>State DR</b>, Priority 1
+	<b>Designated Router (ID) 2.2.2.2, Interface address 150.1.1.2
+	Backup Designated Router (ID) 1.1.1.1, Interface address 150.1.1.1
+	Timer intervals configured, Hello 30, Dead 120,</b> Wait 120, Retransmit 5
+		oob-resync timeout 120
+		Hello due in 00:00:00
+	Supports Link-local Signaling (LLS)
+	Index 2/2, flood queue length 0
+	Next 0x0(0)/0x0(0)
+	Last flood scan length is 2, maximum is 2
+	Last flood scan time is 0 msec, maximum is 0 msec
+	<b>Neighbor Count is 1, Adjacent neighbor count is 1
+		Adjacent with neighbor 1.1.1.1 (Backup Designated Router)</b>
+	Suppress Hello for 0 neighbor(s)
+</pre>
 

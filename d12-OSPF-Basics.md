@@ -387,7 +387,7 @@ Routing Protocol is “ospf 1”
 </pre>
 
 
-又想将路由器ID硬要设置为`10.10.10.1`。那么可以通过配置另一个使用该IP地址的环回接口，或简单地将这个IP地址加在OSPF路由器ID处。__为令到改变生效，将必须重启路由器或在路由器上清除该IP OSPF进程__。
+又想将路由器ID硬要设置为`10.10.10.1`。那么可以通过配置另一个使用该IP地址的环回接口，或简单地将这个IP地址加在OSPF路由器ID处。__为令到改变生效，将必须重启路由器或在路由器上清除该IP OSPF进程__（清除现有数据库）。
 
 <pre>
 Router#conf t
@@ -415,3 +415,11 @@ Routing Protocol is “ospf 1”
 	1.1.1.1 	     110	00:03:15
 Distance: (default is 110)
 </pre>
+
+到第39天，__DR和BDR选举时，就将看到这个路由器ID有着特别的重要性__。
+
+###OSPF被动接口
+
+__OSPF Passive Interfaces__
+
+

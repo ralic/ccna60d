@@ -385,3 +385,33 @@ Routing Protocol is “ospf 1”
 	1.1.1.1 	     110	00:00:14
 	Distance: (default is 110)
 </pre>
+
+
+又想将路由器ID硬要设置为`10.10.10.1`。那么可以通过配置另一个使用该IP地址的环回接口，或简单地将这个IP地址加在OSPF路由器ID处。__为令到改变生效，将必须重启路由器或在路由器上清除该IP OSPF进程__。
+
+<pre>
+Router#conf t
+Enter configuration commands, one per line.
+End with CNTL/Z.
+Router(config)#router ospf 1
+Router(config-router)#router-id 10.10.10.1
+Router(config-router)#Reload or use “clear ip ospf process” command, for this to take effect
+Router(config-router)#end
+Router#
+%SYS-5-CONFIG_I: Configured from console by console
+Router#clear ip ospf process
+Reset ALL OSPF processes? [no]: yes
+Router#show ip prot
+Routing Protocol is “ospf 1”
+	Outgoing update filter list for all interfaces is not set
+	Incoming update filter list for all interfaces is not set
+	<b>Router ID 10.10.10.1</b>
+	Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+	Maximum path: 4
+	Routing for Networks:
+		0.0.0.0 255.255.255.255 area 0
+	Routing Information Sources:
+	Gateway 	Distance	Last Update
+	1.1.1.1 	     110	00:03:15
+Distance: (default is 110)
+</pre>

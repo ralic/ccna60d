@@ -422,4 +422,21 @@ Distance: (default is 110)
 
 __OSPF Passive Interfaces__
 
+被动接口可被描述成是那些在其上没有路由更新发出的接口。在思科IOS软件中，通过使用路由器配置命令`passive-interface [name]`, 将某接口配置为被动接口。如在路由器上有多个接口需要配置为被动接口，就应该使用`passive-interface default`这个路由器配置命令。此命令将那些位处所配置网络范围内的所有接口，都配置为被动模式。而那些需要允许在其上形成邻接关系或邻居关系的接口，就应使用路由器配置命令`no passive-interface [name]`对其进行配置。
+
+被动接口配置在OSPF和EIGRP中的工作方式是一样的，也就是如某个接口被标记为被动接口，经由该接口形成的所有邻居关系都会被拆除，同时再也不会通过该接口发送或接收Hello数据包了。不过，基于路由器上所配置的网络语句配置，该接口仍然会继续受通告。
+
+<pre>
+Router(config)#router ospf 10
+Router(config-router)#passive-interface f0/0
+Router#show ip ospf int f0/0
+FastEthernet0/0 is up, line protocol is up
+	Internet address is 192.168.1.1/24, Area 0
+	Process ID 10,Router ID 172.16.1.1,Network Type BROADCAST, Cost: 1
+	Transmit Delay is 1 sec, State WAITING, Priority 1
+	No designated router on this network
+	No backup designated router on this network
+	Timer intervals configured,Hello 10, Dead 40, Wait 40,Retransmit 5
+		<b>No Hellos (Passive interface)</b>
+</pre>
 

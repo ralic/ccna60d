@@ -350,3 +350,38 @@ __接口配置命令`ip ospf [process id] area [area id]`__令到无需使用__�
 ###OSPF区域
 
 __OSPF Areas__
+
+__OSPF区域号既可以配置为一个0到4294967295之间的整数，也可以使用点分十进制表示法__（也就是采用IP地址格式）。与OSPF进程号不同，为建立邻接关系，OSPF区域号必须匹配。最常见的OSPF区域类型为使用一个整数来指定OSPF区域。但要确保你对支持的两种区域配置方式都要熟悉。
+
+###OSPF路由器ID
+
+__OSPF Router ID__
+
+为令到OSPF在某个网络上允许起来，所有路由器都必须有一个唯一的身份号码，且在OSPF环境下要用到路由器ID。
+
+在决定OSPF路由器ID时，思科IOS选用所配置的环回接口上最高的IP地址。如未曾配置环回接口，软件就会使用所有配置的物理接口上最高的IP地址，作为OSPF路由器ID。思科IOS软件同样允许管理员使用__路由器配置命令`router-id [address]`__, 来手动指定路由器ID。
+
+环回接口极为有用，特别是在测试当中，因为它们无需硬件而是逻辑的，而绝不会宕掉。
+
+在下面的路由器上，给Loopback0配置了IP地址1.1.1.1/32, 给F0/0配置了2.2.2.2/24。接着在路由器上给所有接口配置了OSPF。
+
+<pre>
+Router(config-if)#router ospf 1
+Router(config-router)#net 0.0.0.0 255.255.255.255 area 0
+Router(config-router)#end
+Router#
+%SYS-5-CONFIG_I: Configured from console by console
+Router#show ip protocols
+Routing Protocol is “ospf 1”
+	Outgoing update filter list for all interfaces is not set
+	Incoming update filter list for all interfaces is not set
+	<b>Router ID 1.1.1.1</b>
+	Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+	Maximum path: 4
+	Routing for Networks:
+		0.0.0.0 255.255.255.255 area 0
+	Routing Information Sources:
+	Gateway 	Distance	Last Update
+	1.1.1.1 	     110	00:00:14
+	Distance: (default is 110)
+</pre>

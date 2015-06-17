@@ -465,3 +465,40 @@ FastEthernet0/0 is up, line protocol is up
 8. False.
 9. The `ip ospf <id> area 2`
 10. Passive.
+
+##第12天实验
+
+###OSPF基础实验
+
+沿用第10天的实验场景（两台直接连接的路由器，各自其上的环回接口），但取代配置RIP及对物理和环回接口进行通告的是，使用OSPF 0号区域实现（but instead of configuring RIP and advertising the physical and Loopback interfaces, do this using OSPF Area 0）。
+
++ 分配一个IPv4地址给直接连接的接口（10.10.10.1/24及10.10.10.2/24）
++ 运用ping操作，测试直接连通性
++ 分别在两台路由器上配置一个环回接口，并自两个不同范围为其分配上地址（11.11.11.1/32及12.12.12.2/32）
++ 配置上标准OSPF 1号进程，并在0号区域中通告所有本地网络。同时为两台设备配置一个路由器ID。
+
+__R1:__
+
+```
+router ospf 1
+router-id 1.1.1.1
+network 10.10.10.0 0.0.0.255 area 0
+network 11.11.11.1 0.0.0.0 area 0
+```
+
+__R2:__
+
+```
+router ospf 1
+router-id 2.2.2.2
+network 10.10.10.0 0.0.0.255 area 0
+network 12.12.12.2 0.0.0.0 area 0
+```
+
++ 自R1向R2的环回接口执行ping操作，以测试连通性
++ 执行一条`show ip route`命令，来验证有通过OSPF接收到路由
++ 执行一条`show ip protocols`命令，来验证有配置OSPF且在设备上是活动的
++ 坚持特定于OSPF的接口参数：`show ip ospf interface`及`show ip ospf interface brief`
++ 在两台路由器上（直接连接接口）修改OSPF的Hello包和死亡计时器：`ip ospf hello`及`ip ospf dead`
++ 执行一下`show ip ospf 1`命令，看看路由进程参数
++ 重复该实验，但这次使用`ip ospf 1 area 0 interface specific`命令，而不是在router OSPF 下的`network`命令，对各个网络进行通告。

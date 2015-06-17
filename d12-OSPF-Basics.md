@@ -305,6 +305,27 @@ __Enabling OSPF Routing for Interfaces or Networks__
 + 使用路由器配置命令(router configuration command)`[network] [wildcard] area [area id]`
 + 使用接口配置命令`ip ospf [process id] area [area id]`
 
-与EIGRP不同，OSPF强制使用反掩码且必须配置反掩码; 但与在EIGRP中的情况一样，该反掩码提供了同样的功能，也就是匹配指定范围中的接口（unlike EIGRP, the wildcard is mandatory in OSPF and must be configured; however, as is the case with EIGRP, it serves the same function in that it matches interfaces within the range specified）。比如，语句`network 10.0.0.0 0.255.255.255.255 area 0`，就会对位于10.0.0.1/30、10.5.5.1/24, 甚至10.10.10.1/25这样的IP地址和子网掩码组合的接口，开启OSPF路由。基于该OSPF组网配置，这些接口都会被分配到0号区域。
+与EIGRP不同，OSPF强制使用反掩码且必须配置反掩码; 但与在EIGRP中的情况一样，该反掩码提供了同样的功能，也就是匹配指定范围中的接口（unlike EIGRP, the wildcard is mandatory in OSPF and must be configured; however, as is the case with EIGRP, it serves the same function in that it matches interfaces within the range specified）。比如，语句`network 10.0.0.0 0.255.255.255.255 area 0`，就会对10.0.0.1/30、10.5.5.1/24, 甚至10.10.10.1/25这样的IP地址和子网掩码组合的接口，开启OSPF路由。基于该OSPF组网配置，这些接口都会被分配到0号区域。
+> __注意：__ OSPF的反掩码可以与传统子网掩码的同样格式敲入，比如`network 10.0.0.0 255.0.0.0 area 0`。在这种情况下，思科IOS软件就会将子网掩码翻转，将得到的反掩码输入到允许配置。另外，要记住__OSPF也支持使用全1s和全0s反掩码，来对某个指定接口开启OSPF__。这样的配置在某个特定接口上开启OSPF，但路由器通告配置在该接口自身的实际子网掩码（this configuration enables OSPF on a paricular interface but the router advertises the actual subnet mask configured on the interface itself）。
 
+在执行了`network [network] [wildcast] area [area id]`命令之后，路由器就在与指定的网络和反掩码组合匹配的那些接口上发出Hello数据包，而尝试发现各台邻居路由器。接着便在OSPF数据库交换期间，将连接的子网通告给一台或更多的邻居路由器，而最后，再将该信息加入到这些OSPF路由器的OSPF链路状态数据库（LSDB）中。
+
+在命令`network [network] [wildcard] area [area id]`之后，路由器有对最具体条目做出匹配，以决定将接口分配给的区域。作为实例，想想下面这些OSPF组网语句配置。
+
++ 第一条配置语句：`network 10.0.0.0 0.255.255.255 area 0`
++ 第二条：`network 10.1.0.0 0.0.255.255 area 1`
++ 第三条：`network 10.1.1.0 0.0.0.255 area 2`
++ 第四条：`network 10.1.1.1 0.0.0.0 area 3`
++ 第五条：`network 0.0.0.0 0.0.0.0 area 4`
+
+按照路由器上的该配置，又有路由器上配置了如下表12.1中展示的这些环回接口。
+
+<table>
+<tr><th>接口</th><th>IP地址/掩码</th></tr>
+<tr><td>Loopback 0</td><td>10.0.0.1/32</td></tr>
+<tr><td>Loopback 1</td><td>10.0.1.1/32</td></tr>
+<tr><td>Loopback 2</td><td>10.1.0.1/32</td></tr>
+<tr><td>Loopback 3</td><td>10.1.1.1/32</td></tr>
+<tr><td>Loopback 4</td><td>10.2.0.1/32</td></tr>
+</table>
 

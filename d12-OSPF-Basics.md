@@ -329,3 +329,24 @@ __Enabling OSPF Routing for Interfaces or Networks__
 <tr><td>Loopback 4</td><td>10.2.0.1/32</td></tr>
 </table>
 
+就像前面指出的那样，在执行了`network [network] [wildcard] area [area id]`命令后，路由器匹配最具体的网络条目（最小的网络），来决定该接口应分配到的区域。对于在路由器上的网络语句配置及所配置的接口，命令`show ip ospf interface brief`会显示出这些接口都分配给了以下OSPF区域。
+
+```
+R1#show ip ospf interface brief
+Interface	PID	Area	IP Address/Mask	Cost	State	Nbrs F/C
+Lo4			1	0		10.2.0.1/32		1		LOOP	0/0
+Lo1			1	0		10.0.1.1/32		1		LOOP	0/0
+Lo0			1	0 		10.0.0.1/32 	1 		LOOP	0/0
+Lo2 		1 	1 		10.1.0.1/32 	1 		LOOP	0/0
+Lo3 		1 	3 		10.1.1.1/32 	1 		LOOP	0/0
+```
+
+> __注意：__ 无需考虑网络语句敲入的顺序，在运行配置（the running configuration）中，路由器的`show running-config`输出中最具体的网络条目会列在前面。
+
+__接口配置命令`ip ospf [process id] area [area id]`__令到无需使用__路由器配置命令`network [network] [wildcard] area [area id]`__。该命令对某个指定接口开启OSPF路由，同时将该接口分配给指定的OSPF区域。这两个命令完成的是同样的基本功能且可互换使用。
+
+此外，比如有两台路由器是背靠背连接的，一台使用接口配置命令`ip ospf [process id] area [area id]`进行了配置，而其邻居路由器使用路由器配置命令`network [network] [wildcard] area [area id]`进行了配置，那么假设两个区域IDs是同样的，两台路由器将成功建立OSPF邻接关系。
+
+###OSPF区域
+
+__OSPF Areas__

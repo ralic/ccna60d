@@ -139,7 +139,7 @@ Serial0/0 is up, line protocol is up
 	Suppress Hello for 0 neighbor(s)
 </pre>
 
-一条点对点连接（a Point-to-Point(P2P) connection）, 就是一条简单的两个端结点之间的连接。P2P连接的实例包括采用HDLC及PPP封装的物理WAN接口，以及FR和ATM的点对点子接口。在OSPF点对点组网类型中，不会选举出DR和BDR。在P2P网络类型上，OSPF每10秒发出Hello数据包。在这些网络上，”死亡“间隔是Hello间隔的4倍，也就是40秒。下面的输出演示了在一条P2P链路上的`show ip ospf interface`命令的输出。
+一条点对点连接（a Point-to-Point(P2P) connection）, 就是一条简单的两个端结点之间的连接。P2P连接的实例包括采用HDLC及PPP封装的物理WAN接口，以及FR和ATM的点对点子接口。在OSPF点对点组网类型中，不会选举DR和BDR。在P2P类型网络上，OSPF每10秒发出Hello数据包。在这些网络上，”死亡“间隔是Hello间隔的4倍，也就是40秒。下面的输出演示了在一条P2P链路上的`show ip ospf interface`命令的输出。
 
 <pre>
 R2#show ip ospf interface Serial0/0
@@ -160,7 +160,7 @@ Serial0/0 is up, line protocol is up
 	Suppress Hello for 0 neighbor(s)
 </pre>
 
-广播组网类型，是那些原生支持广播和多播流量的网络，最常见的例子就是以太网了。就如同在非广播网络中一样，OSPF也会在广播网络上选举出一台DR及/或BDR。默认情况下，OSPF每隔10秒发出Hello数据包，而如在4倍的Hello间隔中没有受到Hello数据包，就宣告邻居”死亡“。下面的输出演示了在一个FastEthernet接口上的‘show ip ospf interface’命令的输出。
+广播类型网络，是指那些原生支持广播和多播流量的网络，最常见例子就是以太网了。就如同在非广播网络中一样，OSPF也会在广播网络上选举一台DR及/或BDR。默认情况下，OSPF每隔10秒发出Hello数据包，而如在4倍Hello间隔中没有收到Hello数据包，就宣告邻居”死亡“。下面的输出演示了在一个FastEthernet接口上‘show ip ospf interface’命令的输出。
 
 <pre>
 R2#show ip ospf interface FastEthernet0/0
@@ -183,11 +183,11 @@ FastEthernet0/0 is up, line protocol is up
 	Suppress Hello for 0 neighbor(s)
 </pre>
 
-点对多点是一种非默认OSPF组网（a non-default OSPF network type）。也就是说，此种组网类型必须使用接口配置命令`ip ospf network point-to-point-multicast [non-broadcast]`手动进行配置。默认情况下，该命令默认用于一个广播型点对多点网络类型（this command defaults to a Broadcast Point-to-Point Multipoint network type）。该默认组网类型允许OSPF采用多播数据包来动态地发现其邻居路由器。此外在多播型点对多点网络类型上，不进行DR/BDR选举。
+点对多点是一种非默认OSPF组网（a non-default OSPF network type）。也就是说，此种组网类型必须使用接口配置命令`ip ospf network point-to-point-multicast [non-broadcast]`手动进行配置。默认情况下，该命令默认应用于一个广播型点对多点类型网络（this command defaults to a Broadcast Point-to-Point Multipoint network type）。该默认组网类型允许OSPF采用多播数据包来动态地发现其邻居路由器。此外在多播型点对多点网络类型上，不进行DR/BDR选举。
 
-关键字`[non-broadcast]`将该点对多点网络配置为非广播点对多点网络。这样做就要求静态的OSPF邻居配置，因为这样做后OSPF不会使用多播来动态地发现其邻居路由器。此外，这种网络类型不需要为指定网段的DR及/或BDR选举。此种网络的主要用途是允许将接收自所有邻居路由器的路由的邻居路由器开销，分配给邻居路由器，而不是使用使用分配给接口的开销作为邻居开销（the primary use of this network type is to allow neighbor costs to be assigned to neighbors instead of using the interface-assigned cost for routes recieived from all neighbors）。
+关键字`[non-broadcast]`将该点对多点网络配置为非广播点对多点网络。这样做就要求静态的OSPF邻居配置，因为这样做后OSPF不会使用多播来动态地发现其邻居路由器。此外，这种网络类型不需要为指定网段进行DR及/或BDR选举。此种组网的主要用途，即允许将接收自所有邻居路由器的路由的邻居路由器开销，分配到邻居路由器，而不是使用使用分配给接口的开销作为邻居开销（the primary use of this network type is to allow neighbor costs to be assigned to neighbors instead of using the interface-assigned cost for routes recieived from all neighbors）。
 
-点对多点组网类型，典型地用于局部全通辐射状非广播多路访问（partial-mesh hub-and-spoke Non-Broadcast Multi-Access(NBMA)）网络。尽管如此，此种组网类型也可指定给诸如广播多路访问网络（比如以太网）等的其它网络类型。默认情况下，在点对多点网络上，OSPF每30秒发出一个Hello数据包。默认死亡间隔是Hello间隔的4倍，也就是120秒。
+点对多点组网类型，典型地用于部分全通辐射状非广播多路访问（partial-mesh hub-and-spoke Non-Broadcast Multi-Access(NBMA)）网络。尽管如此，此种组网类型也可指定给诸如广播多路访问网络（比如以太网）等的其它类型网络。默认情况下，在点对多点网络上，OSPF每30秒发出一个Hello数据包。默认死亡间隔是Hello间隔的4倍，也就是120秒。
 
 下面的输出演示了在一个经手动配置为点对多点网络的帧中继串行接口上的`show ip ospf interface`命令的输出。
 
@@ -210,9 +210,9 @@ Serial0/0 is up, line protocol is up
 	Suppress Hello for 0 neighbor(s)
 </pre>
 
-OSPF要求链路上两台路由器的组网类型一致（一致的意思是两台路由器都要么进行选举要么不进行选举）的主要原因在于计时器的数值。就像上面的各个输出中演示的那样，不同组网类型采用了不同的Hello数据包发送及死亡计时器间隔。为成功建立一个OSPF邻接关系，这些数值在两台路由器上必须匹配。
+OSPF要求链路上两台路由器组网类型一致（一致的意思是两台路由器要么都进行选举要么都不进行选举）的主要原因在于计时器的数值。就像上面各个输出中演示的那样，不同组网类型采用了不同Hello数据包发送及死亡计时器间隔。为成功建立一个OSPF邻接关系，在两台路由器上这些数值必须匹配。
 
-思科IOS软件允许通过使用接口配置命令`ip ospf hello-interval <1-65535>`及`ip ospf dead-interval [<1-65535>|minimal]`，对默认的OSPF Hello数据包及死亡计时器进行修改。`ip ospf hell0-interval <1-65535>`命令用于指定Hello间隔的秒数。在执行该命令后，软件会自动将死亡间隔配置为所配置的Hello包间隔的4倍。比如，假定某台路由器做了如下配置。
+思科IOS软件允许通过使用接口配置命令`ip ospf hello-interval <1-65535>`及`ip ospf dead-interval [<1-65535>|minimal]`，对默认OSPF Hello数据包及死亡计时器进行修改。`ip ospf hell0-interval <1-65535>`命令用于指定Hell0间隔的秒数。在执行该命令后，软件会自动将死亡间隔配置为所配置的Hello包间隔的4倍。比如，假定某台路由器做了如下配置。
 
 ```
 R2(config)#interface Serial0/0
@@ -245,11 +245,11 @@ __OSPF Configuration__
 
 __Enabling OSPF in Cisco IOS Software__
 
-在思科IOS软件中，通过使用全局配置命令`router ospf [process id]`开启OSPF。__关键字`[process id]`是本地有效的__(locally sinificant)，邻接关系的建立无需网络中所有路由器的进程号一致。运用本地有效的进程号，允许在同一台路由器上配置多个OSPF的实例。
+在思科IOS软件中，通过使用全局配置命令`router ospf [process id]`开启OSPF。__关键字`[process id]`是本地有效的__(locally sinificant)，邻接关系的建立无需网络中所有路由器的进程号一致。运用本地有效的进程号，允许在同一台路由器上配置多个OSPF实例。
 
-OSPF的进程号是一个1和65535之间的整数。每个OSPF进程都维护着其独自的链路状态数据库（LSDB）；但是，所有路由都放进的是同一IP路由表。也就是说，对配置在路由器上的各个单独OSPF进程，并没有各自唯一的IP路由表。
+OSPF进程号是一个1与65535之间的整数。每个OSPF进程都维护着其独立链路状态数据库（LSDB）；但是，所有路由都放进的是同一IP路由表。也就是说，对配置在路由器上的各个单独OSPF进程，并没有各自唯一的IP路由表。
 
-在思科IOS软件早期版本中，如路由器上没有至少一个的接口配置了有效IP地址且处于up/up状态，就无法开启OSPF。此限制在当前版本的思科IOS软件中去除了。假如路由器没有接口配置了有效IP地址且处于up/up状态，那么思科IOS将创建出一个接近数据库（a Proximity Database, PDB）并允许创建出进程。但是，要记住除非选定下路由器ID，否则该进程就是非活动的进程，而__路由器ID的选定__，可通过下面两种方式完成。
+在思科IOS软件早期版本中，如路由器上没有至少一个的接口配置了有效IP地址且处于up/up状态，就无法开启OSPF。此限制在当前版本思科IOS软件中去除了。假如路由器没有接口配置了有效IP地址且处于up/up状态，那么思科IOS将创建出一个接近数据库（a Proximity Database, PDB）并允许创建出进程。但是，要记住除非选定路由器ID，该进程就是非活动的进程，而__路由器ID的选定__，可通过下面两种方式完成。
 
 + 在某个接口上配置一个有效IP地址，并将该接口开启
 + 使用命令`router-id`为该路由器手动配置一个ID（见下）
@@ -305,20 +305,21 @@ __Enabling OSPF Routing for Interfaces or Networks__
 + 使用路由器配置命令(router configuration command)`[network] [wildcard] area [area id]`
 + 使用接口配置命令`ip ospf [process id] area [area id]`
 
-与EIGRP不同，OSPF强制使用反掩码且必须配置反掩码; 但与在EIGRP中的情况一样，该反掩码提供了同样的功能，也就是匹配指定范围中的接口（unlike EIGRP, the wildcard is mandatory in OSPF and must be configured; however, as is the case with EIGRP, it serves the same function in that it matches interfaces within the range specified）。比如，语句`network 10.0.0.0 0.255.255.255.255 area 0`，就会对10.0.0.1/30、10.5.5.1/24, 甚至10.10.10.1/25这样的IP地址和子网掩码组合的接口，开启OSPF路由。基于该OSPF组网配置，这些接口都会被分配到0号区域。
-> __注意：__ OSPF的反掩码可以与传统子网掩码的同样格式敲入，比如`network 10.0.0.0 255.0.0.0 area 0`。在这种情况下，思科IOS软件就会将子网掩码翻转，将得到的反掩码输入到允许配置。另外，要记住__OSPF也支持使用全1s和全0s反掩码，来对某个指定接口开启OSPF__。这样的配置在某个特定接口上开启OSPF，但路由器通告配置在该接口自身的实际子网掩码（this configuration enables OSPF on a paricular interface but the router advertises the actual subnet mask configured on the interface itself）。
+与EIGRP不同，OSPF强制使用反掩码且必须配置反掩码; 但与在EIGRP中的情况一样，反掩码提供了同样的功能，也就是匹配指定范围中的接口（unlike EIGRP, the wildcard is mandatory in OSPF and must be configured; however, as is the case with EIGRP, it serves the same function in that it matches interfaces within the range specified）。比如，语句`network 10.0.0.0 0.255.255.255 area 0`，就会对10.0.0.1/30、10.5.5.1/24, 甚至10.10.10.1/25这样的IP地址和子网掩码组合的接口，开启OSPF路由。基于该OSPF网络配置，这些接口都会被分配到0号区域。
 
-在执行了`network [network] [wildcast] area [area id]`命令之后，路由器就在与指定的网络和反掩码组合匹配的那些接口上发出Hello数据包，而尝试发现各台邻居路由器。接着便在OSPF数据库交换期间，将连接的子网通告给一台或更多的邻居路由器，而最后，再将该信息加入到这些OSPF路由器的OSPF链路状态数据库（LSDB）中。
+> __注意：__ OSPF反掩码可以与传统子网掩码同样格式敲入，比如`network 10.0.0.0 255.0.0.0 area 0`。在这种情况下，思科IOS软件就会将子网掩码翻转，将得到的反掩码输入到运行配置（the running configuration）。另外要记住__OSPF也支持使用全1s和全0s反掩码，来对某个指定接口开启OSPF__。这样的配置在某个特定接口上开启OSPF，但路由器通告配置在该接口自身的实际子网掩码（this configuration enables OSPF on a paricular interface but the router advertises the actual subnet mask configured on the interface itself）。
 
-在命令`network [network] [wildcard] area [area id]`之后，路由器有对最具体条目做出匹配，以决定将接口分配给的区域。作为实例，想想下面这些OSPF组网语句配置。
+在执行了`network [network] [wildcast] area [area id]`命令后，路由器就在与指定网络和反掩码组合匹配的那些接口上发出Hello数据包，来尝试发现邻居路由器。接着在OSPF数据库交换期间，将连接子网通告给一台或更多的邻居路由器，最终，它们将所有子网信息都被加入到这些OSPF路由器的OSPF链路状态数据库（OSPF LSDB）中。
 
-+ 第一条配置语句：`network 10.0.0.0 0.255.255.255 area 0`
+在命令`network [network] [wildcard] area [area id]`之后，路由器又对最具体条目做出匹配，以决定将接口要分配给的区域。作为实例，想想下面这些OSPF网络语句。
+
++ 第一条网络配置语句：`network 10.0.0.0 0.255.255.255 area 0`
 + 第二条：`network 10.1.0.0 0.0.255.255 area 1`
 + 第三条：`network 10.1.1.0 0.0.0.255 area 2`
 + 第四条：`network 10.1.1.1 0.0.0.0 area 3`
 + 第五条：`network 0.0.0.0 0.0.0.0 area 4`
 
-按照路由器上的该配置，又有路由器上配置了如下表12.1中展示的这些环回接口。
+按照路由器上的此种配置，同时路由器上又配置了如下表12.1中展示的这些环回接口。
 
 <table>
 <tr><th>接口</th><th>IP地址/掩码</th></tr>
@@ -329,7 +330,7 @@ __Enabling OSPF Routing for Interfaces or Networks__
 <tr><td>Loopback 4</td><td>10.2.0.1/32</td></tr>
 </table>
 
-就像前面指出的那样，在执行了`network [network] [wildcard] area [area id]`命令后，路由器匹配最具体的网络条目（最小的网络），来决定该接口应分配到的区域。对于在路由器上的网络语句配置及所配置的接口，命令`show ip ospf interface brief`会显示出这些接口都分配给了以下OSPF区域。
+就像前面指出的那样，在执行了`network [network] [wildcard] area [area id]`命令后，路由器匹配最具体的网络条目（最小的网络），来决定该接口应分配到的区域。对于在路由器上的网络配置语句及已配置的接口，命令`show ip ospf interface brief`会显示出这些接口都分配给了以下OSPF区域。
 
 ```
 R1#show ip ospf interface brief
@@ -341,27 +342,27 @@ Lo2 		1 	1 		10.1.0.1/32 	1 		LOOP	0/0
 Lo3 		1 	3 		10.1.1.1/32 	1 		LOOP	0/0
 ```
 
-> __注意：__ 无需考虑网络语句敲入的顺序，在运行配置（the running configuration）中，路由器的`show running-config`输出中最具体的网络条目会列在前面。
+> __注意：__ 在运行配置（the running configuration）中，无需考虑网络语句敲入顺序，路由器的`show running-config`输出中最具体的网络条目，始终列在前面。
 
-__接口配置命令`ip ospf [process id] area [area id]`__令到无需使用__路由器配置命令`network [network] [wildcard] area [area id]`__。该命令对某个指定接口开启OSPF路由，同时将该接口分配给指定的OSPF区域。这两个命令完成的是同样的基本功能且可互换使用。
+__接口配置命令`ip ospf [process id] area [area id]`__令到无需使用__路由器配置命令`network [network] [wildcard] area [area id]`__。该命令对某个指定接口开启OSPF路由，同时将该接口分配给指定OSPF区域。这两个命令完成同样的基本功能，且可互换使用。
 
-此外，比如有两台路由器是背靠背连接的，一台使用接口配置命令`ip ospf [process id] area [area id]`进行了配置，而其邻居路由器使用路由器配置命令`network [network] [wildcard] area [area id]`进行了配置，那么假设两个区域IDs是同样的，两台路由器将成功建立OSPF邻接关系。
+此外，比如有两台路由器是背靠背连接（connected back-to-back），一台使用接口配置命令`ip ospf [process id] area [area id]`进行了配置，而其邻居路由器使用路由器配置命令`network [network] [wildcard] area [area id]`进行了配置，假设两个区域IDs相同，那么两台路由器将成功建立OSPF邻接关系。
 
 ###OSPF区域
 
 __OSPF Areas__
 
-__OSPF区域号既可以配置为一个0到4294967295之间的整数，也可以使用点分十进制表示法__（也就是采用IP地址格式）。与OSPF进程号不同，为建立邻接关系，OSPF区域号必须匹配。最常见的OSPF区域类型为使用一个整数来指定OSPF区域。但要确保你对支持的两种区域配置方式都要熟悉。
+__OSPF区域号既可以配置为一个0到4294967295之间的整数，也可使用点分十进制表示法__（也就是采用IP地址格式）。与OSPF进程号不同，__为建立邻接关系，OSPF区域号必须匹配__。最常见OSPF区域配置类型为使用一个整数来指定OSPF区域。确保对支持的两种区域配置方式都要熟悉。
 
 ###OSPF路由器ID
 
 __OSPF Router ID__
 
-为令到OSPF在某个网络上允许起来，所有路由器都必须有一个唯一的身份号码，且在OSPF环境下要用到路由器ID。
+为令到OSPF在某个网络上运行起来，所有路由器都必须有个唯一身份编号（a unique identifying number），且在OSPF环境下要用到路由器ID。
 
-在决定OSPF路由器ID时，思科IOS选用所配置的环回接口上最高的IP地址。如未曾配置环回接口，软件就会使用所有配置的物理接口上最高的IP地址，作为OSPF路由器ID。思科IOS软件同样允许管理员使用__路由器配置命令`router-id [address]`__, 来手动指定路由器ID。
+在决定OSPF路由器ID时，思科IOS选用所配置环回接口中最高的IP地址。如未曾配置环回接口，软件就会使用所有配置的物理接口中最高的IP地址，来作为0SPF路由器ID。思科IOS软件同样允许管理员使用__路由器配置命令`router-id [address]`__, 来手动指定路由器ID。
 
-环回接口极为有用，特别是在测试当中，因为它们无需硬件而是逻辑的，而绝不会宕掉。
+环回接口极为有用，特别是在测试当中，因为它们无需硬件且是逻辑的，因此绝不会宕掉。
 
 在下面的路由器上，给Loopback0配置了IP地址1.1.1.1/32, 给F0/0配置了2.2.2.2/24。接着在路由器上给所有接口配置了OSPF。
 
@@ -387,7 +388,7 @@ Routing Protocol is “ospf 1”
 </pre>
 
 
-又想将路由器ID硬要设置为`10.10.10.1`。那么可以通过配置另一个使用该IP地址的环回接口，或简单地将这个IP地址加在OSPF路由器ID处。__为令到改变生效，将必须重启路由器或在路由器上清除该IP OSPF进程__（清除现有数据库）。
+但又想要将路由器ID硬编码（hard code）为`10.10.10.1`。那么可通过再配置一个使用该IP地址的环回接口，或简单地将这个IP地址加在OSPF路由器ID处。__为令到改变生效，必须重启路由器或在路由器上清除该IP OSPF进程__（清除现有数据库）。
 
 <pre>
 Router#conf t
@@ -422,9 +423,9 @@ Distance: (default is 110)
 
 __OSPF Passive Interfaces__
 
-被动接口可被描述成是那些在其上没有路由更新发出的接口。在思科IOS软件中，通过使用路由器配置命令`passive-interface [name]`, 将某接口配置为被动接口。如在路由器上有多个接口需要配置为被动接口，就应该使用`passive-interface default`这个路由器配置命令。此命令将那些位处所配置网络范围内的所有接口，都配置为被动模式。而那些需要允许在其上形成邻接关系或邻居关系的接口，就应使用路由器配置命令`no passive-interface [name]`对其进行配置。
+被动接口可被描述成在其上没有路由更新发出的接口。在思科IOS软件中，通过使用__路由器配置命令`passive-interface [name]`__, 将某接口配置为被动接口。如路由器上有多个接口需要配置为被动接口，就应使用__`passive-interface default`这个路由器配置命令__。此命令将路由器上那些位处所配置网络范围内的所有接口，都配置为被动模式。而那些需要允许在其上形成邻接关系或邻居关系的接口，就应使用路由器配置命令`no passive-interface [name]`对其进行配置。
 
-被动接口配置在OSPF和EIGRP中的工作方式是一样的，也就是如某个接口被标记为被动接口，经由该接口形成的所有邻居关系都会被拆除，同时再也不会通过该接口发送或接收Hello数据包了。不过，基于路由器上所配置的网络语句配置，该接口仍然会继续受通告。
+被动接口配置在OSPF和EIGRP中的工作方式是一样的，也就是一旦某接口被标记为被动接口，经由该接口形成的所有邻居关系都会被拆除，同时再也不会通过该接口发送或接收Hello数据包了。不过，根据路由器上所配置的网络配置语句，该接口仍然会继续受通告。
 
 <pre>
 Router(config)#router ospf 10

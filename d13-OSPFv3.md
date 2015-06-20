@@ -75,4 +75,136 @@ R1(config-if)#exit
 
 __Configuring and Verifying OSPFv3 in Cisco IOS Software__
 
+接着上一部分，上部分强调了OSPFv2和OSPFv3之间配置差异，那么这部分就要过一遍那些在思科IOS软件中开启和验证OSPFv3功能及路由的步骤。在思科IOS软件中，需要依序采行下面这些步骤，来开启OSPFv3路由。
 
+1. 使用全局配置命令`ipv6 unicast-routing`，来全局性地开启IPv6路由。而在思科IOS软件中，IPv6路由默认是关闭的。
+2. 使用全局配置命令`ipv6 router ospf [process ID]`, 配置一或多个的OSPFv3进程。
+3. 如路由器上没有配置了IPv4地址的运行接口，就要使用路由器配置命令（router configuration command）`router-id [IPv4 Address]`， 手动配置OSPFv3路由器ID（Router ID，RID）。
+4. 在需要的接口上（on the desired interfaces），使用接口配置命令`ipv6 address`及`ipv6 enable`, 对这些接口开启IPv6。
+5. 使用接口配置命令`ipv6 ospf [process ID] area [area ID]`，在接口下开启一或更多的OSPFv3进程。
+
+第一个基本的多区域OSPFv3配置示例，建立在下图13.1所演示的拓扑之上。
+
+![在思科IOS软件中配置基本多区域OSPFv3](images/1301.png)
+__图13.1 -- 在思科IOS软件中配置基本多区域OSPFv3__
+
+依之间所讲到的顺序配置步骤，照下面这样，在路由器R1上就会配置上OSPFv3。
+
+```
+R1(config)#ipv6 unicast-routing
+R1(config)#ipv6 router ospf 1
+R1(config-rtr)#router-id 1.1.1.1
+R1(config-rtr)#exit
+R1(config)#interface FastEthernet0/0
+R1(config-if)#ipv6 address 3fff:1234:abcd:1::1/64
+R1(config-if)#ipv6 enable
+R1(config-if)#ipv6 ospf 1 Area 0
+R1(config-if)#exit
+```
+
+而按照同样顺序步骤，就像下面这样在路由器R3上配置好OSPFv3路由。
+
+```
+R3(config)#ipv6 unicast-routing
+R3(config)#ipv6 router ospf 3
+R3(config-rtr)#router-id 3.3.3.3
+R3(config-rtr)#exit
+R3(config)#interface FastEthernet0/0
+R3(config-if)#ipv6 address 3fff:1234:abcd:1::3/64
+R3(config-if)#ipv6 enableR3(config-if)#ipv6 ospf 3 Area 0
+R3(config-if)#exit
+R3(config)#interface Loopback0
+R3(config-if)#ipv6 address 3fff:1234:abcd:2::3/128
+R3(config-if)#ipv6 address 3fff:1234:abcd:3::3/128
+R3(config-if)#ipv6 enable
+R3(config-if)#ipv6 ospf 3 Area 1
+R3(config-if)#exit
+```
+
+按照在两台路由器上OSPFv3的配置，就可以使用命令`show ipv6 ospf neighbor`, 来检查OSPFv3的邻接状态，在R1上如下所示。
+
+```
+R1#show ipv6 ospf neighbor
+Neighbor	ID Pri	State 		Dead Time	Interface ID 	Interface
+3.3.3.3		     1	FULL/BDR 	00:00:36 	4 				FastEthernet0/0
+```
+
+通过将`[detail]`关键字追加到本命令的后面，还可以查看详细的邻居信息。
+
+<pre>
+R1#show ipv6 ospf neighbor detail
+Neighbor 3.3.3.3
+	In the area 0 via interface FastEthernet0/0
+	<b>Neighbor: interface-id 4, link-local address FE80::213:19FF:FE86:A20</b>
+	Neighbor priority is 1, State is FULL, 6 state changes
+	DR is 1.1.1.1 BDR is 3.3.3.3
+	<b>Options is 0x000013 in Hello (V6-Bit E-Bit R-bit )</b>
+	<b>Options is 0x000013 in DBD (V6-Bit E-Bit R-bit )</b>
+	Dead timer due in 00:00:39
+	Neighbor is up for 00:06:40
+	Index 1/1/1, retransmission queue length 0, number of retransmission 0
+	First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+	Last retransmission scan length is 0, maximum is 0
+	Last retransmission scan time is 0 msec, maximum is 0 msec
+</pre>
+
+在上面的输出中，注意真实的邻居地址是本地链路地址，而不是所配置的全球IPv6单播地址。
+
+##第13天问题
+
+1. Both OSPFv2 and OSPFv3 can run on the same router. True or false?
+2. OSPFv2 and OSPFv3 use different LSA flooding and aging mechanisms. True or false?
+3. Which is the equivalent of `224.0.0.5` in the IPv6 world?
+4. As is required for EIGRPv6, the router ID for OSPFv3 must be either specified manually or configured as an operational interface with an IPv4 address. True or false?
+5. Which command would you use to enable the OSPFv3 routing protocol?
+6. Which command would you use to specify an OSPFv3 neighbour over an NBMA interface?
+7. Which command would you use to see the OSPFv3 LSDB?
+8. A significant difference between OSPFv2 and OSPFv3 is that the OSPFv3 Hello packet now contains no address information at all but includes an interface ID, which the originating router has assigned to uniquely identify its interface to the link. True or false?
+
+##第13天答案
+
+1. True.
+2. False.
+3. `FF02::5`.
+4. True.
+5. The `ipv6 router ospf <id>`
+6. The `ipv6 ospf neighbor`
+7. The `show ipv6 ospf database`
+8. True.
+
+##第13天实验
+
+###OSPFv3基础实验
+
+重复第12天的实验场景（两台路由器直连，各自又有环回接口），但以配置IPv6地址并在设备间使用OSPFv3对这些地址进行通告，取代配置IPv4的OSPF。
+
++ 给直连接口分配上IPv6地址（`2001:100::1/64`及`2001:100::2/64`）
++ 用`ping`测试直接连通性
++ 在两台路由器上分别配置一个环回接口，并从两个不同范围分配地址（`2002::1/128`及`2002::2/128`）
++ 配置标准的OSPFv3 1号进程并将所有本地网络在0号区域进行通告。同时为各设备配置一个路由器ID。
+
+__R1:__
+
+<pre>
+ipv6 router ospf 1
+router-id 1.1.1.1
+int fa0/0<b>(or the specific interface number)</b>
+ipv6 ospf 1 area 0
+int lo0<b>(or the specific interface number)</b>
+ipv6 ospf 1 area 0
+</pre>
+
+__R2:__
+
+<pre>
+ipv6 router ospf 1
+router-id 2.2.2.2
+int fa0/0<b>(or the specific interface number)</b>
+ipv6 ospf 1 area 0
+int lo0<b>(or the specific interface number)</b>
+ipv6 ospf 1 area 0
+</pre>
+
++ 自R1向R2的IPv6环回接口发出`ping`操作，以测试连通性
++ 执行一个`show ipv6 route`命令，来验证有通过OSPFv3接收到路由
++ 执行一个``

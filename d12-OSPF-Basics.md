@@ -1,15 +1,15 @@
 #第12天
 
-__OSPF基础知识__
+**OSPF基础知识**
 
-__OSPF Basics__
+**OSPF Basics**
 
 ##今天的任务
 
 + 阅读今天的理论课文
 + 复习昨天的理论课文
 
-先前版本的CCNA考试只要求对OSPF有基本了解。__现今版本要求对OSPFv2、v3及多区域OSPF都要有更为深入的掌握__。OSPF考点在ICND1和ICND2中都有，ICND2中增加了难度。
+先前版本的CCNA考试只要求对OSPF有基本了解。**现今版本要求对OSPFv2、v3及多区域OSPF都要有更为深入的掌握**。OSPF考点在ICND1和ICND2中都有，ICND2中增加了难度。
 
 今天将会学到下面这些内容。
 
@@ -27,13 +27,13 @@ __OSPF Basics__
 
 ##开放最短路径优先
 
-__Open Shortest Path First__
+**Open Shortest Path First**
 
-开放最短路径优先，是__一个开放标准的链路状态路由协议__（an open-standard Link State routing protocol）。链路状态路由协议对链路状态进行通告。在一台链路状态路由器开始在某条网络链路上运行时，与那个逻辑网络有关的信息就被添加到路由器的__本地__链路状态数据库(Link State Database, LSDB)中。该本地路由器此时在其运作链路上，发出Hello数据包，以确定是否有其它链路状态路由器也在其各自接口上运行着链路状态路由协议。__OSPF直接运行在IP协议上，使用IP的89号协议__。
+开放最短路径优先，是**一个开放标准的链路状态路由协议**（an open-standard Link State routing protocol）。链路状态路由协议对链路状态进行通告。在一台链路状态路由器开始在某条网络链路上运行时，与那个逻辑网络有关的信息就被添加到路由器的**本地**链路状态数据库(Link State Database, LSDB)中。该本地路由器此时在其运作链路上，发出Hello数据包，以确定是否有其它链路状态路由器也在其各自接口上运行着链路状态路由协议。**OSPF直接运行在IP协议上，使用IP的89号协议**。
 
 ## OSPF概述及基础知识
 
-__OSPF Overview and Fundamentals__
+**OSPF Overview and Fundamentals**
 
 人们为OSPF撰写了多个RFCs。在本小节，将通过一些有关OSPF最常见的几个RFCs，来了解一下OSPF的历史。OSPF工作组成立于1987年，自成立以后，该工作组发布了为数众多的RFCs。下面列出了OSPF有关的一些最常见的RFCs。
 
@@ -58,11 +58,11 @@ RFC 2328详述了OSPF版本2的最新更新，而OSPF版本2正是现今在用�
 
 ###链路状态基础
 
-__Link State Fundamentals__
+**Link State Fundamentals**
 
-当对某条特定链路(也就是接口）开启链路状态路由协议时，与那个网络有关的信息就被加入到本地LSDB中。该本地路由器此时就往其运作的各链路上发送Hello数据包，以确定有否其它__链路状态路由器__也在接口上运行着。__Hello数据包用于邻居发现并在邻居路由器之间维护邻接关系__。本模块稍后部分会详细说明这些消息。
+当对某条特定链路(也就是接口）开启链路状态路由协议时，与那个网络有关的信息就被加入到本地LSDB中。该本地路由器此时就往其运作的各链路上发送Hello数据包，以确定有否其它**链路状态路由器**也在接口上运行着。**Hello数据包用于邻居发现并在邻居路由器之间维护邻接关系**。本模块稍后部分会详细说明这些消息。
 
-在找到一台邻居路由器后， 假定两台路由器在同一子网且位于同一区域，同时诸如认证方法及计时器等其它参数都是一致的（identical），那么本地路由器就尝试建立一个邻接关系（adjacency）。此邻接关系令到两台路由器将__摘要的LSDB信息__通告给对方。这种信息交换，交换的不是实在的详细数据库信息，而是数据的摘要。
+在找到一台邻居路由器后， 假定两台路由器在同一子网且位于同一区域，同时诸如认证方法及计时器等其它参数都是一致的（identical），那么本地路由器就尝试建立一个邻接关系（adjacency）。此邻接关系令到两台路由器将**摘要的LSDB信息**通告给对方。这种信息交换，交换的不是实在的详细数据库信息，而是数据的摘要。
 
 各台路由器参照其本地LSDB，对收到的摘要信息做出评估，以确定其有着最新信息。如邻接关系的一侧认识到它需要一个更新，路由器就从邻接路由器请求新信息。而来自邻居路由器的更新包含了LSDB中的具体数据。此交换过程持续下去，直到两台路由器拥有同样的LSDB。OSPF用到不同类型的消息，来交换数据库信息，以确保所有路由器都有着网络的统一视图。这些不同的数据包类型将在本模块稍后进行详细说明。
 
@@ -70,30 +70,30 @@ __Link State Fundamentals__
 
 ###OSPF基础
 
-__OSPF Fundamentals__
+**OSPF Fundamentals**
 
 与EIGRP能够支持多个网络层协议不同，OSPF只能支持IP，也就是IPv4和IPv6。和EIGRP相同的是，OSPF支持VLSM、认证及在诸如以太网这样的多路访问（Multi-Access）网络上，于发送和接收更新时，利用IP多播技术（IP Multicast）。
 
 OSPF是一种层次化的路由协议，将网络以逻辑方式，分为称作区域的众多子域。这种逻辑分段用于限制链路状态通告在某个OSPF域中扩散的范围（OSPF is a hierarchical routing protocol that logically divides the network into subdomains referred to as areas. This logical segmentation is used to limit the scope of Link State Advertisements(LSAs)）。LSAs是由运行着OSPF的路由器发出的特殊类型数据包。在区域内和区域间用到不同类型的LSAs。通过限制一些类型的LSAs在区域间传播，OSPF的层次化实现有效地减少了OSPF网络中路由协议流量的数量。
 
-> __注意：__ OSPF的这些LSAs会在第39天详细说明。
+> **注意：** OSPF的这些LSAs会在第39天详细说明。
 
-在多区域OSPF网络中，必须指定一个区域作为__骨干区域, 或者叫0号区域__（the backbone area, or Area 0）。该OSPF骨干就是此OSPF网络的逻辑中心。__其它非骨干区域都必须物理连接到这个骨干区域__。但是，在非骨干区域和骨干区域之间有着一条物理连接，并非总是可能或可行的，所以OSPF标准允许使用到骨干区域的虚拟连接。这些虚拟连接也就是常说的虚拟链路，但此概念是不包括在当前的CCNA大纲中的。
+在多区域OSPF网络中，必须指定一个区域作为**骨干区域, 或者叫0号区域**（the backbone area, or Area 0）。该OSPF骨干就是此OSPF网络的逻辑中心。**其它非骨干区域都必须物理连接到这个骨干区域**。但是，在非骨干区域和骨干区域之间有着一条物理连接，并非总是可能或可行的，所以OSPF标准允许使用到骨干区域的虚拟连接。这些虚拟连接也就是常说的虚拟链路，但此概念是不包括在当前的CCNA大纲中的。
 
-位处区域中的路由器，都存储着其所在区域的详细拓扑信息。而在各区域中，一台或多台的路由器，又被作为__区域边界路由器__（Area Border Routers, ABRs），区域边界路由器通过在不同区域之间通告汇总路由信息，而促进区域间路由（facilitate inter-area routing）。本功能实现OSPF网络中的以下几个目标。
+位处区域中的路由器，都存储着其所在区域的详细拓扑信息。而在各区域中，一台或多台的路由器，又被作为**区域边界路由器**（Area Border Routers, ABRs），区域边界路由器通过在不同区域之间通告汇总路由信息，而促进区域间路由（facilitate inter-area routing）。本功能实现OSPF网络中的以下几个目标。
 
 + 在OSPF域层面减小LSAs的扩散范围
 + 在区域之间隐藏详细拓扑信息
 + OSPF域中端到端连通性（end-to-end connectivity）的实现
 + 在OSPF域内部创建逻辑边界
 
-> __注意：__ 尽管ICND1大纲仅涉及到单区域OSPF（single-area OSPF）, 但为把大部分理论纳入讨论背景，有必要说一下多区域OSPF（multi-area OSPF）。
+> **注意：** 尽管ICND1大纲仅涉及到单区域OSPF（single-area OSPF）, 但为把大部分理论纳入讨论背景，有必要说一下多区域OSPF（multi-area OSPF）。
 
 OSPF骨干网络自ABRs接收到汇总路由信息。该路由信息被散布到OSPF网络中所有其它非骨干区域中去。在网络拓扑发生变化时，变化信息散布到整个的OSPF域中去，令到所有区域中的所有路由器都有着网络的统一视图。下图12.1演示的网络拓扑，就是一个多区域OSPF部署的示例。
 
 ![一个多区域OSPF网络](images/1201.png)
 
-__图12.1 -- 一个多区域OSPF网络__
+*图12.1 -- 一个多区域OSPF网络*
 
 图12.1演示了一个基本的多区域OSPF网络。1、2号区域连接到0号区域的OSPF骨干上。1号区域中，路由器R1、R2和R3交换着区域内（intra-area）路由信息，并维护着那个区域的详细拓扑。R3作为ABR，生成一条区域间汇总路由（an inter-area summary route）, 并将该路由通告给OSPF骨干。
 
@@ -101,11 +101,11 @@ R4是2号区域的ABR，从0号区域接收到R3通告出的汇总信息，并�
 
 总的来讲，众多ABRs都维护着所有其各自连接区域的LSDB信息。而各个区域中的所有路由器，都有着属于其特定区域的详细拓扑信息。这些区域内路由器交换着区域内的路由信息。由ABRs将所连接区域的汇总信息通告给其它OSPF区域，以实现域内各子域（区域）间路由。
 
-> __注意：__ 本书后面会详细说明OSPF ABRs及其它OSPF路由器类型。
+> **注意：** 本书后面会详细说明OSPF ABRs及其它OSPF路由器类型。
 
 ###组网类型
 
-__Network Types__
+**Network Types**
 
 OSPF对不同传输介质，采用不同默认组网类型，有下面这些组网类型。
 
@@ -115,7 +115,7 @@ OSPF对不同传输介质，采用不同默认组网类型，有下面这些组�
 + 点对多点组网，Point-to-Multipoint
 + 环回组网（默认在环回接口上采用此种组网类型）， Loopback(default on Loopback interfaces)
 
-__非广播网络是指那些没有原生的广播或多播流量支持的网络类型__。非广播类型网络的最常见实例就是帧中继网络。非广播类型网络__需要额外配置，以实现广播和多播支持__。在这种网络上，OSPF选举出一台指定路由器(a Designate Router, DR), 及/或一台备用指定路由器（a Backup Designated Router, BDR）。在本书后面会对这两台路由器进行说明。
+**非广播网络是指那些没有原生的广播或多播流量支持的网络类型**。非广播类型网络的最常见实例就是帧中继网络。非广播类型网络**需要额外配置，以实现广播和多播支持**。在这种网络上，OSPF选举出一台指定路由器(a Designate Router, DR), 及/或一台备用指定路由器（a Backup Designated Router, BDR）。在本书后面会对这两台路由器进行说明。
 
 在思科IOS软件中，非广播类型网络上开启OSPF的路由器，默认每30秒发出Hello数据包。若4个Hello间隔，也就是120秒中都没有收到Hello数据包，那么该邻居路由器就被认为”死了“。下面的输出演示了在一个帧中继串行接口上`show ip ospf interface`命令的输出。
 
@@ -238,19 +238,19 @@ Serial0/0 is up, line protocol is up
 
 ##配置OSPF
 
-__OSPF Configuration__
+**OSPF Configuration**
 
 本节对OSPF配置基础进行说明。
 
 ###在思科IOS软件中开启OSPF
 
-__Enabling OSPF in Cisco IOS Software__
+**Enabling OSPF in Cisco IOS Software**
 
-在思科IOS软件中，通过使用全局配置命令`router ospf [process id]`开启OSPF。__关键字`[process id]`是本地有效的__(locally sinificant)，邻接关系的建立无需网络中所有路由器的进程号一致。运用本地有效的进程号，允许在同一台路由器上配置多个OSPF实例。
+在思科IOS软件中，通过使用全局配置命令`router ospf [process id]`开启OSPF。**关键字`[process id]`是本地有效的**(locally sinificant)，邻接关系的建立无需网络中所有路由器的进程号一致。运用本地有效的进程号，允许在同一台路由器上配置多个OSPF实例。
 
 OSPF进程号是一个1与65535之间的整数。每个OSPF进程都维护着其独立链路状态数据库（LSDB）；但是，所有路由都放进的是同一IP路由表。也就是说，对配置在路由器上的各个单独OSPF进程，并没有各自唯一的IP路由表。
 
-在思科IOS软件早期版本中，如路由器上没有至少一个的接口配置了有效IP地址且处于up/up状态，就无法开启OSPF。此限制在当前版本思科IOS软件中去除了。假如路由器没有接口配置了有效IP地址且处于up/up状态，那么思科IOS将创建出一个接近数据库（a Proximity Database, PDB）并允许创建出进程。但是，要记住除非选定路由器ID，该进程就是非活动的进程，而__路由器ID的选定__，可通过下面两种方式完成。
+在思科IOS软件早期版本中，如路由器上没有至少一个的接口配置了有效IP地址且处于up/up状态，就无法开启OSPF。此限制在当前版本思科IOS软件中去除了。假如路由器没有接口配置了有效IP地址且处于up/up状态，那么思科IOS将创建出一个接近数据库（a Proximity Database, PDB）并允许创建出进程。但是，要记住除非选定路由器ID，该进程就是非活动的进程，而**路由器ID的选定**，可通过下面两种方式完成。
 
 + 在某个接口上配置一个有效IP地址，并将该接口开启
 + 使用命令`router-id`为该路由器手动配置一个ID（见下）
@@ -299,7 +299,7 @@ R3#show ip ospf 1
 
 ###开启接口或网络的OSPF路由
 
-__Enabling OSPF Routing for Interfaces or Networks__
+**Enabling OSPF Routing for Interfaces or Networks**
 
 在开启OSPF后，就可以执行两个操作，来为路由器上一个或更多的网络或接口开启OSPF路由。这两个操作如下。
 
@@ -308,7 +308,7 @@ __Enabling OSPF Routing for Interfaces or Networks__
 
 与EIGRP不同，OSPF强制使用反掩码且必须配置反掩码; 但与在EIGRP中的情况一样，反掩码提供了同样的功能，也就是匹配指定范围中的接口（unlike EIGRP, the wildcard is mandatory in OSPF and must be configured; however, as is the case with EIGRP, it serves the same function in that it matches interfaces within the range specified）。比如，语句`network 10.0.0.0 0.255.255.255 area 0`，就会对10.0.0.1/30、10.5.5.1/24, 甚至10.10.10.1/25这样的IP地址和子网掩码组合的接口，开启OSPF路由。基于该OSPF网络配置，这些接口都会被分配到0号区域。
 
-> __注意：__ OSPF反掩码可以与传统子网掩码同样格式敲入，比如`network 10.0.0.0 255.0.0.0 area 0`。在这种情况下，思科IOS软件就会将子网掩码翻转，将得到的反掩码输入到运行配置（the running configuration）。另外要记住__OSPF也支持使用全1s和全0s反掩码，来对某个指定接口开启OSPF__。这样的配置在某个特定接口上开启OSPF，但路由器通告配置在该接口自身的实际子网掩码（this configuration enables OSPF on a paricular interface but the router advertises the actual subnet mask configured on the interface itself）。
+> **注意：** OSPF反掩码可以与传统子网掩码同样格式敲入，比如`network 10.0.0.0 255.0.0.0 area 0`。在这种情况下，思科IOS软件就会将子网掩码翻转，将得到的反掩码输入到运行配置（the running configuration）。另外要记住**OSPF也支持使用全1s和全0s反掩码，来对某个指定接口开启OSPF**。这样的配置在某个特定接口上开启OSPF，但路由器通告配置在该接口自身的实际子网掩码（this configuration enables OSPF on a paricular interface but the router advertises the actual subnet mask configured on the interface itself）。
 
 在执行了`network [network] [wildcast] area [area id]`命令后，路由器就在与指定网络和反掩码组合匹配的那些接口上发出Hello数据包，来尝试发现邻居路由器。接着在OSPF数据库交换期间，将连接子网通告给一台或更多的邻居路由器，最终，它们将所有子网信息都被加入到这些OSPF路由器的OSPF链路状态数据库（OSPF LSDB）中。
 
@@ -343,25 +343,25 @@ Lo2 		1 	1 		10.1.0.1/32 	1 		LOOP	0/0
 Lo3 		1 	3 		10.1.1.1/32 	1 		LOOP	0/0
 ```
 
-> __注意：__ 在运行配置（the running configuration）中，无需考虑网络语句敲入顺序，路由器的`show running-config`输出中最具体的网络条目，始终列在前面。
+> **注意：** 在运行配置（the running configuration）中，无需考虑网络语句敲入顺序，路由器的`show running-config`输出中最具体的网络条目，始终列在前面。
 
-__接口配置命令`ip ospf [process id] area [area id]`__令到无需使用__路由器配置命令`network [network] [wildcard] area [area id]`__。该命令对某个指定接口开启OSPF路由，同时将该接口分配给指定OSPF区域。这两个命令完成同样的基本功能，且可互换使用。
+**接口配置命令`ip ospf [process id] area [area id]`**令到无需使用**路由器配置命令`network [network] [wildcard] area [area id]`**。该命令对某个指定接口开启OSPF路由，同时将该接口分配给指定OSPF区域。这两个命令完成同样的基本功能，且可互换使用。
 
 此外，比如有两台路由器是背靠背连接（connected back-to-back），一台使用接口配置命令`ip ospf [process id] area [area id]`进行了配置，而其邻居路由器使用路由器配置命令`network [network] [wildcard] area [area id]`进行了配置，假设两个区域IDs相同，那么两台路由器将成功建立OSPF邻接关系。
 
 ###OSPF区域
 
-__OSPF Areas__
+**OSPF Areas**
 
-__OSPF区域号既可以配置为一个0到4294967295之间的整数，也可使用点分十进制表示法__（也就是采用IP地址格式）。与OSPF进程号不同，__为建立邻接关系，OSPF区域号必须匹配__。最常见OSPF区域配置类型为使用一个整数来指定OSPF区域。确保对支持的两种区域配置方式都要熟悉。
+**OSPF区域号既可以配置为一个0到4294967295之间的整数，也可使用点分十进制表示法**（也就是采用IP地址格式）。与OSPF进程号不同，**为建立邻接关系，OSPF区域号必须匹配**。最常见OSPF区域配置类型为使用一个整数来指定OSPF区域。确保对支持的两种区域配置方式都要熟悉。
 
 ###OSPF路由器ID
 
-__OSPF Router ID__
+**OSPF Router ID**
 
 为令到OSPF在某个网络上运行起来，所有路由器都必须有个唯一身份编号（a unique identifying number），且在OSPF环境下要用到路由器ID。
 
-在决定OSPF路由器ID时，思科IOS选用所配置环回接口中最高的IP地址。如未曾配置环回接口，软件就会使用所有配置的物理接口中最高的IP地址，来作为0SPF路由器ID。思科IOS软件同样允许管理员使用__路由器配置命令`router-id [address]`__, 来手动指定路由器ID。
+在决定OSPF路由器ID时，思科IOS选用所配置环回接口中最高的IP地址。如未曾配置环回接口，软件就会使用所有配置的物理接口中最高的IP地址，来作为0SPF路由器ID。思科IOS软件同样允许管理员使用**路由器配置命令`router-id [address]`**, 来手动指定路由器ID。
 
 环回接口极为有用，特别是在测试当中，因为它们无需硬件且是逻辑的，因此绝不会宕掉。
 
@@ -389,7 +389,7 @@ Routing Protocol is “ospf 1”
 </pre>
 
 
-但又想要将路由器ID硬编码（hard code）为`10.10.10.1`。那么可通过再配置一个使用该IP地址的环回接口，或简单地将这个IP地址加在OSPF路由器ID处。__为令到改变生效，必须重启路由器或在路由器上清除该IP OSPF进程__（清除现有数据库）。
+但又想要将路由器ID硬编码（hard code）为`10.10.10.1`。那么可通过再配置一个使用该IP地址的环回接口，或简单地将这个IP地址加在OSPF路由器ID处。**为令到改变生效，必须重启路由器或在路由器上清除该IP OSPF进程**（清除现有数据库）。
 
 <pre>
 Router#conf t
@@ -418,13 +418,13 @@ Routing Protocol is “ospf 1”
 Distance: (default is 110)
 </pre>
 
-到第39天，__DR和BDR选举时，就将看到这个路由器ID有着特别的重要性__。
+到第39天，**DR和BDR选举时，就将看到这个路由器ID有着特别的重要性**。
 
 ###OSPF被动接口
 
-__OSPF Passive Interfaces__
+**OSPF Passive Interfaces**
 
-被动接口可被描述成在其上没有路由更新发出的接口。在思科IOS软件中，通过使用__路由器配置命令`passive-interface [name]`__, 将某接口配置为被动接口。如路由器上有多个接口需要配置为被动接口，就应使用__`passive-interface default`这个路由器配置命令__。此命令将路由器上那些位处所配置网络范围内的所有接口，都配置为被动模式。而那些需要允许在其上形成邻接关系或邻居关系的接口，就应使用路由器配置命令`no passive-interface [name]`对其进行配置。
+被动接口可被描述成在其上没有路由更新发出的接口。在思科IOS软件中，通过使用**路由器配置命令`passive-interface [name]`**, 将某接口配置为被动接口。如路由器上有多个接口需要配置为被动接口，就应使用**`passive-interface default`这个路由器配置命令**。此命令将路由器上那些位处所配置网络范围内的所有接口，都配置为被动模式。而那些需要允许在其上形成邻接关系或邻居关系的接口，就应使用路由器配置命令`no passive-interface [name]`对其进行配置。
 
 被动接口配置在OSPF和EIGRP中的工作方式是一样的，也就是一旦某接口被标记为被动接口，经由该接口形成的所有邻居关系都会被拆除，同时再也不会通过该接口发送或接收Hello数据包了。不过，根据路由器上所配置的网络配置语句，该接口仍然会继续受通告。
 
@@ -479,7 +479,7 @@ FastEthernet0/0 is up, line protocol is up
 + 分别在两台路由器上配置一个环回接口，并自两个不同范围为其分配上地址（11.11.11.1/32及12.12.12.2/32）
 + 配置上标准OSPF 1号进程，并在0号区域中通告所有本地网络。同时为两台设备配置一个路由器ID。
 
-__R1:__
+**R1:**
 
 ```
 router ospf 1
@@ -488,7 +488,7 @@ network 10.10.10.0 0.0.0.255 area 0
 network 11.11.11.1 0.0.0.0 area 0
 ```
 
-__R2:__
+**R2:**
 
 ```
 router ospf 1

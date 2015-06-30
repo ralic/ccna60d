@@ -1,8 +1,8 @@
 #第十一天
 
-__静态路由__
+**静态路由**
 
-__Static Routing__
+**Static Routing**
 
 ##第11天任务
 
@@ -32,13 +32,13 @@ __Static Routing__
 
 ##静态路由配置
 
-__Configuring Static Routes__
+**Configuring Static Routes**
 
  配置一条静态路由（见下图11.1）需要以下这些命令。
 
 + `network address/prefix mask`
-+ `address` __or__ `exit interface`
-+ `distance` __(optional)__
++ `address` **or** `exit interface`
++ `distance` **(optional)**
 
 这里是一个这些命令使用的实例。
 
@@ -46,7 +46,7 @@ __Configuring Static Routes__
 
 ![静态路由示例网络](images/1101.png)
 
-__图11.1 -- 静态路由示例网络__
+*图11.1 -- 静态路由示例网络*
 
 要加入上面网络的一条静态路由，就要在左边的路由器上写出下面这行配置。
 
@@ -56,7 +56,7 @@ __图11.1 -- 静态路由示例网络__
 
 ![不总是知道下一跳地址的情形](images/1102.png)
 
-__图11.2 -- 不总是知道下一跳地址的情形__
+*图11.2 -- 不总是知道下一跳地址的情形*
 
 `Router(config)#ip route 192.168.1.0 255.255.255.0 s0/0`
 
@@ -69,11 +69,11 @@ __图11.2 -- 不总是知道下一跳地址的情形__
 
 ###静态IPv6路由的配置
 
-__Configuring Static IPv6 Routes__
+**Configuring Static IPv6 Routes**
 
-静态IPv6路由的配置，与静态IPv4路由的配置遵循同样的逻辑。在思科IOS软件中，全局配置命令`ipv6 route [ipv6-prefix/prefix-length] [next-hop-address | interface] [distance <1-254> | multicast | tag | unicast]`用于配置静态IPv6路由。当中的一些关键字是熟悉的，因为它们也适用于IPv4静态路由，而`[multicast]`关键字则是IPv6所独有的，用于配置一条IPv6静态多播路由(an IPv6 static Multicast route)。如用到此关键字，该路由就不会进到单薄路由表（the Unicast routing table），同时也绝不会用于转发单播流量。为确保该路由绝不会安装到单播路由信息库（the Unicast RIB）, 思科IOS软件将该条路由__（静态多播路由）的管理距离设置为255__。
+静态IPv6路由的配置，与静态IPv4路由的配置遵循同样的逻辑。在思科IOS软件中，全局配置命令`ipv6 route [ipv6-prefix/prefix-length] [next-hop-address | interface] [distance <1-254> | multicast | tag | unicast]`用于配置静态IPv6路由。当中的一些关键字是熟悉的，因为它们也适用于IPv4静态路由，而`[multicast]`关键字则是IPv6所独有的，用于配置一条IPv6静态多播路由(an IPv6 static Multicast route)。如用到此关键字，该路由就不会进到单薄路由表（the Unicast routing table），同时也绝不会用于转发单播流量。为确保该路由绝不会安装到单播路由信息库（the Unicast RIB）, 思科IOS软件将该条路由**（静态多播路由）的管理距离设置为255**。
 
-相反，`[unicast]`关键字则是用于配置一条IPv6静态单播路由。如用到此关键字，该条路由就绝不会进入到多播路由表（the Multicast routing table）, 并仅被用于转发单播流量。而__既没用到`[multicast]`关键字，也没用到`[unicast]`关键字时，默认情况下，该条路由机会用于单播数据包的转发，也会用于多播数据包的转发__。
+相反，`[unicast]`关键字则是用于配置一条IPv6静态单播路由。如用到此关键字，该条路由就绝不会进入到多播路由表（the Multicast routing table）, 并仅被用于转发单播流量。而**既没用到`[multicast]`关键字，也没用到`[unicast]`关键字时，默认情况下，该条路由机会用于单播数据包的转发，也会用于多播数据包的转发**。
 
 以下的配置示例，演示了如何来配置3条静态IPv6路由。第一条路由，到子网`3FFF:1234:ABCD:0001::/64`, 会将流量从FastEthernet0/0转发出去。此路由仅用于单播流量的转发。第二条路由，到子网`3FFF:1234:ABCD:0002::/64`, 会将到那个子网的数据包从Serial0/0，使用下一跳路由器的数据链路层地址，作为IPv6的下一跳地址转发出去。本条路由仅会用于多播流量。最后，同样配置了一条指向Serial0/1作为出口接口的默认路由。此默认路由将会通过Serial0/1, 使用下一跳路由器的本地链路地址作为IPv6下一跳地址，转发那些到未知IPv6目的地址的数据包。这些路由如下面所示。
 
@@ -112,11 +112,11 @@ Code: * - installed in RIB
 
 ##静态路由排错
 
-__Troubleshooting Satic Routes__
+**Troubleshooting Satic Routes**
 
 排错总会涉及到某个配置问题（如果不是接口宕掉的话）。如流量没有到达目的地，就可以使用命令`traceroute`测试该路由。
 
-> __注意__ -- 今天内容很少，所以请前往第12天吧，因为那将是个非常充实的主题。
+> **注意** -- 今天内容很少，所以请前往第12天吧，因为那将是个非常充实的主题。
 
 ##第11天问题
 
@@ -138,17 +138,17 @@ __Troubleshooting Satic Routes__
 
 ###静态路由实验
 
-__Static Routes Lab__
+**Static Routes Lab**
 
-__拓扑图__
+**拓扑图**
 
 ![静态路由实验拓扑图](images/1103.png)
 
-__实验目的__
+**实验目的**
 
 学习如何以下一跳地址和出口接口方式，将静态路由指定给一台路由器。
 
-__实验步骤__
+**实验步骤**
 
 1. 按照上面的拓扑图分配IP地址。Router A可以是192.168.1.1/30, Router B可以是.2。
 2. 通过串行链路进行ping操作，以确保该链路是工作的。

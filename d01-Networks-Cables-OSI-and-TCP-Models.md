@@ -1686,21 +1686,21 @@ Tracing the route to 192.168.1.1
 8. What are the five TCP/IP layers from the top down?
 9. How does the TCP/IP model map to the OSI model?
 10. Layer 2 addresses are also referred to as `_______` addresses.
-11. Using a switch will allow you to divide your network into smaller, more manageable sections known as `_______ _______`.
+11. Using a switch will allow you to divide your network into smaller, more manageable sections known as `_______` `_______`.
 
 ### 线缆的问题 Cable Questions
 
-1. The current standard Ethernet cable still uses eight wires twisted into pairs to prevent `_______ _______` and `_______`.
+1. The current standard Ethernet cable still uses eight wires twisted into pairs to prevent `_______` `_______` and `_______`.
 2. `_______` is when a signal from one Ethernet wire spills over into a neighbouring cable.
 3. Which command would set the FastEthernet router interface speed to 10Mbps?
 4. On a crossover cable, the wire on pin 1 on one end needs to connect to pin `_______` on the other end and pin 2 needs to connect to pin `_______`.
 5. Which cable would you use to connect a router Ethernet interface to a PC?
-6. You can see a summary of which interfaces you have on your router with the show `_______ _______ _______` command.
+6. You can see a summary of which interfaces you have on your router with the show `_______` `_______` `_______` command.
 7. Line Configuration mode lets you configure which ports?
 8. A Loopback interface is a `_______` or `_______` interface that you configure.
 9. The keyboard shortcut Ctrl+A does what?
 10. The `_______` keyboard shortcut moves the cursor back one word.
-11. By default, the `_______ _______` command shows the last 10 commands entered.
+11. By default, the `_______` `_______` command shows the last 10 commands entered.
 
 ## 第一天的答案
 

@@ -828,7 +828,7 @@ VLAN 相关故障，通常是经由观察网络主机之间连通性（比如某
 ## 第二天的问题
 
 1. Switches contain a memory chip known as an `_______`, which builds a table listing which device is plugged into which port.
-2. The `_______ _______`-`_______`-`_______` command displays a list of which MAC addresses are connected to which ports.
+2. The `_______` `_______`-`_______`-`_______` command displays a list of which MAC addresses are connected to which ports.
 3. Which two commands add an IP address to the VLAN?
 4. Which commands will enable Telnet and add a password to the switch Telnet lines?
 5. How do you permit only SSH traffic into your Telnet lines?

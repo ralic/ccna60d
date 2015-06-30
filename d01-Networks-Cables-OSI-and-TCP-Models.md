@@ -1713,7 +1713,10 @@ Tracing the route to 192.168.1.1
 6. Bits (Layer 1), Frames (Layer 2), Packets (Layer 3), Segments (Layer 4) and Data (Layers 5-7).
 7. LLC and MAC.
 8. Application, Transport, Network, Data Link, and Network.
-9. ![](images/q-0.png)
+9.
+
+![](images/q-0.png)
+
 10. MAC.
 11. Collision domains.
 

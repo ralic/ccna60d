@@ -186,7 +186,7 @@ RouterA(config)#privilege exec level 4 show ip interface brief
 RouterA(config)#line console 0
 RouterA(config-line)#password basketball
 RouterA(config-line)#login local <b>←  password is needed</b>
-RouterA(config-line)#^z 
+RouterA(config-line)#^z
 </pre>
 
 支持那人在登入到路由器并尝试进入配置模式时，此命令及其它命令将不可用且无效，也不能看到。
@@ -265,7 +265,7 @@ Router#
 
 此时你既可以用命令 `no logging console` 关闭日志消息输出，也可以用 `logging synchronous` 命令将它们设置为无中断（not interrupt）， `logging synchronous` 命令会重新输入在被日志消息中断之前，你所输入的那行命令。`logging synchronous` 命令在虚拟终端线路上也是可用的。
 
-<pre>
+```
 Router(config)#line con 0
 Router(config-line)#logging synchronous
 Router(config-line)#
@@ -277,13 +277,13 @@ Router(config)#
 *Jun 27 02:12:46.143: %LINK-5-CHANGED: Interface FastEthernet0/1, changed state to
 administratively down
 Router(config)#exit
-</pre>
+```
 
 这里值得一提的是，在你经由 Telnet (或 SSH) 进入到路由器时，你是不会看到控制台输的。如你想在此时看到日志消息，__执行 `terminal monitor` 命令__即可。
 
 ## 简单网络管理协议，Simple Network Management Protocol, SNMP
 
-__SNMP 是一种可用于远程管理网络的_服务___。它由一台网络管理员维护、运行了 SNMP 管理软件的中心工作站，及包括路由器、交换机及服务器等的，各台网络设备上的小文件（代理，agents）构成。
+**SNMP 是一种可用于远程管理网络的服务**。它由一台网络管理员维护、运行了 SNMP 管理软件的中心工作站，及包括路由器、交换机及服务器等的，各台网络设备上的小文件（代理，agents）构成。
 
 包括 HP、Cisco、IBM 及 SolarWinds 等的几家厂商，都有设计 SNMP 软件。也有很多开发源代码版本的 SNMP 软件可用。这类软件允许你监测设备的带宽及活动情况，比如登陆活动以及端口状态等。
 
@@ -735,10 +735,10 @@ __拨入用户远端认证服务（Remote Authentication Dial-In User Service, R
 
 交换机上的时间经常被忽略；但它却是重要的。在你遇到安全入侵（security violations）、SNMP 问题（SNMP traps）, 或者事件记录时，会用到时间戳。如交换机上的时间不正确，就会难于找出时间发生的时间。举个例子，让我们看看下面的交换机，并检查一下它的时间。
 
-<pre>
+```
 Switch#show clock
 *23:09:45.773 UTC Tue Mar 2 1993
-</pre>
+```
 
 该时间是不准确的，所以我们要修改一下。但首先，我们要设置一些属性值。
 
@@ -824,6 +824,7 @@ CDP 是一个思科专有协议，也就是说它只运行在思科设备上。�
 CDP 作为非常强大的故障排除工具，考试中要求你掌握如何来使用它。图 4.1 展示了 Router 0 的 CDP 输出。请设想一下在没有拓扑图（topology diagram）的情况下，你要对此网络进行故障排除的情形。
 
 !["Router 0 的 CDP 输出"](images/0401.png)
+
 图 4.1 -- Router 0 的 CDP 输出
 
 下列配置输入，正是图 4.1 中的。
@@ -895,6 +896,7 @@ Router0#show cdp ?
 端口安全特性，是通过限制某个特定端口或是接口能够学习到的 MAC 地址数目，来保护交换机端口安全，并最终确保 CAM 表的安全的一项，Catalyst 交换机的有力特性。具备了端安全特性，交换机就能够维护一张用于明确哪个 MAC 地址（或哪些地址），可以接入哪些本地交换机端口的表格。此外，交换机同样可以配置为仅允许在任何给定的端口上学习到指定数量的 MAC 地址。端口安全如图 4.2 所示。
 
 !["端口安全的运作"](images/0402.png)
+
 图 4.2 -- 端口安全的运作
 
 图 4.2 展示了在某台 Catalyst 交换机上，通过端口安全特性配置的 4 个端口，它们都只允许单一 MAC 地址接入。从 1 号到 3 号端口连接的 MAC 地址与端口安全所允许的地址匹配。在没有其它过滤的情况下，这些主机就能够经由其各自交换机端口转发流量。而端口 4 上所配置的是允许 AAAA.0000.0004 MAC 地址，但所接入的 MAC 地址却是 BBBB.0000.0001。因为主机 MAC 地址与所允许的 MAC 不一样，端口安全（port security）将在端口上做出如同管理员所设定的适当动作。这些有效端口安全动(the valid port security actions)作将在接下来的部分详细说明。
@@ -937,7 +939,7 @@ MAC 地址欺骗，用于冒充某个源 MAC 地址，以达到扮演网络上�
 
 现在，假设 1 号主机被某个想要接收所有发往 2 号主机流量的攻击者入侵了。则经由 MAC 地址欺骗，攻击者精心构建出使用 2 号主机源地址的以太网帧。在交换机收到该帧后，它记下该源地址，并重写 CAM 表中 2 号主机所对应的条目，将其指向 FastEthernet 0/1 端口，而不是 2 号主机所真正连接的 FastEthernet 0/2。此概念如图 4.4 所示。
 
-!["MAC 地址欺骗"](images/0404.png width=800) 
+!["MAC 地址欺骗"](images/0404.png width=800)
 
 根据图 4.4, 在 3 号主机或 4 号主机尝试将帧发给 2 号主机时，交换机会将这些帧转发出 FastEthernet 0/1, 到 1 号主机，因为 CAM 表已被 MAC 地址欺骗攻击投毒。在 2 号主机发出另一个帧时，交换机再次从 FastEthernet 0/2 了解其 MAC 地址, 并再度将 CAM 表条目重写，以反应出该变化。结果就出现 2 号主机与 1 号主机之间就谁保有此 MAC 地址的拔河。
 
@@ -995,7 +997,7 @@ VTP-Server-1(config-if)#switchport mode access
 | vlan {vlan id} | 此关键字应只使用在某个中继端口上，以指定 VLAN ID 和 MAC 地址。如没有指定 VLAN ID，就使用原生 VLAN。 |
 | vlan {access} | 此关键字应只用在某个接入端口上，以指定该 VLAN 作为接入 VLAN。 |
 | vlan {voice} | 此关键字应只用在某个接入端口上, 用以知道该 VLAN 作为一个语音 VLAN。而只有在该特定端口上配置了语音 VLAN 时，该选项才可用。 |
-| mac-address {sticky} [mac-address] | 此关键字用于在特定接口上开启动态或地址粘滞学习（used to enable dynamic or sticky learning），或者为其配置一个静态安全 MAC 地址。| 
+| mac-address {sticky} [mac-address] | 此关键字用于在特定接口上开启动态或地址粘滞学习（used to enable dynamic or sticky learning），或者为其配置一个静态安全 MAC 地址。|
 | maxium {value} | 此关键字用于指定某个接口上可以学到的安全地址的最大数目。默认是 1。 |
 
 ### 静态安全地址配置， Configuring Static Secure MAC Addresses
@@ -1257,7 +1259,7 @@ address 0004.c16f.8741 on port Gi0/2.
 3. Which command will encrypt a password with level 7 encryption?
 4. Name the eight levels of logging available on the router.
 5. Why would you choose SSH access over Telnet?
-6. Your three options upon violation of your port security are protect,` _______`, and `_______`.
+6. Your three options upon violation of your port security are protect,`_______`, and `______`.
 7. How would you hard set a port to accept only MAC 0001.c74a.0a01?
 8. Which command turns off CDP for a particular interface?
 9. Which command turns off CDP for the entire router or switch?

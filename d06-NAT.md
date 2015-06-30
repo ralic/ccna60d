@@ -6,19 +6,19 @@
 
 ##第六天的任务
 
-* 阅读今天的课文
-* 回顾昨天的课文内容
-* 完成今天的实验
-* 阅读 ICND1 记诵指南
-* 在网站[subnetting.org](http://www.subnetting.org) 上花15分钟
++ 阅读今天的课文
++ 回顾昨天的课文内容
++ 完成今天的实验
++ 阅读 ICND1 记诵指南
++ 在网站[subnetting.org](http://www.subnetting.org) 上花15分钟
 
 网络地址转换是另一个生僻内容(another strange subject)，思科把网络地址转换拆分到ICND1和ICND2两个大纲中了。
 
 今天你会学到下面这些知识。
 
-* NAT基础
-* 对NAT的配置和验证
-* NAT故障排除
++ NAT基础
++ 对NAT的配置和验证
++ NAT故障排除
 
 今天的课程涵盖了ICND1大纲的以下要求。
 

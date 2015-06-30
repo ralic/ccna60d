@@ -6,10 +6,10 @@
 
 ## 第四天任务
 
-* 阅读今天的课文（接下来的）
-* 复习昨天的课文
-* 完成今天的实验
-* 阅读 ICND1 记诵指南
++ 阅读今天的课文（接下来的）
++ 复习昨天的课文
++ 完成今天的实验
++ 阅读 ICND1 记诵指南
 
 购买的交换机和路由器都是没有任何安全配置的。依据业务需求，你需要添加这些配置。令到交换机安全的那些命令和过程，与路由器的是大致一样的。现在我们就要移步到这些防止意外或是恶意登入及重新配置你的路由器，从而确保其安全的操作步骤上来。
 
@@ -19,39 +19,39 @@
 
 今天你会学到以下几点。
 
-* 物理访问的防护, Protecting physical access
-* 远程登入防护，Telnet access
-* Enable 模式防护，Protecting Enable mode
-* 路由器日志记录，Router logging
-* 交换机安全加固，Securing the switch
++ 物理访问的防护, Protecting physical access
++ 远程登入防护，Telnet access
++ Enable 模式防护，Protecting Enable mode
++ 路由器日志记录，Router logging
++ 交换机安全加固，Securing the switch
 
 
 本章覆盖以下的 CCNA 大纲要求。
 
-* 配置和检查网络设备的以下安全特性
-    * 设备口令安全，device password security
-    * Enable 秘密与 enable, Enable secret versus enable
-    * 传入，transport
-    * 关闭 Telnet, disable telnet
-    * 安全壳， Secure SHell, SSH
-    * 虚拟终端，VTYs
-    * 物理安全，Physical security
-    * 服务口令，service password
++ 配置和检查网络设备的以下安全特性
+    - 设备口令安全，device password security
+    - Enable 秘密与 enable, Enable secret versus enable
+    - 传入，transport
+    - 关闭 Telnet, disable telnet
+    - 安全壳， Secure SHell, SSH
+    - 虚拟终端，VTYs
+    - 物理安全，Physical security
+    - 服务口令，service password
 
-* 描述不同的外部认证方式，describe external authentication methods
-* 配置并检查交换机端口安全特性，比如以下这些。
-    * MAC 地址粘滞，sticky MAC
-    * MAC 地址限制，MAC address limitation
-    * 静态/动态，static/dynamic
-    * 危害模式，violation modes
-    * 错误关闭，err disable
-    * 关闭端口，shutdown
-    * 受限保护，protect restrict
-    * 关闭未使用端口，shutdown unused ports
-    * 错误关闭恢复，err disable recovery
-* 将未使用端口指派到一个未使用 VLAN 中，assign unused ports to an unused VLAN
-* 将原生 VLAN 设置成非 VLAN 1, set native VLAN to something other than VLAN 1
-* 配置并验证 NTP 客户端
++ 描述不同的外部认证方式，describe external authentication methods
++ 配置并检查交换机端口安全特性，比如以下这些。
+    - MAC 地址粘滞，sticky MAC
+    - MAC 地址限制，MAC address limitation
+    - 静态/动态，static/dynamic
+    - 危害模式，violation modes
+    - 错误关闭，err disable
+    - 关闭端口，shutdown
+    - 受限保护，protect restrict
+    - 关闭未使用端口，shutdown unused ports
+    - 错误关闭恢复，err disable recovery
++ 将未使用端口指派到一个未使用 VLAN 中，assign unused ports to an unused VLAN
++ 将原生 VLAN 设置成非 VLAN 1, set native VLAN to something other than VLAN 1
++ 配置并验证 NTP 客户端
 
 ## 物理访问防护，Protecting Physical Access
 
@@ -63,7 +63,7 @@
 
 控制台接口是设计用于提供到路由器的物理访问的，以**完成路由器的初始设置及灾难恢复**。任何能取得控制台访问的人，都能够完全擦出或是重新配置这些文件，因此，**控制台接口应有一个口令进行保护，可以简单地添加一个口令，也可以为其添加一个本地用户名和口令**，如下面所示。
 
-* 只添加一个口令即可
++ 只添加一个口令即可
 
 <pre>
 Router(config)#line console 0
@@ -71,7 +71,7 @@ Router(config-line)#password cisco
 Router(config-line)#login
 </pre>
 
-* 为控制台添加一个本地用户名和口令组合
++ 为控制台添加一个本地用户名和口令组合
 
 <pre>
 Router(config)#username paul password cisco
@@ -146,10 +146,10 @@ Router#show run
 
 记住如你忘记了使能口令，你将不得不对路由器或交换机进行一下**口令恢复操作**。请用 Google 搜索你所使用的型号，因为型号不同其口令恢复过程也不一样。对于路由器来说，涉及
 
-* 设备重启，以及
-* 在重启过程中按下指定的中断键盘按键
-* 再设置配置寄存器（the configuration register）以跳过启动配置文件（通常将配置寄存器设置为 0x2142）
-* 接着要执行一个 `copy start-config running-config` 命令
++ 设备重启，以及
++ 在重启过程中按下指定的中断键盘按键
++ 再设置配置寄存器（the configuration register）以跳过启动配置文件（通常将配置寄存器设置为 0x2142）
++ 接着要执行一个 `copy start-config running-config` 命令
 
 此时，就可以创建新的口令了。
 
@@ -218,9 +218,9 @@ Router#
 
 公认地，更新 IOS 有时会将漏洞或故障引入你的网络中，因此，如你有与思科公司有个技术支持合同（a TAC contract, Technical Assistance Centre, TAC), 那么最好的做法就是依据思科公司的建议来做。一般来讲，保持 IOS 版本最新是高度推荐的做法。藉由更新 IOS， 你能得到下面这些好处。
 
-* 修正已知的软件缺陷，fixed known bugs
-* 解决安全隐患，cloese security vulnerabilities
-* 提供特性强化及 IOS 能力提升，Offers enhanced features and IOS capabilities
++ 修正已知的软件缺陷，fixed known bugs
++ 解决安全隐患，cloese security vulnerabilities
++ 提供特性强化及 IOS 能力提升，Offers enhanced features and IOS capabilities
 
 ## 路由器日志记录，Router Logging
 
@@ -469,20 +469,20 @@ udp-small-servers       Enable small UDP servers (e.g., ECHO)
 
 一般来讲，有下列的这些最常见的要开启或关闭的服务。其各自的说明在中括号里。
 
-* `no service pad` [数据包组装程序/分拆程序，在异步组网中有使用；很少使用到]
-* `no service config` [阻止交换机从网络获取其配置文件]
-* `no service finger` [关闭 finger 服务器；很少用到]
-* `no ip icmp redirect` [组织 ICMP 重定向，而 ICMP 重定向可被用于路由器投毒]
-* `no ip finger` [关闭 finger 服务的另一种方式]
-* `no ip gratuitous-arps` [关闭此服务以阻止中间人攻击（man-in-the-middle attacks）]
-* `no ip source-route` [关闭由用户提供到目的地的逐跳路由(user-provided hop-by-hop routing to destination)]
-* `service sequence-numbers` [在每条日志记录中，分配给其一个编号，同时此编号序列增加]
-* `service tcp-keepalive-in` [防止路由器将挂起的管理会话一直保持开启，prevents the router from keeping hung management sessions open]
-* `service tcp-keepalive-out` [与 `sevice tcp-keepalive-in` 功能一样]
-* `no service upp-small-servers` [关闭 `echo, chargen, discard, daytime` 等功能，这些功能很少用到]
-* `no service tcp-small-servers` [关闭 `echo, chargen, discard` 等功能，这些功能很少用到]
-* `service timestamps debug datetime localtime show-timezone` [在调试模式下（in debug mode）, 将每个记录的数据包，使用本地时间，打上日期和时间的时间戳，并显示时区]
-* `service timestamps log datetime localtime show-timezone` [在非调试模式下（not in debug mode）, 将每个记录的数据包，使用本地时间，打上日期和时间的时间戳，并显示时区 -- 这服务在查看日志文件非常有用，尤其是在时钟设置正确的情况下]
++ `no service pad` [数据包组装程序/分拆程序，在异步组网中有使用；很少使用到]
++ `no service config` [阻止交换机从网络获取其配置文件]
++ `no service finger` [关闭 finger 服务器；很少用到]
++ `no ip icmp redirect` [组织 ICMP 重定向，而 ICMP 重定向可被用于路由器投毒]
++ `no ip finger` [关闭 finger 服务的另一种方式]
++ `no ip gratuitous-arps` [关闭此服务以阻止中间人攻击（man-in-the-middle attacks）]
++ `no ip source-route` [关闭由用户提供到目的地的逐跳路由(user-provided hop-by-hop routing to destination)]
++ `service sequence-numbers` [在每条日志记录中，分配给其一个编号，同时此编号序列增加]
++ `service tcp-keepalive-in` [防止路由器将挂起的管理会话一直保持开启，prevents the router from keeping hung management sessions open]
++ `service tcp-keepalive-out` [与 `sevice tcp-keepalive-in` 功能一样]
++ `no service upp-small-servers` [关闭 `echo, chargen, discard, daytime` 等功能，这些功能很少用到]
++ `no service tcp-small-servers` [关闭 `echo, chargen, discard` 等功能，这些功能很少用到]
++ `service timestamps debug datetime localtime show-timezone` [在调试模式下（in debug mode）, 将每个记录的数据包，使用本地时间，打上日期和时间的时间戳，并显示时区]
++ `service timestamps log datetime localtime show-timezone` [在非调试模式下（not in debug mode）, 将每个记录的数据包，使用本地时间，打上日期和时间的时间戳，并显示时区 -- 这服务在查看日志文件非常有用，尤其是在时钟设置正确的情况下]
 
 ### 修改原生 VLAN， Change the Native VLAN
 
@@ -584,9 +584,9 @@ KEEP OUT OR
 
 横幅消息可以是以下这些。
 
-* 在用户看到登陆提示符之前显示出来 -- MOTD（message of the day）
-* 在用户看到登陆提示符之前显示出来 -- Login
-* 在登陆提示符之后显示给用户 -- Exec （在你打算对未授权用户隐藏的信息）
++ 在用户看到登陆提示符之前显示出来 -- MOTD（message of the day）
++ 在用户看到登陆提示符之前显示出来 -- Login
++ 在登陆提示符之后显示给用户 -- Exec （在你打算对未授权用户隐藏的信息）
 
 在本书中，横幅消息作为一些实验的组成部分。我建议你掌握全部三种类型横幅消息，并以登入路由器的方式来测试它们。依据你所用的平台和 IOS，会有不同的选择。
 
@@ -666,15 +666,15 @@ Switch(config)#errdisable recovery cause ?
 
 `errdisable recovery cause` 命令依设备型号会有所不同，但最常见的参数有这些。
 
-* all
-* arp-inspection
-* bpduguard
-* dhcp-rate-limit
-* link-flap
-* psecure-violation
-* security-violation
-* storm-control
-* udld
++ all
++ arp-inspection
++ bpduguard
++ dhcp-rate-limit
++ link-flap
++ psecure-violation
++ security-violation
++ storm-control
++ udld
 
 多数平台上端口自动恢复的默认时间是 300 秒，此时间可以用全局配置命令 `errdisable recovery interval` 手动修改。
 
@@ -779,8 +779,8 @@ Switch#show ntp status
 
 未使用的，或者说“空起的”那些没有任何网络设备的端口，因为某人会插入一条网线并将未授权设备连接到网络，而引发安全威胁。这会导致一些安全问题，包括。
 
-* 网络未能如同与其的那样运作
-* 网络信息暴露于外部人员
++ 网络未能如同与其的那样运作
++ 网络信息暴露于外部人员
 
 这就是为何你要关闭路由器、交换机及其它网络设备上，所有未使用端口的原因。依据具体设备，关闭状态可能是端口默认的状态，但你仍要对此进行验证。
 
@@ -903,8 +903,8 @@ Router0#show cdp ?
 
 **端口安全特性**设计用于保护交换局域网（the switched LAN）免受两种主要的攻击方式。这两种方式在下的小节讲到。
 
-* CAM 表溢出攻击， CAM table overflow attacks
-* MAC 欺骗攻击， MAC spoofing attacks
++ CAM 表溢出攻击， CAM table overflow attacks
++ MAC 欺骗攻击， MAC spoofing attacks
 
 ### CAM 表溢出攻击
 
@@ -963,10 +963,10 @@ MAC 地址欺骗，用于冒充某个源 MAC 地址，以达到扮演网络上�
 
 一旦开启了端口安全，管理员就可定义出在出现违反端口安全事件后，交换机所采取的动作了。思科 IOS 软件允许管理员指定 4 种在出现冲突时所采取的不同动作。
 
-* 保护，Protect
-* 关闭（默认动作）, Shutdown(default)
-* 限制，Restrict
-* 关闭 VLAN （超出 CCNA 大纲）, Shutdown VLAN(outside of the CCNA syllabus)
++ 保护，Protect
++ 关闭（默认动作）, Shutdown(default)
++ 限制，Restrict
++ 关闭 VLAN （超出 CCNA 大纲）, Shutdown VLAN(outside of the CCNA syllabus)
 
 **保护动作选项强制端口进入受保护端口模式（Protected Port mode）**。此模式下，交换机会简单地丢弃所有源地址不明的单播和多播帧（simply discard all Unicast or Multicast frames with unknown source MAC addresses）。而在交换机被配置为保护某端口时，当其以受保护端口模式运行时，不会发出通知，这就意味着由处于此模式下的交换机端口阻止所有流量时，管理员是无法获知的。
 
@@ -1189,10 +1189,10 @@ Max Addresses limit in System : 1024
 
 和在早前指出的那样，思科 IOS 软件允许管理员指定于出现冲突时可采取的 4 种不同动作，如下所示。
 
-* 保护动作，Protect
-* 端口关闭动作（默认），Shutdown(default)
-* 限制动作，Restrict
-* 关闭 VLAN 动作（CCNA 大纲不要求），Shutdown VLAN (this is outside the CCNA syllabus)
++ 保护动作，Protect
++ 端口关闭动作（默认），Shutdown(default)
++ 限制动作，Restrict
++ 关闭 VLAN 动作（CCNA 大纲不要求），Shutdown VLAN (this is outside the CCNA syllabus)
 
 使用接口配置命令 `switchport port-security [violation {protect | restrict | shutdown | shutdown vlan}]` 来配置这些选项。如果某个端口因为因为一个安全冲突而关闭，它就显示为 `errdisabled`，此时需要使用 `shutdown` 和接着的 `no shutdown` 命令来将其再度开启。
 

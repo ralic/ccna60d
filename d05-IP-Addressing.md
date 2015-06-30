@@ -5,11 +5,11 @@
 
 ## 第五天的任务
 
-* 阅读今天的课文
-* 复习昨天的课文
-* 完成今天的实验
-* 阅读 ICND1 记诵指南
-* 花 15 分钟浏览 [subnetting.org](http://subnetting.org/) 网站
++ 阅读今天的课文
++ 复习昨天的课文
++ 完成今天的实验
++ 阅读 ICND1 记诵指南
++ 花 15 分钟浏览 [subnetting.org](http://subnetting.org/) 网站
 
 欢迎来到今天的学习，许多人都发现今天的内容是 CCNA 大纲中最难掌握的部分之一。为理解 CCNA 考试的 IP 分址， 我们必须涵盖**二进制运算及十六进制计数系统**（binary mathematics and the hexadecimal numbering system）、**地址类别**(classes of adresses)、**2 的指数**（powers of two）和**诸如零号子网（subnet zero）等规则**, 以及**广播地址与网络地址**，还有**用于计算子网地址和主机地址的公式**。
 
@@ -17,19 +17,19 @@
 
 今天会学到这些内容。
 
-* IP 分址（采用二进制和十六进制），IP addressing (using binary and hexadecimal)
-* IP 地址的使用，Using IP addresses
-* 子网划分，Subnetting
-* 简易子网划分，Easy subnetting
-* 网络规划设计，Network design
-* 采用 VLSM, Using VLSM
-* 切分网络，Slicing down networks
++ IP 分址（采用二进制和十六进制），IP addressing (using binary and hexadecimal)
++ IP 地址的使用，Using IP addresses
++ 子网划分，Subnetting
++ 简易子网划分，Easy subnetting
++ 网络规划设计，Network design
++ 采用 VLSM, Using VLSM
++ 切分网络，Slicing down networks
 
 本模块对应的是 CCNA 大纲要求的以下部分。
 
-* 描述 IPv4 分址中使用私有和公共 IP 地址的做法和必要性，Describe the operationg and necessity of using private and public IP addresses for IPv4 addressing
-* 找出采行 VLSM 和汇总技术，用以满足某个 LAN/WAN 环境中分址要求的恰当 IPv4 分址方案，Identify the appropriate IPv4 addressing scheme using VLSM and summarisation to satisfy addressing requirements in a LAN/WAN environment
-* 对有关 IP 分址和主机配置有关的故障进行排除和修正， Troubleshoot and correct common problems associated with IP addressing and host configurations
++ 描述 IPv4 分址中使用私有和公共 IP 地址的做法和必要性，Describe the operationg and necessity of using private and public IP addresses for IPv4 addressing
++ 找出采行 VLSM 和汇总技术，用以满足某个 LAN/WAN 环境中分址要求的恰当 IPv4 分址方案，Identify the appropriate IPv4 addressing scheme using VLSM and summarisation to satisfy addressing requirements in a LAN/WAN environment
++ 对有关 IP 分址和主机配置有关的故障进行排除和修正， Troubleshoot and correct common problems associated with IP addressing and host configurations
 
 思科已经将一些 VLSM 要求加入到 ICND1 和 ICND2 考试中了。而在 ICND2 考试中看起来考得更多一些，不过两个考试都需要你做好解答问题的准备。**在掌握 VLSM 前，你需要先理解 IP 分址和子网划分**。
 
@@ -495,7 +495,7 @@ C类地址 = 255.255.255.0
 
 国际互联网上有数百万条路由。如果这些路由都不得不单独存储，因特网在好多年前就会停摆了。路由汇总，也就是常说的超网（supernetging）, 是在 RFC 1338 中提出的，点击 RFC -- [www.faqs.org/rfcs/rfc1338.html](http://www.faqs.org/rfcs/rfc1338.html) 可以读到这个 RFC。
 
-如你要阅读一份更详尽的路由汇总文档，那么去找一本 Jeff Doyle 的卓越的思科书_Routing TCP/IP Volume 1_, 现在该书出了第二版。
+如你要阅读一份更详尽的路由汇总文档，那么去找一本 Jeff Doyle 的卓越的思科书*Routing TCP/IP Volume 1*, 现在该书出了第二版。
 
 ###邮编，ZIP Codes
 
@@ -615,15 +615,15 @@ C类地址 = 255.255.255.0
 
 先看看下面这个网络。
 
-* 192.168.1.0/24 = 这是一个有254台主机的网络
++ 192.168.1.0/24 = 这是一个有254台主机的网络
 
 当然这会很好地工作，那么如果你的网络需要多于一个的子网呢？或者你的那些子网无需254台这么多的主机呢？此两种情形，都需要做出一些改变。如你取而代之的是用一个/26的掩码，就可以得到这样的结果。
 
-* 192.168.1.0/26 = 4个有62台主机的子网
++ 192.168.1.0/26 = 4个有62台主机的子网
 
 如这样不适当，那么来个/28的掩码如何？
 
-* 192.168.1.0/28 = 16个有14太主机的子网
++ 192.168.1.0/28 = 16个有14太主机的子网
 
 对子网划分秘笈的设计部门的再度引用，可帮你计算出如何来在网络中应用变长子网掩码，或是有助于解答考试问题。在使用/26掩码是，你可以发现将会得到多少个子网及每个子网有多少台主机。
 
@@ -692,9 +692,9 @@ C类地址 = 255.255.255.0
 
 在出现IP分址、子网掩码或网关问题时，你会看到多种现象。一些问题会如同下面这样。
 
-* 网络设备可在其本地子网通信，却无法与本地网络之外的设备通信。这通常表明有着与网关配置或运行相关类型的问题。
-* 没有任何类型的IP通信，不管是内部的还是远程的。这通常表明存在大问题，可能涉及相应设备上功能的缺失。
-* 还有这种能与某些IP地址通信，却无法与存在的全部IP地址通信的情形。这通常是最难解决的故障，因为其可能有很多原因。
++ 网络设备可在其本地子网通信，却无法与本地网络之外的设备通信。这通常表明有着与网关配置或运行相关类型的问题。
++ 没有任何类型的IP通信，不管是内部的还是远程的。这通常表明存在大问题，可能涉及相应设备上功能的缺失。
++ 还有这种能与某些IP地址通信，却无法与存在的全部IP地址通信的情形。这通常是最难解决的故障，因为其可能有很多原因。
 
 在处理这些问题的过程中，**首先要做的就是对设备上所配置的IP地址、子网掩码及默认网关进行反复检查**。同时**还要查看设备文档，来验证相应信息**。**大量的故障都是由错误配置造成的**。
 
@@ -861,7 +861,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 31/31/32 ms
 
 请将今天所剩下的时间，用来做下面这些重要的联系。
 
-* 十进制到二进制的转换（随机数字）
-* 二进制到十进制的转换（随机数字）
-* IPv4 子网划分（随机网络和场景）
++ 十进制到二进制的转换（随机数字）
++ 二进制到十进制的转换（随机数字）
++ IPv4 子网划分（随机网络和场景）
 

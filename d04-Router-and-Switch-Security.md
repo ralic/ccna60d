@@ -1,8 +1,8 @@
 # 第四天
 
-__路由器和交换机安全__
+**路由器和交换机安全**
 
-__Router and Switch Security__
+**Router and Switch Security**
 
 ## 第四天任务
 
@@ -61,7 +61,7 @@ __Router and Switch Security__
 
 ## 控制台访问
 
-控制台接口是设计用于提供到路由器的物理访问的，以__完成路由器的初始设置及灾难恢复__。任何能取得控制台访问的人，都能够完全擦出或是重新配置这些文件，因此，__控制台接口应有一个口令进行保护，可以简单地添加一个口令，也可以为其添加一个本地用户名和口令__，如下面所示。
+控制台接口是设计用于提供到路由器的物理访问的，以**完成路由器的初始设置及灾难恢复**。任何能取得控制台访问的人，都能够完全擦出或是重新配置这些文件，因此，**控制台接口应有一个口令进行保护，可以简单地添加一个口令，也可以为其添加一个本地用户名和口令**，如下面所示。
 
 * 只添加一个口令即可
 
@@ -125,7 +125,7 @@ Trying 192.168.1.2 ...Open
 
 ## 使能模式保护，Protecting Enable Mode
 
-使能模式（enable mode）取得路由器的配置访问，因此你会想要保护该模式。你可以配置一个__使能秘密（an enable secret）或使能口令（an enable password）__。实际上，使能秘密和使能口令是可以同时有的，但这是一个坏主意。
+使能模式（enable mode）取得路由器的配置访问，因此你会想要保护该模式。你可以配置一个**使能秘密（an enable secret）或使能口令（an enable password）**。实际上，使能秘密和使能口令是可以同时有的，但这是一个坏主意。
 
 使能口令是未加密的，所以在路由器配置中可以看到。而使能秘密有 5 级加密(level 5 encryption, MD5)，难于破解。自 15.0(1）S 后的较新 IOS 版本中，还可以使用比 MD5 加密高级的 4 级加密（level 4 encryption, SHA256）, 5 级加密最终会不赞成使用。你可以给使能口令加上命令 `service password-encryption`, 但因为此方式使用 7 级加密(level 7 encryption, 比如，低安全性；思科称其为“背后安全性，over the shoulder security”, 因其仅需某人从你背后偷看并记住一个稍难的词组，便可以用网上的 7 级口令解密工具予以破解)，而很容易被破解。下面的输出中可以看到 7 级与 5 级加密文本。
 
@@ -144,7 +144,7 @@ Router#show run
 <b>enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0</b>
 </pre>
 
-记住如你忘记了使能口令，你将不得不对路由器或交换机进行一下__口令恢复操作__。请用 Google 搜索你所使用的型号，因为型号不同其口令恢复过程也不一样。对于路由器来说，涉及
+记住如你忘记了使能口令，你将不得不对路由器或交换机进行一下**口令恢复操作**。请用 Google 搜索你所使用的型号，因为型号不同其口令恢复过程也不一样。对于路由器来说，涉及
 
 * 设备重启，以及
 * 在重启过程中按下指定的中断键盘按键
@@ -171,7 +171,7 @@ RouterA(config-line)#exit
 RouterA(config)#exit
 </pre>
 
-你__可在路由器上指派不同用户帐号的访问级别__。比如，你也许打算那些初级网络团队成员仅能使用一些基本的故障排除命。你还有必要记住思科路由器有口令安全的两种模式（two modes of password security），用户模式（Exec mode）和特权模式（Enable mode）。
+你**可在路由器上指派不同用户帐号的访问级别**。比如，你也许打算那些初级网络团队成员仅能使用一些基本的故障排除命。你还有必要记住思科路由器有口令安全的两种模式（two modes of password security），用户模式（Exec mode）和特权模式（Enable mode）。
 
 思科路由器有可供配置的 16 种（0 到 15）不同特权级别，其中 15 级是完全的访问权限，如下所示。
 
@@ -224,7 +224,7 @@ Router#
 
 ## 路由器日志记录，Router Logging
 
-路由器提供事件记录的能力。它们可将日志消息照你的意愿，发送到屏幕或某台服务器。你应该记录路由器消息，而又__有 8 个可用的日志记录严重程度级别__（考试要求你知道这些不同的级别），如下面输出中的粗体字所示。
+路由器提供事件记录的能力。它们可将日志消息照你的意愿，发送到屏幕或某台服务器。你应该记录路由器消息，而又**有 8 个可用的日志记录严重程度级别**（考试要求你知道这些不同的级别），如下面输出中的粗体字所示。
 
 <pre>
 logging buffered ?
@@ -279,7 +279,7 @@ administratively down
 Router(config)#exit
 ```
 
-这里值得一提的是，在你经由 Telnet (或 SSH) 进入到路由器时，你是不会看到控制台输的。如你想在此时看到日志消息，__执行 `terminal monitor` 命令__即可。
+这里值得一提的是，在你经由 Telnet (或 SSH) 进入到路由器时，你是不会看到控制台输的。如你想在此时看到日志消息，**执行 `terminal monitor` 命令**即可。
 
 ## 简单网络管理协议，Simple Network Management Protocol, SNMP
 
@@ -333,7 +333,7 @@ If you require further assistance please contact us by sending email to export@c
 --More-
 </pre>
 
-> __注意:__ 如你没有带有安全特性版本的 IOS，你就必须为此付费购买。
+> **注意:** 如你没有带有安全特性版本的 IOS，你就必须为此付费购买。
 
 为建立加密连接，你需要在交换机上创建一对公钥和私钥（a private/public key, 见下面）。在连接时，你这边使用公钥加密数据，交换机将会使用它的私钥来解密数据。而在认证时，使用你所选择的用户名/口令组合。下一个问题是，要设置交换机的主机名和域名（hostname and domain name）, 因为在创建公钥/私钥对时，会用到主机名.域名命名法（hostname.domainname nomenclature）。显然，在命名主机名和域名时，将其命名为能够代表系统的有意义名字，是好的做法。
 
@@ -406,7 +406,7 @@ HTTP secure server active session modules: ALL
 
 全局配置模式允许用户对交换机或路由器进行配置，还可以擦除配置，以及重置口令。你务必要设置一个口令或秘密口令来保护此模式，而这实际上是为阻止用户闯过（get past）用户模式。一般口令在路由器配置文件中会显示出来，而 `enable secret` 口令则会进行加密。
 
-上面已经提到，你实际上可以在交换机或路由器上同时设置使能口令（a password）和使能秘密口令（enable secret password）,但这会带来混乱。所以__请只设置使能秘密口令__就好。下面的配置文件演示了__通过在命令前键入 `do` 关键字，而无需回到特权模式，就可执行该命令__的情形。
+上面已经提到，你实际上可以在交换机或路由器上同时设置使能口令（a password）和使能秘密口令（enable secret password）,但这会带来混乱。所以**请只设置使能秘密口令**就好。下面的配置文件演示了**通过在命令前键入 `do` 关键字，而无需回到特权模式，就可执行该命令**的情形。
 
 <pre>
 Switch1(config)#enable password cisco
@@ -504,11 +504,11 @@ Access Mode VLAN: 1 (default)
 Voice VLAN: none
 </pre>
 
-__将端口放入 VLAN 1 被认为是一种安全漏洞（a security vulnerability）__, 允许黑客取得网络资源的访问。为减轻此问题，避免任何主机放入 VLAN 1 是一种明智可取的做法。同时也可将所有中继接口上的原生 VLAN 修改为某个未使用的 VLAN。
+**将端口放入 VLAN 1 被认为是一种安全漏洞（a security vulnerability）**, 允许黑客取得网络资源的访问。为减轻此问题，避免任何主机放入 VLAN 1 是一种明智可取的做法。同时也可将所有中继接口上的原生 VLAN 修改为某个未使用的 VLAN。
 
 `Switch(config-if)#switchport trunk native vlan 888`
 
-> __注意：__这是 CCNA 大纲中的一个关键目标（one of the key objectives）, 所以务必牢记。
+> **注意：**这是 CCNA 大纲中的一个关键目标（one of the key objectives）, 所以务必牢记。
 
 你还可以用下面的命令，来阻止原生 VLAN 上的数据通过中继链路。
 
@@ -722,13 +722,13 @@ Fa0/0               psecure-violation           <b>193</b>
 
 与本地存储不同，你可以采用一台通常运行了 AAA 或 TACACS+ 的服务器来存储用户名和口令。这么做的优势在于，你无需在每台路由器和交换机上都手动输入用户名和口令。而是将其存储在服务器的数据库中。
 
-TACACS+ 表示“加强版终端访问控制器访问控制系统（Terminal Access Controller Access Control System Plus, TACACS+）”。它是一个思科专有协议，使用 TCP 49 号端口。__TACACS+ 提供了经由一台或多台 TACACS+ 中心服务器，对包含路由器及网络介入服务器等网络设备的访问控制__。
+TACACS+ 表示“加强版终端访问控制器访问控制系统（Terminal Access Controller Access Control System Plus, TACACS+）”。它是一个思科专有协议，使用 TCP 49 号端口。**TACACS+ 提供了经由一台或多台 TACACS+ 中心服务器，对包含路由器及网络介入服务器等网络设备的访问控制**。
 
-__拨入用户远端认证服务（Remote Authentication Dial-In User Service, RADIUS）__, 是一套__分布式网络安全系统__，用以确保网络远程访问的安全性，同时它又__是一个使用 UDP 的客户端/服务器协议（a client/server protocol）。RADIUS 是开放标准__。
+**拨入用户远端认证服务（Remote Authentication Dial-In User Service, RADIUS）**, 是一套**分布式网络安全系统**，用以确保网络远程访问的安全性，同时它又**是一个使用 UDP 的客户端/服务器协议（a client/server protocol）。RADIUS 是开放标准**。
 
 如你拥有 TACACS+ 或者 RADIUS，那么你可能希望开启认证、授权和记账（Authentication, Authorization, and Accounting, AAA）。AAA 是安装在一台服务器上的，它监测着网络的一个用户帐号数据库。用户访问、协议、连接，以及断开原因，及其它很多特性都能被监测到。
 
-路由器和交换机可被设置为在某用户尝试登入时查询服务器。服务器此时来验证用户。__CCNA 考试不要求你去配置这些协议__。
+路由器和交换机可被设置为在某用户尝试登入时查询服务器。服务器此时来验证用户。**CCNA 考试不要求你去配置这些协议**。
 
 
 ### 路由器时钟及 NTP， Router Clock and NTP
@@ -759,7 +759,7 @@ Switch#show clock
 14:55:13.858 CST Tue Jun 19 2007
 </pre>
 
-请注意，__时钟设置实在使能模式（Enable mode），而不是配置模式下__。除了手动设置时钟外，你可以使用网络时间协议（Network Time Protocol, NTP）。它让你可将交换机的时钟与某台原子钟（an atomic clock）同步，保证非常精确的时间。
+请注意，**时钟设置实在使能模式（Enable mode），而不是配置模式下**。除了手动设置时钟外，你可以使用网络时间协议（Network Time Protocol, NTP）。它让你可将交换机的时钟与某台原子钟（an atomic clock）同步，保证非常精确的时间。
 
 <pre>
 Switch(config)#ntp server 134.84.84.84 prefer
@@ -784,7 +784,7 @@ Switch#show ntp status
 
 这就是为何你要关闭路由器、交换机及其它网络设备上，所有未使用端口的原因。依据具体设备，关闭状态可能是端口默认的状态，但你仍要对此进行验证。
 
-而关闭端口是通过在__接口配置模式__下使用 `shutdown` 命令完成的。
+而关闭端口是通过在**接口配置模式**下使用 `shutdown` 命令完成的。
 
 <pre>
 Switch#conf t
@@ -801,7 +801,7 @@ FastEthernet0/0     unassigned  YES unset   <b>administratively down</b>   down
 FastEthernet0/1     unassigned  YES unset   administratively down   down
 </pre>
 
-请注意，__管理性关闭__状态就是说该端口是手工关闭的。验证关闭状态的另一方法是使用 `show interface` 命令。
+请注意，**管理性关闭**状态就是说该端口是手工关闭的。验证关闭状态的另一方法是使用 `show interface` 命令。
 
 <pre>
 Router#show interface fa0/0
@@ -815,11 +815,11 @@ FastEthernet0/0 is <b>administratively down</b>, line protocol is down
 
 现在来讨论思科发现协议正是时候。
 
-CDP 因为其在做出任何配置之前，就提供了一种发现有关网络设备信息的方法，而是__一个热门的考试考点__。它是一直非常有用的故障排除工具；但它又带来了安全威胁。
+CDP 因为其在做出任何配置之前，就提供了一种发现有关网络设备信息的方法，而是**一个热门的考试考点**。它是一直非常有用的故障排除工具；但它又带来了安全威胁。
 
-CDP 是一个思科专有协议，也就是说它只运行在思科设备上。它是__一种二层服务__, 设备用它来通告和接收那些直接连接设备的基本信息。IEEE 版本的 CDP 叫做__链路层发现协议（Link Layer Discovery Protocol, LLDP）__, CCNA 大纲并不包含此内容。
+CDP 是一个思科专有协议，也就是说它只运行在思科设备上。它是**一种二层服务**, 设备用它来通告和接收那些直接连接设备的基本信息。IEEE 版本的 CDP 叫做**链路层发现协议（Link Layer Discovery Protocol, LLDP）**, CCNA 大纲并不包含此内容。
 
-因为 CDP 是一种二层服务，所以它__并不需要配置有 IP 地址来交换信息__。只需开启接口就行。如有配置 IP 地址，该 IP 地址也会包含进 CDP 消息中。
+因为 CDP 是一种二层服务，所以它**并不需要配置有 IP 地址来交换信息**。只需开启接口就行。如有配置 IP 地址，该 IP 地址也会包含进 CDP 消息中。
 
 CDP 作为非常强大的故障排除工具，考试中要求你掌握如何来使用它。图 4.1 展示了 Router 0 的 CDP 输出。请设想一下在没有拓扑图（topology diagram）的情况下，你要对此网络进行故障排除的情形。
 
@@ -901,7 +901,7 @@ Router0#show cdp ?
 
 图 4.2 展示了在某台 Catalyst 交换机上，通过端口安全特性配置的 4 个端口，它们都只允许单一 MAC 地址接入。从 1 号到 3 号端口连接的 MAC 地址与端口安全所允许的地址匹配。在没有其它过滤的情况下，这些主机就能够经由其各自交换机端口转发流量。而端口 4 上所配置的是允许 AAAA.0000.0004 MAC 地址，但所接入的 MAC 地址却是 BBBB.0000.0001。因为主机 MAC 地址与所允许的 MAC 不一样，端口安全（port security）将在端口上做出如同管理员所设定的适当动作。这些有效端口安全动(the valid port security actions)作将在接下来的部分详细说明。
 
-__端口安全特性__设计用于保护交换局域网（the switched LAN）免受两种主要的攻击方式。这两种方式在下的小节讲到。
+**端口安全特性**设计用于保护交换局域网（the switched LAN）免受两种主要的攻击方式。这两种方式在下的小节讲到。
 
 * CAM 表溢出攻击， CAM table overflow attacks
 * MAC 欺骗攻击， MAC spoofing attacks
@@ -925,7 +925,7 @@ Vlan    Mac Address         Type        Ports
 Total Mac Addresses for this criterion: 6
 </pre>
 
-如同所有的计算装置一样，交换机的存储资源也是有限的。这就意味着 __CAM 表的存储空间是固定的，已分配好的__。CAM 表溢出攻击（CAM table overflow attacks）将此限制作为目标，用大量随机生成的无效源及目的 MAC 地址灌入交换机，直到填满 CAM 表，此时交换机就无法接收新的 CAM 表条目了。在此情况下，交换机成为了一台集线器，只能开始简单地将新近接收的帧广播到其上的所有接口（同一 VLAN 中的），就是将该 VLAN 变成了一个大的广播域。
+如同所有的计算装置一样，交换机的存储资源也是有限的。这就意味着 **CAM 表的存储空间是固定的，已分配好的**。CAM 表溢出攻击（CAM table overflow attacks）将此限制作为目标，用大量随机生成的无效源及目的 MAC 地址灌入交换机，直到填满 CAM 表，此时交换机就无法接收新的 CAM 表条目了。在此情况下，交换机成为了一台集线器，只能开始简单地将新近接收的帧广播到其上的所有接口（同一 VLAN 中的），就是将该 VLAN 变成了一个大的广播域。
 
 对 CAM 表的攻击易于开展，因为有着像 MACOF 及 DSNIFF 等常见的工具可用于实施这样的行为。而增加 VLANs 的数目（此举减少了广播域的尺寸），可有助于降低 CAM 表攻击的影响，在交换机上配置端口安全特性，是推荐的安全方案。
 
@@ -947,7 +947,7 @@ MAC 地址欺骗，用于冒充某个源 MAC 地址，以达到扮演网络上�
 
 ### 地址安全的端口安全，Port Security Secure Addresses
 
-__经由端口安全特性，我们可以指定特定 MAC 才被允许访问某个交换机端口，同时限制某个单一交换机端口所支持的 MAC 地址数目__。以下本节所说明的几种端口安全应用方式。
+**经由端口安全特性，我们可以指定特定 MAC 才被允许访问某个交换机端口，同时限制某个单一交换机端口所支持的 MAC 地址数目**。以下本节所说明的几种端口安全应用方式。
 
 * 静态 MAC 地址保全, Static secure MAC addresses
 * 动态 MAC 地址保全, Dynamic secure MAC addresses
@@ -968,13 +968,13 @@ __经由端口安全特性，我们可以指定特定 MAC 才被允许访问某�
 * 限制，Restrict
 * 关闭 VLAN （超出 CCNA 大纲）, Shutdown VLAN(outside of the CCNA syllabus)
 
-__保护动作选项强制端口进入受保护端口模式（Protected Port mode）__。此模式下，交换机会简单地丢弃所有源地址不明的单播和多播帧（simply discard all Unicast or Multicast frames with unknown source MAC addresses）。而在交换机被配置为保护某端口时，当其以受保护端口模式运行时，不会发出通知，这就意味着由处于此模式下的交换机端口阻止所有流量时，管理员是无法获知的。
+**保护动作选项强制端口进入受保护端口模式（Protected Port mode）**。此模式下，交换机会简单地丢弃所有源地址不明的单播和多播帧（simply discard all Unicast or Multicast frames with unknown source MAC addresses）。而在交换机被配置为保护某端口时，当其以受保护端口模式运行时，不会发出通知，这就意味着由处于此模式下的交换机端口阻止所有流量时，管理员是无法获知的。
 
-__关闭动作选项则是在出现违反端口安全后，将某端口置于某种错误关闭状态（an err-disabled state）__。在此配置动作被用到时，交换机上相应端口的 LED 同时被关闭。而在关闭模式下，交换机发出一条 SNMP trap ([浅谈 Linux 系统中的 SNMP trap](http://www.ibm.com/developerworks/cn/linux/l-cn-snmp/index.html)), 以及一条 syslog 消息，同时冲突计数器会增大。这个选项是接口配置了端口安全时的默认动作。
+**关闭动作选项则是在出现违反端口安全后，将某端口置于某种错误关闭状态（an err-disabled state）**。在此配置动作被用到时，交换机上相应端口的 LED 同时被关闭。而在关闭模式下，交换机发出一条 SNMP trap ([浅谈 Linux 系统中的 SNMP trap](http://www.ibm.com/developerworks/cn/linux/l-cn-snmp/index.html)), 以及一条 syslog 消息，同时冲突计数器会增大。这个选项是接口配置了端口安全时的默认动作。
 
-__限制动作选项是在安全 MAC 地址数目到达管理员为该端口所定义的最大限制时，用于丢弃那些带有不明 MAC 地址的数据包__。此模式下，交换机会持续限制额外的那些 MAC 地址发出帧，直到移除对那些安全 MAC 地址数目的限制，或直到所允许的最大地址数目得以增加。和关闭工作选项一样，交换机也会发出一条 SNMP trap 及一条 syslog 消息，同时冲突计数器会增加。
+**限制动作选项是在安全 MAC 地址数目到达管理员为该端口所定义的最大限制时，用于丢弃那些带有不明 MAC 地址的数据包**。此模式下，交换机会持续限制额外的那些 MAC 地址发出帧，直到移除对那些安全 MAC 地址数目的限制，或直到所允许的最大地址数目得以增加。和关闭工作选项一样，交换机也会发出一条 SNMP trap 及一条 syslog 消息，同时冲突计数器会增加。
 
-__关闭 VLAN 动作选项跟关闭动作选项类似；不过此选项是关闭某个 VLAN, 而不是某个交换机端口__。此配置可能会应用在那些指派了多个 VLAN， 诸如语音 VLAN 和数据 VLAN， 的端口上，以及交换机的中继链路上。
+**关闭 VLAN 动作选项跟关闭动作选项类似；不过此选项是关闭某个 VLAN, 而不是某个交换机端口**。此配置可能会应用在那些指派了多个 VLAN， 诸如语音 VLAN 和数据 VLAN， 的端口上，以及交换机的中继链路上。
 
 ### 端口安全配置， Configuring Port Security
 
@@ -986,7 +986,7 @@ VTP-Server-1(config-if)#switchport
 VTP-Server-1(config-if)#switchport mode access
 </pre>
 
-> __注意:__在诸如 Catalyst 2950 及 Catalyst 2960 系列的二层交换机上无需 `switchport` 命令。而在比如 Catalyst 3750、Catalyst 4500 以及 Catalyst 6500 系列等的多层交换机上， 它是要要到的。
+> **注意:**在诸如 Catalyst 2950 及 Catalyst 2960 系列的二层交换机上无需 `switchport` 命令。而在比如 Catalyst 3750、Catalyst 4500 以及 Catalyst 6500 系列等的多层交换机上， 它是要要到的。
 
 默认情况下，端口安全是关闭的；但可通过接口配置命令 `switchport port-security [mac-address {mac-address} [vlan {vlan-id | {access | voice}}] | mac-address {sticky} [mac-address | vlan {vlan-id | {access | voice}}] [maximum {value} [vlan {vlan-list | {access | voice}}]] 予以开启。表 4.1 说明了该命令的这些选项。
 
@@ -1002,7 +1002,7 @@ VTP-Server-1(config-if)#switchport mode access
 
 ### 静态安全地址配置， Configuring Static Secure MAC Addresses
 
-下面的输出演示了怎样在某个接口上开启端口安全，以及在某个交换机__接入端口__上配置一个静态安全 MAC 地址 001f:3c59:d63b。
+下面的输出演示了怎样在某个接口上开启端口安全，以及在某个交换机**接入端口**上配置一个静态安全 MAC 地址 001f:3c59:d63b。
 
 <pre>
 VTP-Server-1(config)#interface GigabitEthernet0/2
@@ -1012,7 +1012,7 @@ VTP-Server-1(config-if)#switchport port-security
 VTP-Server-1(config-if)#switchport port-security mac-address 001f.3c59.d63b
 </pre>
 
-下面的输出演示了怎样在某个接口上开启端口安全，并在某个交换机__中继端口__的 VLAN 5 中配置一个静态安全 MAC 地址 001f:3c59:d63b。
+下面的输出演示了怎样在某个接口上开启端口安全，并在某个交换机**中继端口**的 VLAN 5 中配置一个静态安全 MAC 地址 001f:3c59:d63b。
 
 <pre>
 VTP-Server-1(config)#interface GigabitEthernet0/2
@@ -1037,7 +1037,7 @@ VTP-Server-1(config-if)#switchport port-security mac-address 001f.3c59.5555 vlan
 VTP-Server-1(config-if)#switchport port-security mac-address 001f.3c59.7777 vlan voice
 </pre>
 
-记住在某个同时配置了语音 VLAN 和数据 VLAN 的接口上开启端口安全时，该端口上的最大允许安全地址数应设置为 2，这一点非常重要。这又是通过包含在上面输出中的__接口配置命令__ `switchport port-security maxium 2` 完成的。
+记住在某个同时配置了语音 VLAN 和数据 VLAN 的接口上开启端口安全时，该端口上的最大允许安全地址数应设置为 2，这一点非常重要。这又是通过包含在上面输出中的**接口配置命令** `switchport port-security maxium 2` 完成的。
 
 两个 MAC 地址中的一个由 IP 电话使用，交换机在语音 VLAN 上学到此地址。另一个由可连接在 IP 电话上的主机（比如 PC）所使用。交换机将在数据 VLAN 上学到这个 MAC 地址。
 
@@ -1073,7 +1073,7 @@ SecureStatic address aging : Disabled
 Security Violation count : 0
 </pre>
 
->__注意：__ 在我们进一步学习本章内容的过程中，将会详细介绍对上面的输出中其它默认参数的修改。
+>**注意：** 在我们进一步学习本章内容的过程中，将会详细介绍对上面的输出中其它默认参数的修改。
 
 而要查看该端口上具体配置的静态安全 MAC 地址，就要用到 `show port-security address` 或者 `show running-config interface [name]` 命令了。以下输出演示了 `show port-security address`。
 
@@ -1096,7 +1096,7 @@ Max Addresses limit in System : 1024
 
 !["现实场景"](images/real-world.png)
 
-__现实场景部署，Real-World Implementation__
+*现实场景部署，Real-World Implementation*
 
 在使用思科 Catalyst 3750 交换机的生产网络中，事先确定下来某台特定交换机的用途，总是一个好主意，接着就可以通过全局配置命令（global configuration command） `sdm prefer {access | default | dual-ipv4-ipv6 {default | routing | vlan} | routing | vlan} [desktop]`, 选定恰当的交换机数据库（Switch Database Management, SDM）模板。
 
@@ -1202,7 +1202,7 @@ Port Name	Status			Vlan	Duplex	Speed	Type
 Fa0/1		errdisabled		100		full	100		100BaseSX
 </pre>
 
-__思科要求你知道何种冲突动作引起发出给网络管理员一条 SNMP 消息以及产生一条日志消息，__ 下面的表 4.2 是你所要的信息。
+**思科要求你知道何种冲突动作引起发出给网络管理员一条 SNMP 消息以及产生一条日志消息，** 下面的表 4.2 是你所要的信息。
 
 | 模式 | 端口动作 | 流量 | 系统日志 | 冲突计数器 |
 | -- | -- | -- | -- | -- |
@@ -1210,7 +1210,7 @@ __思科要求你知道何种冲突动作引起发出给网络管理员一条 SN
 | 关闭模式 | 端口出错关闭 | 关闭流量转发 | 记录日志并发出一条 SNMP trap 消息 | 计数器增加 |
 | 限制模式 | 端口开放 | 超出数量的那些 MAC 流量被拒绝 | 记录日志并发出一条 SNMP trap 消息 | 计数器增加 |
 
-__为顺利通过考试，你务必要记住这个表！__
+**为顺利通过考试，你务必要记住这个表！**
 
 下面的输出演示了如何在某个端口上配置粘滞地址学习最多 10 个 MAC 地址。如果端口上探测到某未知 MAC 地址（比如第 11 个 MAC 地址）时，端口将被配置为丢弃收到的那些帧。
 
@@ -1250,7 +1250,7 @@ address 000c.cea7.f3a0 on port Gi0/2.
 address 0004.c16f.8741 on port Gi0/2.
 </pre>
 
-最后要说明的一点是__在 Packet Tracer 上可以配置交换机安全，但许多命令及 `show` 命令不会工作。__
+最后要说明的一点是**在 Packet Tracer 上可以配置交换机安全，但许多命令及 `show` 命令不会工作。**
 
 ## 第四天的问题，Day 4 Questions
 
@@ -1284,15 +1284,15 @@ address 0004.c16f.8741 on port Gi0/2.
 
 ### 路由器安全基础实验，Basic Router Security Lab
 
-__拓扑图，Topology__
+**拓扑图，Topology**
 
 !["拓扑图"](images/0405.png)
 
-__实验目的，Purpose__
+**实验目的，Purpose**
 
 学习一些给路由器上锁所需的基本步骤。
 
-__实验步骤, Walkthrough__
+**实验步骤, Walkthrough**
 
 1. 使用某个启用秘密口令（an enable secret password），登入使用保护启用模式（Protect Enable mode）。通过登出特权模式（Privileged mode）并再度登入来进行测试。
 
@@ -1415,15 +1415,15 @@ Router(config)#logging 10.1.1.1
 
 ### 交换机安全基础实验，Basic Switch Security Lab
 
-__拓扑图，Topology__
+**拓扑图，Topology**
 
 !["交换机安全基础实验拓扑图"](images/0406.png)
 
-__实验目的，Purpose__
+**实验目的，Purpose**
 
 学习一些给交换机上锁的基本步骤。
 
-__实验步骤，Walkthrough__
+**实验步骤，Walkthrough**
 
 1. 连接一台 PC 或笔记本计算机到交换机。另外为后面的配置建立一个控制台连接。连接 PC 的那个以太网端口，将会作为本实验中配置安全设置的那个端口。我所选择的是交换机的 FastEthernet0/1 端口。
 
@@ -1535,5 +1535,5 @@ Last Source Address:Vlan	: <b>0001.C7DD.CB19:1</b>
 Security Violation Count	: 1
 </pre>
 
->__注意：__ 请重复本实验，直到理解这些命令，并在不看上述实验步骤的情况下输入这些命令为止（本书的其它实验也要这样做）。
+>**注意：** 请重复本实验，直到理解这些命令，并在不看上述实验步骤的情况下输入这些命令为止（本书的其它实验也要这样做）。
 

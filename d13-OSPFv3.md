@@ -1,8 +1,8 @@
 #第13天
 
-__OSPF版本3__
+**OSPF版本3**
 
-__OSPFv3__
+**OSPFv3**
 
 ##第13天任务
 
@@ -21,7 +21,7 @@ __OSPFv3__
 
 ##OSPF第3版
 
-__OSPF Version 3__
+**OSPF Version 3**
 
 OSPFv3定义在RFC 2740中，而其功能与OSPFv2相同，不过OSPFv3显式地是为IPv6路由协议设计（OSPFv3 is defined in RFC 2740 and is the counterpart of OSPFv2, but it is designed explicitly for the IPv6 routed protocol）。该版本号取自此种OSPF数据包中的版本字段，该字段已被更新到数字3. OSPFv3规格主要是基于OSPFv2, 但因为加入的对IPv6的支持，而包含了一些额外的功能增强。
 
@@ -31,7 +31,7 @@ OSPFv2和OSPFv3能在同一台路由器上允许。也就是说，同一台物�
 + OSPSv3中的动态邻居发现机制及邻接关系形成过程（也就是OSPF所经历的从初始或尝试建立邻接关系到邻接关系完整建立的过程），仍然和OSPFv2中一样
 + OSPFv3仍然对遵从RFC的对各种技术的支持（OSPFv3 still remains RFC-compliant on different technologies）。比如，若在某条PPP链路上开启了OSPFv3, 那么组网类型及仍然被指定为点对点（Point-to-Point）。同样，如在FR上开启OSPFv3, 默认组网类型仍然是非广播类型（Non-Broadcast）。另外，在思科IOS软件中，默认组网类型仍可通过使用不同的接口特定命令，手动进行改变。
 + OSPFv2和OSPFv3使用同样的LSA散布及老化机制（the same LSA flooding and aging mechanism）.
-+ 与OSPFv2类似，OSPFv3的路由器ID（rid）仍然需要使用一个32位的IPv4地址。当在某台运行着双栈（dual-stack, 也就是同时有IPv4和IPv6）的路由器上开启OSPFv3时， 那么与在OSPFv2中为思科IOS路由器所用到的同样的RID选定过程，也用于确定OSPFv3中要用到的路由器ID。但是，__当在一台没有接口运行着IPv4的路由器上开启OSPFv3时，就强制性要求使用路由器配置命令`router-id`来手动配置OSPFv3的路由器ID了__。
++ 与OSPFv2类似，OSPFv3的路由器ID（rid）仍然需要使用一个32位的IPv4地址。当在某台运行着双栈（dual-stack, 也就是同时有IPv4和IPv6）的路由器上开启OSPFv3时， 那么与在OSPFv2中为思科IOS路由器所用到的同样的RID选定过程，也用于确定OSPFv3中要用到的路由器ID。但是，**当在一台没有接口运行着IPv4的路由器上开启OSPFv3时，就强制性要求使用路由器配置命令`router-id`来手动配置OSPFv3的路由器ID了**。
 + OSPFv3链路ID表明，这些链路并非IPv6专用的，而是仍然基于一个32位IPv4地址，跟OSPFv2中一样。
 + 在OSPFv2与OSPFv3有着这些相同点同时，重要的是掌握你必须熟悉的一些存在的明显不同点。包括下面这些。
 
@@ -46,19 +46,19 @@ OSPFv2和OSPFv3能在同一台路由器上允许。也就是说，同一台物�
 
 ##思科IOS软件的OSPFv2和OSPFv3配置差异
 
-__Cisco IOS Software OSPFv2 and OSPFv3 Configuration Differences__
+**Cisco IOS Software OSPFv2 and OSPFv3 Configuration Differences**
 
 在思科IOS软件中，配置OSPFv2与OSPFv3时有着一些配置差异。但应注意到，这些区别与其它路由协议的IPv4和IPv6版本的差异相比，并不那么显著。
 
 在思科IOS软件中，通过使用全局配置命令`ipv6 router ospf [process id]`，来开启OSPFv6。和OSPFv2中的情况一样，OSPF进程ID是对路由器本地有效的，并不要求其在邻接路由器上为建立邻接关系保持一致。
 
-> __译者总结:__ 邻居路由器要形成邻接关系，要求：1. 区域号一致；2. 认证一直；3. Hello包、死亡间隔时间直一致；不要求：进程号一致。Hello数据包用于动态邻居发现和形成邻接关系，因此Hello数据包包含上述要求的参数，不包含不要求的参数。只有形成了邻接关系，才能开始发送和接受LSAs。
+> **译者总结:** 邻居路由器要形成邻接关系，要求：1. 区域号一致；2. 认证一直；3. Hello包、死亡间隔时间直一致；不要求：进程号一致。Hello数据包用于动态邻居发现和形成邻接关系，因此Hello数据包包含上述要求的参数，不包含不要求的参数。只有形成了邻接关系，才能开始发送和接受LSAs。
 
 与EIGRPv6（将在ICND2中涵盖）所要求的一样，OSPFv3的路由器ID也必须予以手动指定，或配置成一个带有IPv4地址的运行接口（比如一个环回接口）。与EIGRPv6类似，在启用OSPFv3时，是没有网络命令的。取而代之的是，OSPF的启用，是基于各个接口的，且在同一接口上可开启多个OSPFv3实例（similar to EIGRPv6, there are no network commands used when enabling OSPFv3. Instead OSPFv3 is enabled on a per-interface basis and multiple instances may be enabled on the same interface）。
 
 最后，当在诸如FR及ATM这样的NBMA网络上配置OSPFv3时，是在指定接口下，使用接口配置命令`ipv6 ospf neighbor [link local address]`，来指定邻居声明语句（the neighbor statements）。而在OSPFv2中，这些语句会是在路由器配置模式中配置的。
 
-> __注意：__ 当在NBMA传输技术上配置OSPFv3时，应该使用本地链路地址来创建出静态FR地图声明语句（static Frame Relay map statements）。这是因为正是使用本地链路地址，而不是全球单播地址，建立邻接关系。比如，为给一个FR部署创建一幅静态FR地图语句并指定一台OSPF邻居路由器，就要在该路由器上应用下面的配置（在ICND2部分将对FR进行讲解）。
+> **注意：** 当在NBMA传输技术上配置OSPFv3时，应该使用本地链路地址来创建出静态FR地图声明语句（static Frame Relay map statements）。这是因为正是使用本地链路地址，而不是全球单播地址，建立邻接关系。比如，为给一个FR部署创建一幅静态FR地图语句并指定一台OSPF邻居路由器，就要在该路由器上应用下面的配置（在ICND2部分将对FR进行讲解）。
 
 ```
 R1(config)#ipv6 unicast-routing
@@ -73,7 +73,7 @@ R1(config-if)#exit
 
 ###思科IOS软件中OSPFv3的配置和验证
 
-__Configuring and Verifying OSPFv3 in Cisco IOS Software__
+**Configuring and Verifying OSPFv3 in Cisco IOS Software**
 
 接着上一部分，上部分强调了OSPFv2和OSPFv3之间配置差异，那么这部分就要过一遍那些在思科IOS软件中开启和验证OSPFv3功能及路由的步骤。在思科IOS软件中，需要依序采行下面这些步骤，来开启OSPFv3路由。
 
@@ -86,7 +86,8 @@ __Configuring and Verifying OSPFv3 in Cisco IOS Software__
 第一个基本的多区域OSPFv3配置示例，建立在下图13.1所演示的拓扑之上。
 
 ![在思科IOS软件中配置基本多区域OSPFv3](images/1301.png)
-__图13.1 -- 在思科IOS软件中配置基本多区域OSPFv3__
+
+*图13.1 -- 在思科IOS软件中配置基本多区域OSPFv3*
 
 依之间所讲到的顺序配置步骤，照下面这样，在路由器R1上就会配置上OSPFv3。
 
@@ -183,7 +184,7 @@ Neighbor 3.3.3.3
 + 在两台路由器上分别配置一个环回接口，并从两个不同范围分配地址（`2002::1/128`及`2002::2/128`）
 + 配置标准的OSPFv3 1号进程并将所有本地网络在0号区域进行通告。同时为各设备配置一个路由器ID。
 
-__R1:__
+**R1:**
 
 <pre>
 ipv6 router ospf 1
@@ -194,7 +195,7 @@ int lo0<b>(or the specific interface number)</b>
 ipv6 ospf 1 area 0
 </pre>
 
-__R2:__
+**R2:**
 
 <pre>
 ipv6 router ospf 1

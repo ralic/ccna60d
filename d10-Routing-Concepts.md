@@ -60,16 +60,19 @@ __Packet Forwarding__
 当路由器接收到一个发往其直接连接网络的数据包时，该路由器就检查其路由表并将该数据包转发到那个网络，如图10.1所示。
 
 ![直连网络](images/1001.png)
+
 __图10.1 -- 直连网络__
 
 如数据包的目的地是一个远端网络，就会检查路由表，如果有一条路由或默认路由，那么就转发数据包到下一跳路由器，如下图10.2所示。
 
 ![远端网络](images/1002.png)
+
 __图10.2 -- 远端网络__
 
 如数据包以一个不在路由表中的网络为目的地，且又不存在默认路由，那么该数据包就不丢弃，如下图10.3所示。
 
 ![没有路由](images/1003.png)
+
 __图10.3 -- 没有路由__
 
 __交换过程（the switching process）__允许路由器通过一个接口接收数据包，并从另一接口发出。同时路由器也会以外出链路的适当数据链路帧方式，对数据包进行封装。
@@ -77,26 +80,31 @@ __交换过程（the switching process）__允许路由器通过一个接口接�
 可能会要求你对自一个网络接收，并以另一个网络为目的地的数据包所发生的事情进行解释。首先，路由器通过移除二层帧的头部和尾部，实现三层数据包的解封装; 接着，路由器查看该IP数据包的目的IP地址，以找出路由表中的最佳路径; 最后，路由器将该三层数据包封装为一个新的二层帧，并将该帧从离开接口转发出去，那么__封装方式就可能从以太网变为HDLC__。此过程在下图10.4中进行了演示。
 
 ![某数据包的三层地址](images/1004.png)
+
 __图10.4 -- 某数据包的三层地址__
 
 记住在一个较早的模块中曾提到，当数据包往其最终目的漫游时，源和目的IP地址绝不会变化。而MAC地址则会改变，以允许在那些中间设备之间进行传输。这在下图10.5中有演示。
 
 ![二层地址改变](images/1005.png)
+
 __图10.5 -- 二层地址改变__
 
 图10.6展示了一个从主机X离开，前往主机Y的数据包。注意其下一跳MAC地址属于路由器A（采用了代理ARP）；但其IP地址则是属于主机Y。在帧到达路由器B时，以太网头部和尾部将换成WAN协议的头部和尾部，这里可以假定为HDLC的头部和尾部。
 
 ![离开主机X的数据包](images/1006.png)
+
 __图10.6 -- 离开主机X的数据包__
 
 图10.7展示了离开路由器A前往路由器B的同样数据包。这里有着一次路由查找，接着数据包就被从接口E1 __交换出去__(there is a route lookup and then the packet is switched out of interface E1)。类型800(Type 800）表明该数据包是一个IPv4数据包。
 
 ![离开路由器A的数据包](images/1007.png)
+
 __图10.7 -- 离开路由器A的数据包__
 
 图10.8展示了该帧最终到达路由器C并被转发给主机Y。
 
 ![离开路由器C的数据包](images/1008.png)
+
 __图10.8 -- 离开路由器C的数据包__
 
 ###互联网协议路由基础知识
@@ -124,6 +132,7 @@ __IP Addressing and Address Summarisation__
 汇总（summarisation）减少路由器所必须处理信息的数量，以此就可以实现网络的快速收敛。汇总还通过隐藏掉网络中某些区域的详细拓扑信息，从而令到因网络发生改变而受影响区域的大小受限。此概念在下图10.9中进行了演示。
 
 ![采用思科设计模型的路由汇总](images/1009.png)
+
 __图10.9 -- 采用思科设计模型的路由汇总__
 
 通过图10.9可以看出，那些分支局（接入层）到地区局路由器（分布层）都是双线路接入（the branch offices(Access Layer) are dual-homed to the regional office routers(Distribution Layer)）。这些层都是采用思科设计模型（Cisco design models）定义出来的。采用某种层次化分址方案，就令到分布层路由器将仅一条的那些分支局子网的汇总路由，通告给核心层。这样做保护了核心层免受任何位处分布层和接入层之间路由器路由抖动的影响，因为除非某条汇总路由所继承自的那些更为具体前缀都从路由表中移除，该条汇总路由是不会抖动的（this protects the Core Layer from the effects of any route flapping between the Distribution and Access Layer routers, because a summary route will not flap until every last one of the more specific prefixes from which it is derived is removed from the routing table）。这又带来了该区域稳定性的提升。此外，核心层路由表大小得以极大地减小。
@@ -351,6 +360,7 @@ __Passive Interfaces__
 被动接口通常能接收到路由更新或Hello数据包，但不被允许发出任何种类的路由协议信息出去。
 
 ![限制不必要的数据交换](images/1010.png)
+
 __图10.10 -- 限制不必要的对等数据交换__
 
 被动接口的一个用例实例就是用于防止路由协议数据自分布层对等传送（peerings）到接入层，就如同上面的图10.10所示。当留有三层跨越这些性质不同的接入层交换机的对等传输时（也就是在跨越交换机区块的不同交换机上有着多台主机），就只会增加内存负载、路由协议更新开销及更多的复杂性。同样，如发生了某条链路故障，流量会经由一台邻居接入交换机传输，而到达另一个VLAN成员处（by having Layer 3 switches across the different Access Layer switches(i.e., having multiple hosts on different switches across switch blocks) you are basically adding memory load, routing protocol update overhead, and more complexity. Also, if there is a link failure, the traffic may transit through a neighbouring Access Layer switch to get to another VLAN member）。
@@ -370,6 +380,7 @@ __Understanding Vectors__
 一个一维矢量就是一个有方向的量。它就是一个在特定方向或路线上的量（数字）。下图10.11演示了矢量这个概念。
 
 ![理解矢量](images/1011.png)
+
 __图10.11 -- 理解矢量__
 
 在图10.11中，第一条线路从0开始，到9结束，同时第二条线路从8开始，在13处结束。那么第一条线路的矢量就是8, 第二条的矢量就是5。运用基础数学，就知道8+5=13。矢量的开始点和结束点是无关的。而是与矢量长度及其经过的距离有关。
@@ -741,5 +752,4 @@ network 12.12.12.0
 + 自R1向R2的环回接口进行`ping`操作，以测试连通性
 + 执行一条`show ip route`命令，来检查经由RIP收到了那些路由
 + 执行一条`show ip protocols`命令，来检查有配置了RIP且RIP在设备上是允许着的
-
 

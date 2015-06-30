@@ -37,6 +37,7 @@ __Network Address Translation__
 想象一下如果网络不是以IP地址运行，而是按颜色来运作。蓝色和黄色有无限的供应，其它颜色却是短缺的。网络分开成使用蓝色和黄色的许多用户，因为这两种颜色可以随意使用。而蓝色用户需要频繁地前往外部网络，那么就需要去买点绿色凭据，在蓝色用户需要与外部网络上的主机通信时，路由器可以用其将蓝色用户的凭据进行替换。路由器此时会像下面这样做。
 
 ![内部凭据被替换成了外部凭据](images/0601.png)
+
 __图6.1 -- 内部凭据被替换成了外部凭据__
 
 <table>
@@ -51,6 +52,7 @@ __图6.1 -- 内部凭据被替换成了外部凭据__
 我们看到，NAT不仅保护了网络IP地址，同时也是节约地址的另一种方法。__NAT是在路由器或者防火墙上实现的__，那么，代替上面的颜色，你会看到下面这样的情况。
 
 ![内部地址被替换成外部地址](images/0602.png)
+
 __图6.2 -- 内部地址被替换成外部地址__
 
 <table>
@@ -89,6 +91,7 @@ __外部本地地址是某台外部主机呈现给内部主机的IP地址__。�
 为搞清楚这些概念，图6.3表示了两台主机之间的一个会话中各种地址的使用。中间的网关上开启了NAT。
 
 ![理解NAT的各种内部外部地址](images/0603.png)
+
 __图6.3 -- 理解NAT的各种内部外部地址__
 
 NAT内部和外部的分址，是一个经典的考试问题，所以还需在回头看几次这里的内容。
@@ -154,6 +157,7 @@ __Static NAT__
 >Farai指出，“对那些需要经由互联网可达的所有服务器，比如e-mail或FTP服务器，都要使用静态NAT（如下面的图6.4所示）”
 
 ![在用的静态NAT](images/0604.png)
+
 __图6.4 -- 在用的静态NAT__
 
 <table>
@@ -188,6 +192,7 @@ Router(config)#ip nat inside source static 192.168.2.1 200.1.1.2
 路由器会维护一个内部地址到外部地址对应的清单，而最后该表格中的转换会超时(Your router will keep a list of the internal addresses to external addresses, and eventually the translation in the table will time out)。可以修改此超时值，但请找Cisco 技术支持工程师（a Cisco TAC engineer）的建议去修改。
 
 ![到一个NAT公网可路由地址池的内部似有地址](images/0605.png)
+
 __图6.5 -- 到一个NAT公网可路由地址池的内部似有地址__
 
 当路由器上的内部主机发出到外部的连接时，如执行命令`show ip nat translations`, 就会看到下面的包含类似信息的图表。
@@ -201,7 +206,7 @@ __图6.5 -- 到一个NAT公网可路由地址池的内部似有地址__
 在上面的图6.5中，让内部地址使用的是一个从200.1.1.1到200.1.1.16的地址池。下面是要实现该目的的配置文件。这里就不再给出路由器接口地址了。
 
 ```
-Router(config)#interface f0/0 
+Router(config)#interface f0/0
 Router(config-if)#ip nat inside
 Router(config)#interface s0/1
 Router(config-if)#ip nat outside
@@ -221,6 +226,7 @@ IP地址处于紧缺之中，在有着成千上万的地址需要路由时，将
 尽管__这是超出CCNA考试范围的，但了解PAT如何处理端口号，会是有用的__。在每个思科文档中，都将每个公网IP地址的可用端口号分为3个范围，分别是0-511、512-1023和1024-65535。PAT给每个UDP和TCP会话都分配一个独特的端口号。它会尝试给原始请求分配同样的端口值，但如果原始的源端口号已被使用，它就会开始从某个特别端口范围的开头进行扫描，找出第一个可用的端口号，分配给那个会话。
 
 ![NAT Overload](images/0606.png)
+
 __图6.6 -- NAT Overload__
 
 此时，命令`show ip nat translations`给出的表格，将会显示下面这样的IP地址及端口号。
@@ -288,6 +294,7 @@ __Static NAT Lab__
 __拓扑图__
 
 ![静态NAT实验拓扑图](images/0607.png)
+
 __静态NAT实验拓扑图__
 
 __实验目的__
@@ -442,7 +449,7 @@ RouterA(config-if)#ip add 10.1.1.1 255.255.255.0
 RouterA(config-if)#int l1 <b>← short for Loopback1</b>
 RouterA(config-if)#ip address 10.2.2.2 255.255.255.0
 RouterA(config-if)#
-</pre> 
+</pre>
 
 3. 为了进行测试，需要告诉RouterB将到任何网络的任何流量，都发往RouterA。用一条静态路由完成这点。
 

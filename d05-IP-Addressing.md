@@ -502,6 +502,7 @@ C类地址 = 255.255.255.0
 美国邮政局用邮编来提升美国国内信件到地址的路由效率（见图 5.2）。邮编的第一位表示一组的美国州份，第二和三位表示那组中的一个区域。这个想法在于可以将信件或包裹经由机器或人工快速地路由到正确的州份，并转发到相应州份。在邮件到达该州时，又可以正确地路由到相应区域。从该区域有可以正确地路由到相应城市等等，直到邮件装入当地邮政投递人员的正确邮报为止。
 
 ![美国邮政编码](images/0502.png)
+
 __图5.2 -- 美国邮政编码__
 
 ###路由汇总的前提，Route Summarisation Prerequistes
@@ -513,6 +514,7 @@ __图5.2 -- 美国邮政编码__
 我们来看看一个实例网络，如不采用路由汇总，会有什么问题。在此实例中，说的就是在某网络上的IP地址范围下，汇总是如何工作的。图5.3中的路由器连着一些网络。头一种解决办法是将这些网络都通告给下一跳的路由器（the next-hop router）。而替代的做法是汇总这8个网络到一条路由，并将汇总结果发送给下一跳路由器，这样做可降低带宽、CPU和内存的需求。
 
 ![路由汇总的一个实例](images/0503.png)
+
 __图5.3 -- 路由汇总的一个实例__
 
 抱歉的是，计算出汇总路由（a summary route）的唯一方法是将IP地址转换成二进制形式。如你不这样做，就无法知道是否通告了正确的汇总路由，而这将导致网络故障。
@@ -557,6 +559,7 @@ __练习一__: 写出下面的地址的二进制形式，并找出匹配的位�
 __练习二__: 下面述及的机构有3台连接到公司总部的路由器。他们需要将通告自伦敦1、2、3号路由器的路由进行汇总。
 
 ![通告自伦敦1、2、3号路由器的汇总路由](images/0504.png)
+
 __图5.4 -- 通告自伦敦1、2、3号路由器的汇总路由__
 
 我们先从伦敦1号路由器开始。
@@ -714,7 +717,7 @@ __CCNA考试要求你掌握路由汇总__。如你能快速地算出同样的位
 7. What is the last host of the `172.16.96.0/19` network?
 8. Starting with `192.168.1.0/24`, with VLSM, you can use a /26 mask and generate which subnets?
 9. In order to use route summarisation on your network, you need to use what?
-10. Write down the subnets `172.16.8.0` to `172.16.15.0`, and work out the common bits and what subnet mask you should use as a summary. Don’t look in the book before working this out. 
+10. Write down the subnets `172.16.8.0` to `172.16.15.0`, and work out the common bits and what subnet mask you should use as a summary. Don’t look in the book before working this out.
 
 ## 第五天问题的答案
 
@@ -759,10 +762,10 @@ __CCNA考试要求你掌握路由汇总__。如你能快速地算出同样的位
 6. Convert 101 to binary and hex
 ```
 	Binary = 1100101
-	Hex = 657 
+	Hex = 657
 ```
 7. Convert A6 from hex to binary and decimal
-```	
+```
 	Binary = 10100110
 	Decimal = 166
 ```
@@ -784,6 +787,7 @@ __CCNA考试要求你掌握路由汇总__。如你能快速地算出同样的位
 __拓扑图，Topology__
 
 ![路由器上的IP分址实验拓扑图](images/0505.png)
+
 __路由器上的IP分址实验拓扑图__
 
 __实验目的, Purpose__

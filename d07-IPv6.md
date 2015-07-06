@@ -378,6 +378,8 @@ IPv6中的多播数据包，不是通过使用TTL值来将其限制在本地网�
 
 **在这些IPv6多播前缀中，又保留了一些地址**。这些保留的地址称作多播指定地址（Multicast Assigned addresses）, 如下表7.8中所示。
 
+*表7.8 -- 保留的IPv6多播地址*
+
 <table>
 <tr><th>地址</th><th>范围</th><th>说明</th></tr>
 <tr><td><pre>FF01::1</pre></td><td>主机</td><td>所有在本地接口范围内的主机</td></tr>

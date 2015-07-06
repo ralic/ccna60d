@@ -25,7 +25,7 @@
 
 OSPFv3定义在RFC 2740中，而其功能与OSPFv2相同，不过OSPFv3显式地是为IPv6路由协议设计（OSPFv3 is defined in RFC 2740 and is the counterpart of OSPFv2, but it is designed explicitly for the IPv6 routed protocol）。该版本号取自此种OSPF数据包中的版本字段，该字段已被更新到数字3. OSPFv3规格主要是基于OSPFv2, 但因为加入的对IPv6的支持，而包含了一些额外的功能增强。
 
-OSPFv2和OSPFv3能在同一台路由器上允许。也就是说，同一台物理路由器可同时路由IPv4和IPv6流量，因为每个地址家族都有不同的SPF进程；这就是说，同样SPF算法对OSPFv2和OSPFv3分别有一个单独的实例。OSPFv2和OSPFv3有以下共同点。
+OSPFv2和OSPFv3能在同一台路由器上运行。也就是说，同一台物理路由器可同时路由IPv4和IPv6流量，因为每个地址家族都有不同的SPF进程；这就是说，同样SPF算法对OSPFv2和OSPFv3分别有一个单独的实例。OSPFv2和OSPFv3有以下共同点。
 
 + OSPFv3继续使用着为OSPFv2所用到的那些数据包。包括数据库说明数据包（Database Description, DBD）, 链路状态请求数据包（Link State Requests, LSRs），链路状态更新数据包（Link State Updates, LSUs）, 以及链路状态通告数据包（Lins State Advertisements, LSAs）
 + OSPSv3中的动态邻居发现机制及邻接关系形成过程（也就是OSPF所经历的从初始或尝试建立邻接关系到邻接关系完整建立的过程），仍然和OSPFv2中一样

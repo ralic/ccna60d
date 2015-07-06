@@ -18,6 +18,7 @@
 
 `2000::/3`
 `2000::` - `3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff`
+
 **全球单播地址空间，Global Unicast Address Space**
 
 `4000::/3`
@@ -46,6 +47,7 @@
 
 `fc00::/7`
 `fc00::` - `fdff:ffff:ffff:ffff:ffff:ffff:ffff:ffff`
+
 **本地唯一单播地址， Unique Local Unicast Address Space**
 
 `fe00::/9`
@@ -53,6 +55,7 @@
 
 `fe80::/10`
 `fe80::` - `febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff`
+
 **链路上的单播地址空间， Link Scoped Unicast Address Space**
 
 `fec0::/10`
@@ -60,5 +63,6 @@
 
 `ff00::/8`
 `ff00::` - `ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff`
+
 **多播地址空间**
 

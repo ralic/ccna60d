@@ -189,9 +189,9 @@ Neighbor 3.3.3.3
 <pre>
 ipv6 router ospf 1
 router-id 1.1.1.1
-int fa0/0<b>(or the specific interface number)</b>
+int fa0/0<b>(或特定接口编号)</b>
 ipv6 ospf 1 area 0
-int lo0<b>(or the specific interface number)</b>
+int lo0<b>(或特定接口编号)</b>
 ipv6 ospf 1 area 0
 </pre>
 
@@ -200,15 +200,15 @@ ipv6 ospf 1 area 0
 <pre>
 ipv6 router ospf 1
 router-id 2.2.2.2
-int fa0/0<b>(or the specific interface number)</b>
+int fa0/0<b>(或特定接口编号)</b>
 ipv6 ospf 1 area 0
-int lo0<b>(or the specific interface number)</b>
+int lo0<b>(或特定接口编号)</b>
 ipv6 ospf 1 area 0
 </pre>
 
 + 自R1向R2的IPv6环回接口发出`ping`操作，以测试连通性
 + 执行一个`show ipv6 route`命令，来验证有通过OSPFv3接收到路由
 + 执行一个`show ipv6 protocols`命令，来验证有配置OSPFv3且在设备上是活动的
-+ 执行命令`show ipv6 ospf interface`及`show ipv6 ospf interface brief`，检查接口OSPF特定的参数
++ 执行命令`show ipv6 ospf interface`及`show ipv6 ospf interface brief`，检查接口特定于OSPF的那些参数
 + 在两台路由器上（直连接口）修改Hello包和死亡计时器: `ipv6 ospf hello`及`ipv6 ospf dead`
-+ 执行一下`show ipv6 ospf`命令，来查看路由进程参数
++ 执行一下`show ipv6 ospf 1`命令，来查看路由进程参数

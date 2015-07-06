@@ -1,7 +1,33 @@
-`::/8`
-`::` - `00ff:ffff:ffff:ffff:ffff:ffff:ffff:ffff`
+在IPv6地址空间中，当前所用到的主要有4段（分别是全球单播地址、本地唯一单播地址、链路范围单播地址及多播地址），其它各段为IETF保留。
 
-**为IETF所保留, Reserved by IETF**
++ 用到的4个地址段
+    -`2000::/3`
+    `2000::` - `3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff`
+
+    **全球单播地址空间，Global Unicast Address Space**
+
+    `fc00::/7`
+    `fc00::` - `fdff:ffff:ffff:ffff:ffff:ffff:ffff:ffff`
+
+    **本地唯一单播地址， Unique Local Unicast Address Space**
+
+
+    `fe80::/10`
+    `fe80::` - `febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff`
+
+    **链路上的单播地址空间， Link Scoped Unicast Address Space**
+
+    `ff00::/8`
+    `ff00::` - `ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff`
+
+    **多播地址空间, Multicast**
+
++ 全部IPv6地址空间
+
+    `::/8`
+    `::` - `00ff:ffff:ffff:ffff:ffff:ffff:ffff:ffff`
+
+    **为IETF所保留, Reserved by IETF**
 
 
 `0100::/8`

@@ -255,7 +255,7 @@ IPv6地址可像下面这三种方式进行表示。
 
 >**注意：** 6to4是一种IPv4迁移到IPv6的过渡机制。对于CCNA考试来说，只需知道有这么个东西就行了。
 
-**在任意播寻址方式下，设备使用从路由协议度量值上看离它们最近的那个公共地址**(the common address)。假如该主要地址不可达时，就会使用下一个最近的地址（with Anycast adressing, devices use the common address that is closest to them based on routing protocol metric. The next closest address is then used in the event that the primary address is no longer reachable）。此概念在下图7.5中进行了演示。
+在任意播寻址方式下，**设备使用从路由协议度量值上看离它们最近的那个公共地址**(the common address)。假如该主要地址不可达时，就会使用下一个最近的地址（with Anycast adressing, devices use the common address that is closest to them based on routing protocol metric. The next closest address is then used in the event that the primary address is no longer reachable）。此概念在下图7.5中进行了演示。
 
 ![理解任意播寻址方式](images/0705.png)
 

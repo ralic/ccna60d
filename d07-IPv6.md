@@ -401,7 +401,7 @@ IPv6中用到的多播地址，是从`FF00::/8`这个IPv6前缀中得到的。IP
 
 *图7.9 -- IPv6节点询问多播地址*
 
-而作为与IPv4到二层以太网的多播映射的一个类似方案，IPv6提供了一种独特的方法，来将三层IPv6多播地址，映射到二层多播地址。IPv6中的多播映射是通过在某多播地址的后32位加上一个16位前缀`33:33`，这个前缀就是IPv6网络中定义的多播以太网前缀（the defined Multicast Ethernet prefix for IPv6 Networks）。其在下图7.10中，演示了所有位于本地接口范围前缀`FF02::2`上的路由器的以太网映射多播地址。
+而作为与IPv4到二层以太网的多播映射的一个类似方案，**IPv6提供了一种独特的方法，来将三层IPv6多播地址，映射到二层多播地址**。IPv6中的多播映射是通过在某多播地址的后32位加上一个16位前缀`33:33`，这个前缀就是IPv6网络中定义的多播以太网前缀（the defined Multicast Ethernet prefix for IPv6 Networks）。其在下图7.10中，演示了所有位于本地接口范围前缀`FF02::2`上的路由器的以太网映射多播地址。
 
 ![IPv6多播地址](images/0710.png)
 
@@ -516,7 +516,7 @@ ICMP用于将有关发往预期目的主机的IP数据的错误和其他信息�
 <tr><td>137</td><td>用于路由器重定向报文, used for Router Redirect messages</td></tr>
 </table>
 
-**路由器询问报文**由主机在其接口开启IPv6时所发出。这些报文用于请求本地网段上的路由器立即生成RA报文，而不要等到下一个计划的RA时间间隔才生成RA报文。下图7.2演示了一条在线路上捕获到的RS报文。
+**路由器询问报文**（Router Solicition messages）由主机在其接口开启IPv6时所发出。这些报文用于请求本地网段上的路由器立即生成RA报文，而不要等到下一个计划的RA时间间隔才生成RA报文。下图7.2演示了一条在线路上捕获到的RS报文。
 
 ![IPv6路由器询问报文](images/0712.png)
 
@@ -534,7 +534,7 @@ ICMP用于将有关发往预期目的主机的IP数据的错误和其他信息�
 
 *图7.14 -- IPv6的RS和RA报文*
 
-IPv6的**NS报文**，则是本地网段上的IPv6路由器所发出的多播报文，用于确定某个邻居的数据链路地址，或是用于检查某个邻居是否仍然可达（因而NS报文取代的是ARP的功能）。这些报文也用于重复地址检测(DAD)目的。尽管对NS报文的深入探究超出了CCNA考试要求的范围，下面的图7.15仍然演示了一个在线路上捕获到的IPv6邻居询问报文数据包。
+IPv6的**邻居询问报文**(Neighbor Solicition messages)，则是本地网段上的IPv6路由器所发出的多播报文，用于确定某个邻居的数据链路地址，或是用于检查某个邻居是否仍然可达（因而NS报文取代的是ARP的功能）。这些报文也用于重复地址检测(DAD)目的。尽管对NS报文的深入探究超出了CCNA考试要求的范围，下面的图7.15仍然演示了一个在线路上捕获到的IPv6邻居询问报文数据包。
 
 ![IPv6邻居询问报文](images/0715.png)
 
@@ -550,7 +550,7 @@ IPv6的**NS报文**，则是本地网段上的IPv6路由器所发出的多播报
 
 *图7.17 -- IPv6邻居通告报文*
 
-最后，路由器重定向（router redirect）使用的是报文类型为137的ICMPv6重定向报文（ICMPv6 Redirect messages），路由器重定向用于告知网络主机，网络上存在一台路由器，该路由器有着前往预计目的主机的更优路径。ICMPv6的路由器重定向与ICMPv4的工作方式一样，而ICMPv4的路由器重定向就是用来对当前IPv4网络中的流量进行重定向的。
+最后，**路由器重定向**（router redirect）**使用报文类型为137的ICMPv6重定向报文**（ICMPv6 Redirect messages），路由器重定向用于告知网络主机，网络上存在一台路由器，该路由器有着前往预计目的主机的更优路径。ICMPv6的路由器重定向与ICMPv4的工作方式一样，而ICMPv4的路由器重定向就是用来对当前IPv4网络中的流量进行重定向的。
 
 ###IPv6的有状态自动配置
 
@@ -568,7 +568,7 @@ RA报文中的M位，指的是受管理的地址配置标志位（the Managed Ad
 + 有状态DHCPv6 -- M标志位设置为1, 告诉主机使用DHCPv6取得所有地址和网络信息。
 + 无状态DHCPv6 -- M标志位设置为0, O标志位设置为1, 意味着主机将采用SLAAC来得到地址（从一条RA），而同时从DNS服务器取得其它信息。
 
-尽管无状态自动配置能力是IPv6的一项优势，有状态自动配置仍然有着许多好处，包括以下这些。
+尽管SLAAC能力是IPv6的一项优势，有状态自动配置仍然有着许多好处，包括以下这些。
 
 + 相较SLAAC所提供的那些项目，有状态自动配置有着更大的控制权
 + 在SLAAC网络上，同样可以使用有状态自动配置
@@ -589,6 +589,7 @@ IPv6容许设备为自己配置一个IP地址，以便进行主机到主机的�
 + 前缀重编号，prefix renumbering
 
 **前缀通告**
+
 **prefix advertisement**
 
 IPv6地址前缀通告用到了ICMPv6 RA报文，而ICMPv6 RA是发往链路上的所有主机（all-hosts-on-the-local-link）的，带有多播地址`FF02::1`的ICMPv6数据包。根据IPv6的设计，仅有路由器才被允许在本地链路上通告前缀。在采行SLAAC后，就务必要记住，所用到的前缀长度，必须是64位（比如`2001:1a2b::/64`）。
@@ -611,6 +612,7 @@ SLAAC RA的默认路由器，提供了其本身IPv6地址的存在情况和生�
 最后，一些标志和选项字段可被用作指示网络主机采行SLAAC或有状态自动配置。这些字段在图7.13中的RA线路捕获中有包含。
 
 **重复地址检测**
+
 **Duplicated Address Detection, DAD**
 
 重复地址检测（DAD）是一种用在SLAAC中，在某网段上主机启动时，用到的NDP机制。DAD要求某台网络主机启动期间，在永久地配置它自己的IPv6地址之前，先要确保没有别的网络主机已经使用了它打算使用的那个地址。
@@ -618,6 +620,7 @@ SLAAC RA的默认路由器，提供了其本身IPv6地址的存在情况和生�
 DAD通过使用邻居询问（135类型的ICMPv6）及节点询问多播地址（Solicited-Node Multicast addresses），来完成这个验证。主机使用一个未指明IPv6地址（an unspecified IPv6 address, 也就是地址`::`）作为报文数据包的源地址，并将其打算使用的那个IPv6单播地址，作为目的地址，在本地网段上发送一个邻居询问ICMPv6报文数据包。如有其它主机使用着该地址，那么主机就不会自动将此地址配置为自己的地址；而如没有其他设备使用这个地址，则该主机就自动配置并开始使用这个IPv6地址了。
 
 **前缀重编号**
+
 **prefix renumbering**
 
 最后，前缀重编号（prefix renumbering）机制允许IPv6网络从一个前缀变为另一个时，进行前缀透明重编号。与IPv4中同样的全球IP地址可由多个服务提供商进行通告不同，IPv6地址空间的严格聚合阻止了服务提供商对不属于其组织的前缀进行通告（Unlike in IPv4, where the same global IP address can be advertised by multiple providers, the strict aggregation of the IPv6 address space prevents providers from advertising prefixes that do not belong to their organization）。
@@ -691,7 +694,7 @@ AD	<b>3FFF:1234:ABCD:9012::/64</b> [LA] Valid lifetime 2592000, preferred lifeti
 
 关键字`[anycast]`用于配置一个IPv6任意播地址。和先前指出的那样，任意播分址允许将同一个公共地址（the same common address）分配到多个路由器接口。主机使用从路由协议度量值上看离它们最近的任意播地址。任意播配置超出CCNA考试要求范围，不会在本模块进行演示。
 
-`[autoconfig <default>]`关键字开启无状态自动配置（SLAAC）。如用到该关键字，路由器将动态学习链路上的前缀，之后将EUI-64地址加到所有学习到的前缀上。`[default]`关键字是一个允许安装一条默认路由的可选关键字（the `<default>` keyword is an optional keyword that allows a default route to be installed）。下面的配置样例，演示了如何在某个路由器接口上开启无状态自动配置，同时额外地允许安装上默认路由。
+`[autoconfig <default>]`关键字开启SLAAC。如用到该关键字，路由器将动态学习链路上的前缀，之后将EUI-64地址加到所有学习到的前缀上。`[default]`关键字是一个允许安装一条默认路由的可选关键字（the `<default>` keyword is an optional keyword that allows a default route to be installed）。下面的配置样例，演示了如何在某个路由器接口上开启无状态自动配置，同时额外地允许安装上默认路由。
 
 ```
 R2(config)#ipv6 unicast-routing
@@ -726,7 +729,7 @@ FastEthernet0/0 is up, line protocol is up
 [Truncated Output]
 </pre>
 
-在上面的输出中，注意到尽管接口上没有配置显式的IPv6地址，还是动态地为该路由器经由侦听RA报文所发现的子网，配置了一个EUI-64地址。每个这些前缀的计时器，都继承自通告RA报文的那台路由器。为了进一步验证无状态自动配置，可以使用`show ipv6 route`命令，来验证到首选通告路由器本地链路地址的默认路由，如下面所演示的那样。
+在上面的输出中，注意到尽管接口上没有配置显式的IPv6地址，还是动态地为经由侦听RA报文所发现的子网，配置了一个EUI-64地址。每个这些前缀的计时器，都继承自通告RA报文的那台路由器。为了进一步验证无状态自动配置，可以使用`show ipv6 route`命令，来验证到首选通告路由器本地链路地址的默认路由，如下面所演示的那样。
 
 <pre>
 R2#show ipv6 route ::/0
@@ -740,7 +743,7 @@ Codes:	C - Connected, L - Local, S - Static, R - RIP, B - BGP
 	via FE80::20C:CEFF:FEA7:F3A0, FastEthernet0/0</b>
 </pre>
 
-在命令`ipv6 address`之后，关键字`[dhcp]`用于配置该路由器接口使用有状态自动配置（也就是DHPCv6），来请求该接口的分址配置。在此配置下，有着一个额外的关键字，`[rapid-commit]`, 同样可以追加到此命令之后，以允许地址分配及其它配置信息的二报文交换快速方式（the two-message exchange method）。
+在命令`ipv6 address`之后，关键字`[dhcp]`用于配置该路由器接口使用有状态自动配置（也就是DHPCv6），来请求该接口的分址配置。在此配置下，有着一个额外的关键字，`[rapid-commit]`, 同样可以追加到此命令之后，以开启地址分配及其它配置信息的二报文交换快速方式（the two-message exchange method）。
 
 再回到讨论主题，在`ipv6 address`命令下，关键字`[eui-64]`用于为某个接口配置一个IPv6地址，并在地址的低64位使用一个EUI-64地址而在该接口上开启IPv6处理。默认情况下，**本地链路、站点本地以及IPv6无状态自动配置都用到EUI-64格式来构造其各自的IPv6地址**。EUI-64分址**将48位MAC地址扩展到一个64位地址**。通过两步实现该扩展，这两步将在下一段进行说明。该过程就叫作无状态自动配置（stateless autoconfiguration），或SLAAC。
 

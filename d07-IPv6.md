@@ -251,7 +251,7 @@ IPv6地址可像下面这三种方式进行表示。
 
 **The Different IPv6 Address Types**
 
-**IPv4支持4中不同类别的地址，分别是任意播（Anycast）、广播(Broadcast)、多播(Multicast)及单播(Unicast)地址**。尽管在本教程之前的模块中并未用到任意播一词, 但请仍要记住，**任意播地址并非特殊类型的地址**。相反，**一个任意播地址简单地就是一个分配给多个接口的IP地址**。常见的使用了任意播的技术包括IP多播应用(IP Multicast implementations)，以及6to4中继应用(6to4 relay implementation)。
+**IPv4支持4中不同类别的地址，分别是任意播（Anycast）、广播(Broadcast)、多播(Multicast)及单播(Unicast)地址**。尽管在本教程之前的模块中并未用到任意播一词, 但要记住，**任意播地址并非特殊类型的地址**。相反，**一个任意播地址简单地就是一个分配给多个接口的IP地址**。常见的使用了任意播的技术包括IP多播应用(IP Multicast implementations)，以及6to4中继应用(6to4 relay implementation)。
 
 >**注意：** 6to4是一种IPv4迁移到IPv6的过渡机制。对于CCNA考试来说，只需知道有这么个东西就行了。
 

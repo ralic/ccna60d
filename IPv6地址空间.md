@@ -20,11 +20,13 @@
 
         **链路上的单播地址空间， Link Scoped Unicast Address Space**
 
+    - `fec0::/10`
+
     - `ff00::/8`
 
         `ff00::` - `ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff`
 
-        **多播地址空间, Multicast**
+        **多播地址空间, Multicast**, 该段中由IANA分配的地址在这里进行了登记：[http://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml](http://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml)
 
 + 全部IPv6地址空间
 
@@ -140,7 +142,7 @@
 
         `fec0::` - `feff:ffff:ffff:ffff:ffff:ffff:ffff:ffff`
 
-        **为IETF所保留, Reserved by IETF**
+        **为IETF所保留, Reserved by IETF**。 [RFC38979](http://www.iana.org/go/rfc3879)中弃用，先前的站点本地范围地址前缀。
 
     - `ff00::/8`
 

@@ -834,9 +834,9 @@ FastEthernet0/0 is up, line protocol is up
 
 绝不用担心会用完每个子网的主机位，因为每个子网有超过2的64次幂的主机。任何组织要用完这些子网都是不大可能的，而就算发生了这种情况，也可以轻易地从ISP那里要一个前缀。
 
-比如我们说分得了全球路由前缀（the global routing prefix）`0:123:abc/48`。该地址占用了一个完整IPv6地址的三个区段，而每个区段或4位字节（quartet）则是16位，那么到目前为止就用了48位。主机部分则需要64位，留下16位用于子网的分配。
+比如我们说分得了全球路由前缀（the global routing prefix）`0:123:abc/48`。该地址占用了一个完整IPv6地址的三个区段，而每个区段或4位16进制字符（quartet）则是16位，那么到目前为止就用了48位。主机部分则需要64位，留下16位用于子网的分配。
 
-可以简单的从零（子网零也是合法的）开始以十六进制数下去。对于主机来说，也可以这样做，除非想要将头几个地址留给网段上的服务器，比如说。
+可以简单的从零（子网零也是合法的）开始以十六进制数下去。对于主机来说，也可以这样做，除非比如说想要将头几个地址留给网段上的服务器。
 
 用一个更简单的前缀来打比方吧 -- `2001:123:abc/48`。第一个子网就是全零，当然，每个子网上的第一台主机也可以是全零，这也是合法的（只要不保留IPv6中的全0s和全1s地址）。又会将全零主机表示为缩写形式的`::`。那么这里就有开头的几个子网及主机地址。
 
@@ -882,7 +882,7 @@ FastEthernet0/0 is up, line protocol is up
 
 <pre>2001:123:abc:<b>8b00</b>:0000:0000:0000:0000/56</pre>
 
-上面对位界限分离的地方进行了加粗（I've blod the quartet where the bit boundary is broken）。在匆忙中及考试中时间上的压力下，可能会完全忘记这重要的一步。请记住也要将下面这个地址（第一个子网上的第一台主机）写作这样。
+上面对位界限分离的地方进行了加粗（I've made the quartet bold where the bit boundary is broken）。在匆忙中及考试中时间上的压力下，可能会完全忘记这重要的一步。请记住也要将下面这个地址（第一个子网上的第一台主机）写作这样。
 
 <pre>2001:123:abc:<b>8b00</b>::/56</pre>
 
@@ -892,7 +892,7 @@ FastEthernet0/0 is up, line protocol is up
 
 那么上面这个缩写就是非法的了。
 
-也可以从主机部分借用位来用于子网划分，但绝没有理由这么做，同时这么做也会破坏采行发明IPv6而带来的可资利用的那些众多特性的能力，包括无状态自动配置（You can steal bits from the host portion to use for subnets, but there should never be a reason to and it would break the ability to use many of the features IPv6 was invented to utilise, including stateless autoconfiguration）。
+也可以从主机部分借用位来用于子网划分，但绝没有理由这么做，同时这么做也会破坏采行发明IPv6而带来的可资利用的那些众多特性的能力，包括SLAAC（You can steal bits from the host portion to use for subnets, but there should never be a reason to and it would break the ability to use many of the features IPv6 was invented to utilise, including stateless autoconfiguration）。
 
 ##IPv6和IPv4的比较
 
@@ -902,7 +902,7 @@ FastEthernet0/0 is up, line protocol is up
 
 + IPv6有着一个扩展的地址空间，从32位扩展到了128位, IPv6 has an expanded address space, from 32 bits to 128bits
 + IPv6使用十六进制表示法，而不是IPv4中的点分十进制表示法, IPv6 uses hexadecimal notation instead of dotted-decimal notation(as in IPv4)
-+ 因为采用了扩展的地址空间，IPv6地址是全球唯一地址，从而消除了NAT的使用需求, IPv6 addresses are globally unique due to the extended address space, eliminating the need for NAT
++ 因为采用了扩充的地址空间，IPv6地址是全球唯一地址，从而消除了NAT的使用需求, IPv6 addresses are globally unique due to the extended address space, eliminating the need for NAT
 + IPv6有着一个固定的头部长度（40字节），允许厂商在交换效率上进行提升, IPv6 has a fixed header length(40 bytes), allowing vendors to improve switching efficiency
 + IPv6通过在IPv6头部和传输层之间放入扩展头部，而实现对一些增强选项（这可以提供新特性）的支持, IPv6 supports enhanced options(that offer new features)by placing extension headers between the IPv6 header and the Transport Layer header
 + IPv6具备地址自动配置的能力，提供无需DHCP服务器的IP地址动态分配, IPv6 offers address autoconfiguration, providing for dynamic assignment of IP addresses even without a DHCP server
@@ -911,7 +911,7 @@ FastEthernet0/0 is up, line protocol is up
 + IPv6具备在往目的主机发送数据包之前的路径MTU发现功能，从而消除碎片的需求, IPv6 offers MTU path discovery before sending packets to a destination, eliminating the need for fragmentation
 + IPv6支持站点多处分布，IPv6 supports site multi-homing
 + IPv6使用ND（邻居发现，Neighbor Discovery）协议取代ARP，IPv6 uses the ND protocol instead of ARP
-+ IPv6使用AAAA DNS记录，取代IPv4中的A记录, IPv6 uses AAA DNS records instead of A records (as in IPv4)
++ IPv6使用AAAA DNS记录，取代IPv4中的A记录, IPv6 uses AAAA DNS records instead of A records (as in IPv4)
 + IPv6使用站点本地分址，取代IPv4中的RFC 1918， IPv6 uses Site-Local addressing instead of RFC 1918(as in IPv4)
 + IPv4和IPv6使用不同的路由协议, IPv4 and IPv6 use different routing protocols
 + IPv6提供了任意播分址, IPv6 provides for Anycast addressing

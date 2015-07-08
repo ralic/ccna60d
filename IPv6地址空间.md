@@ -22,6 +22,11 @@
 
     - `fec0::/10`
 
+        `fec0::` - `feff:ffff:ffff:ffff:ffff:ffff:ffff:ffff`
+
+        **为IETF所保留, Reserved by IETF**。 [RFC38979](http://www.iana.org/go/rfc3879)中弃用，先前的站点本地范围地址前缀。
+
+
     - `ff00::/8`
 
         `ff00::` - `ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff`

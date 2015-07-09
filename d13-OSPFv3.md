@@ -23,22 +23,22 @@
 
 **OSPF Version 3**
 
-OSPFv3定义在RFC 2740中，而其功能与OSPFv2相同，不过OSPFv3显式地是为IPv6路由协议设计（OSPFv3 is defined in RFC 2740 and is the counterpart of OSPFv2, but it is designed explicitly for the IPv6 routed protocol）。该版本号取自此种OSPF数据包中的版本字段，该字段已被更新到数字3. OSPFv3规格主要是基于OSPFv2, 但因为加入的对IPv6的支持，而包含了一些额外的功能增强。
+OSPFv3定义在RFC 2740中，而其功能与OSPFv2相同，不过OSPFv3显式地是为IPv6路由协议设计（OSPFv3 is defined in RFC 2740 and is the counterpart of OSPFv2, but it is designed explicitly for the IPv6 routed protocol）。该版本号取自此种OSPF数据包中的版本字段，该字段已被更新到数字3. OSPFv3规格主要是基于OSPFv2, 但因为加入对IPv6的支持，而包含了一些额外功能增强。
 
-OSPFv2和OSPFv3能在同一台路由器上运行。也就是说，同一台物理路由器可同时路由IPv4和IPv6流量，因为每个地址家族都有不同的SPF进程；这就是说，同样SPF算法对OSPFv2和OSPFv3分别有一个单独的实例。OSPFv2和OSPFv3有以下共同点。
+OSPFv2和OSPFv3能在同一台路由器上运行。也就是说，同一台物理路由器可同时路由IPv4和IPv6流量，因为每个地址家族都有不同的SPF进程；这就是说，同样SPF算法对OSPFv2和OSPFv3分别有一个单独实例。OSPFv2和OSPFv3有以下共同点。
 
 + OSPFv3继续使用着为OSPFv2所用到的那些数据包。包括数据库说明数据包（Database Description, DBD）, 链路状态请求数据包（Link State Requests, LSRs），链路状态更新数据包（Link State Updates, LSUs）, 以及链路状态通告数据包（Lins State Advertisements, LSAs）
-+ OSPSv3中的动态邻居发现机制及邻接关系形成过程（也就是OSPF所经历的从初始或尝试建立邻接关系到邻接关系完整建立的过程），仍然和OSPFv2中一样
++ OSPSv3中的动态邻居发现机制及邻接关系形成过程（OSPF所经历的从初始、尝试建立邻接关系到邻接关系完整建立的过程），仍然和OSPFv2中一样
 + 在不同通信技术方面，OSPFv3仍然保持对RFC的遵循（OSPFv3 still remains RFC-compliant on different technologies）。比如，若在某条PPP链路上开启OSPFv3, 那么组网类型仍然被指定为点对点（Point-to-Point）。同样，如在FR上开启OSPFv3, 默认组网类型仍然是非广播类型（Non-Broadcast）。此外，在思科IOS软件中，默认组网类型仍可通过使用不同的、特定于接口的命令，手动进行改变。
 + OSPFv2和OSPFv3使用同样的LSA散布及老化机制（the same LSA flooding and aging mechanism）.
-+ 与OSPFv2类似，OSPFv3的路由器ID（rid）仍然需要使用一个32位的IPv4地址。当在某台运行着双栈（dual-stack, 也就是同时有IPv4和IPv6）的路由器上开启OSPFv3时， 那么与在OSPFv2中为思科IOS路由器所用到的同样的RID选定过程，也用于确定OSPFv3中要用到的路由器ID。但是，**当在一台没有接口运行着IPv4的路由器上开启OSPFv3时，就强制性要求使用路由器配置命令`router-id`来手动配置OSPFv3的路由器ID了**。
-+ OSPFv3链路ID表明，这些链路并非IPv6专用的，而是仍然基于一个32位IPv4地址，跟OSPFv2中一样。
++ 与OSPFv2类似，OSPFv3的路由器ID（rid）仍然需要使用一个32位的IPv4地址。当在某台运行着双栈（dual-stack, 也就是同时有IPv4和IPv6）的路由器上开启OSPFv3时， 那么与在OSPFv2中为思科IOS路由器所用到的同样RID选定过程，也用于确定OSPFv3中要用到的路由器ID。但是，在一台没有接口运行着IPv4的路由器上开启OSPFv3时，就**强制性要求使用路由器配置命令`router-id`来手动配置OSPFv3的路由器ID**。
++ OSPFv3链路ID表明，这些链路并非IPv6专用，同时这些链路ID跟OSPFv2中一样，仍然基于一个32位IPv4地址。
 
-在OSPFv2与OSPFv3有着这些相同点同时，重要的是掌握那些存在的你必须熟悉的明显不同点。包括下面这些。
+在OSPFv2与OSPFv3有着这些相同点的同时，重要的是掌握那些你必须熟悉的存在的明显不同点。包括下面这些。
 
-+ 以与EIGRP类似的方式，OSPFv3是在链路上运行的（in a manner similar to EIGRP, OSPFv3 runs over a link）。这就打消了为OSPFv3而执行网络声明语句的需求。取而代之的是，**通过使用接口配置命令`ipv6 router ospf [process id] area [area id]`，来将该链路配置为某个OSPF进程的组成部分**。但是，与OSPFv2类似，OSPF进程号仍然是通过在全局配置模式中，使用全局配置命令`ipv6 router ospf [process id]`进行指定。
++ 以与EIGRP类似的方式，OSPFv3是在链路上运行的（in a manner similar to EIGRP, OSPFv3 runs over a link）。这就打消了OSPFv3中执行网络声明语句的需求。取而代之的是，**通过使用接口配置命令`ipv6 router ospf [process id] area [area id]`，来将该链路配置为某个OSPF进程的组成部分**。但是，与OSPFv2类似，OSPF进程号仍然是通过在全局配置模式中，使用全局配置命令`ipv6 router ospf [process id]`进行指定。
 + **OSPFv3使用本地链路地址（Link-local address）来区分OSPFv3邻接关系**。与EIGRPv6类似，OSPFv3路由的下一跳地址将反映邻接的或邻居路由器的本地链路地址。
-+ OSPFv3**引入了两种新的OSPF LSA类型**。分别是**链路LSA**（the Link LSA），被定义为LSA类型0x0008(LSA Type 0x0008，或LSA Type 8）, 以及**区域内前缀LSA**（the Intra-Area-Prefix LSA），被定义为LSA类型0x0029(LSA Type 0x0029, 或LSA Type 29）。**链路LSA提供了路由器的本地链路地址，及加诸路由器上的所有IPv6前缀**。每条链路都有一个链路LSA。可能有多个带有不同**链路状态IDs**的区域内前缀LSAs。那么，区域LSA散布范围就既可能是与应用自网络LSA的所经过网络的相关前缀，也可能是参考自路由器LSA的某台路由器或末梢区域相关前缀（There can be multiple Intra-Area-Prefix LSAs with different Link-State IDs. The Area flooding scope can therefore be an associated prefix with the transit network referencing a Network LSA or it can be an associated prefix with a router or Stub referencing a Router LSA）。
++ OSPFv3**引入了两种新的OSPF LSA类型**。分别是**链路LSA**（the Link LSA），被定义为LSA类型0x0008(LSA Type 0x0008，或LSA Type 8）, 以及**区域内前缀LSA**（the Intra-Area-Prefix LSA），被定义为LSA类型0x0029(LSA Type 0x0029, 或LSA Type 29）。**链路LSA提供了路由器的本地链路地址，及加诸路由器上的所有IPv6前缀**。每条链路都有一个链路LSA。可能有多个带有不同**链路状态IDs**的区域内前缀LSAs。因此，区域LSA散布范围就既可能是与应用自网络LSA的所经过网络的相关前缀网络，也可能是参考自路由器LSA的某台路由器或末梢区域相关前缀（There can be multiple Intra-Area-Prefix LSAs with different Link-State IDs. The Area flooding scope can therefore be an associated prefix with the transit network referencing a Network LSA or it can be an associated prefix with a router or Stub referencing a Router LSA）。
 + OSPFv2与OSPFv3所用到的传输方式是不同的。OSPFv3报文是用（封装成）IPv6数据包发出的。
 + OSPFv3使用两个标准IPv6多播地址。多播地址`FF02::5`与OSPFv2中用到的所有SPF路由器（AllSPFRouters）地址`224.0.0.5`等价，同时多播地址`FF02::6`就是所有DR路由器（AllDRRouters）地址，且与OSPFv2中用到的`224.0.0.6`组地址等价。（这将在ICND2部分讲到）。
 + OSPFv3利用到IPv6内建的IPSec的能力，并将AH和ESP扩展头部用着一种的认证机制，而不是想在OSPFv2中可配置的为数众多的认证机制（OSPFv3 leverages the built-in capabilities of IPSec and uses the AH and ESP extension headers as an authentication mechanism instead of the numerous authentication mechanisms configurable in OSPFv2）。因此，在OSPFv3的OSPF数据包中，那些认证和AuType字段就被移除了。
@@ -77,13 +77,13 @@ R1(config-if)#exit
 
 接着上一部分，上部分强调了OSPFv2和OSPFv3之间配置差异，那么这部分就要过一遍那些在思科IOS软件中开启和验证OSPFv3功能及路由的步骤。在思科IOS软件中，需要依序采行下面这些步骤，来开启OSPFv3路由。
 
-1. 使用全局配置命令`ipv6 unicast-routing`，来全局性地开启IPv6路由。而在思科IOS软件中，IPv6路由默认是关闭的。
+1. 使用全局配置命令`ipv6 unicast-routing`，来全局性地开启IPv6路由。在思科IOS软件中，IPv6路由默认是关闭的。
 2. 使用全局配置命令`ipv6 router ospf [process ID]`, 配置一或多个的OSPFv3进程。
-3. 如路由器上没有配置了IPv4地址的运行接口，就要使用路由器配置命令（router configuration command）`router-id [IPv4 Address]`， 手动配置OSPFv3路由器ID（Router ID，RID）。
+3. 如路由器上没有配置IPv4地址的运行接口，就要使用路由器配置命令（router configuration command）`router-id [IPv4 Address]`， 手动配置OSPFv3路由器ID（Router ID，RID）。
 4. 在需要的接口上（on the desired interfaces），使用接口配置命令`ipv6 address`及`ipv6 enable`, 对这些接口开启IPv6。
 5. 使用接口配置命令`ipv6 ospf [process ID] area [area ID]`，在接口下开启一或更多的OSPFv3进程。
 
-第一个基本的多区域OSPFv3配置示例，建立在下图13.1所演示的拓扑之上。
+第一个基础多区域OSPFv3配置示例，建立在下图13.1所演示的拓扑之上。
 
 ![在思科IOS软件中配置基本多区域OSPFv3](images/1301.png)
 
@@ -103,7 +103,7 @@ R1(config-if)#ipv6 ospf 1 Area 0
 R1(config-if)#exit
 ```
 
-而按照同样顺序步骤，就像下面这样在路由器R3上配置好OSPFv3路由。
+而按照同样顺序的步骤，像下面这样在路由器R3上配置好OSPFv3路由。
 
 ```
 R3(config)#ipv6 unicast-routing
@@ -122,7 +122,7 @@ R3(config-if)#ipv6 ospf 3 Area 1
 R3(config-if)#exit
 ```
 
-按照在两台路由器上OSPFv3的配置，就可以使用命令`show ipv6 ospf neighbor`, 来检查OSPFv3的邻接状态，在R1上如下所示。
+依据上述两台路由器上OSPFv3的配置，就可以使用命令`show ipv6 ospf neighbor`, 来检查OSPFv3的邻接状态，在R1上如下所示。
 
 ```
 R1#show ipv6 ospf neighbor

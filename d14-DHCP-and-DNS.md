@@ -80,4 +80,14 @@ DHCP服务器可被配置为在一个名为租期的特定时期，赋予某台�
 3. **DHCP确认数据包**（DHCP ACK packet）, 选中的那台DHCP服务器发出另一个广播报文，来确认给那台特定客户端的地址分配，再度用到UDP源端口bootps 67及目的端口bootpc 68。
 
 
-###
+###DHCP保留
+
+**DHCP Reservations**
+
+DHCP服务器可被配置为以几种不同方式提供IP地址，包括下面这些。
+
++ 动态分配, Dynamic allocation
++ 自动分配, Automatic allocation
++ 静态分配, Static allocation
+
+通过DHCP指派地址的一个十分常用方法，就是采用动态分配过程，

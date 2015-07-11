@@ -51,7 +51,7 @@ DHCP通过在网络上给主机自动分配IP信息，简化了网络管理任�
 
 *图14.1 -- 主机请求IP配置信息*
 
-DHCP具体使用UDP端口67和68，来在网络上通信，而且，尽管在需要时，路由器也可实现此功能，但通常都会使用实际服务器作为DHCP服务器。在需要时，路由器同样可以配置为从DHCP服务器取得其IP地址，但很少这样做。配置这个特性的命令如下。
+DHCP具体使用UDP端口67和68，来在网络上通信，同时，尽管在需要时路由器也可实现DHCP功能，但通常都会使用具体服务器作为DHCP服务器。在需要时，路由器同样可以配置为从DHCP服务器取得其接口IP地址，但很少这样做。配置这个特性的命令如下。
 
 `Router(config-if)#ip address dhcp`
 
@@ -75,7 +75,7 @@ DHCP服务器可被配置为在一个名为租期的特定时期，赋予某台�
 
     **DHCP提议数据包**（DHCP Offer packet），本地网络上的DHCP服务器看到由客户端发出的广播发现报文（the broadcasted Discover message），就用UDP源端口bootps 67及目的端口bootpc 68, 同样以广播地址的形式，发回一个响应（就是DHCP提议数据包）。之所以同样以广播地址形式，是因为客户端此时仍然没有IP地址，而无法接收单播数据包。
 
-2. **DHCP请求数据包**（DHCP Request packet）, 一旦客户端工作站收到由DHCP服务器做出的提议（an offer made by the DHCP server），它就会发出一个广播（用于告知所有DHCP服务器，它已接受了来自某台服务器的提议）DHCP请求报文到某台特定的DHCP服务器，并再度使用UDP源端口bootpc 68及目的端口bootps 67。客户端可能会收到来自多台DHCP服务器的提议，但它只需单独一个IP地址，所以它必需选择一台DHCP服务器（基于服务器标识），而选择通常都是按照"先到，先服务"原则完成的（on a "first-come, first-served" basis）。
+2. **DHCP请求数据包**（DHCP Request packet）, 一旦客户端工作站收到由DHCP服务器做出的提议（an offer made by the DHCP server），它就会发出一个广播（用于告知所有DHCP服务器，它已接受了来自某台服务器的提议）DHCP请求报文到某台特定的DHCP服务器，并再度使用UDP源端口bootpc 68及目的端口bootps 67。**客户端可能会收到来自多台DHCP服务器的提议，但它只需单独一个IP地址，所以它必需选择一台DHCP服务器**（基于服务器标识），而选择通常都是按照"先到，先服务"原则完成的（on a "first-come, first-served" basis）。
 
 3. **DHCP确认数据包**（DHCP ACK packet）, 选中的那台DHCP服务器发出另一个广播报文，来确认给那台特定客户端的地址分配，再度用到UDP源端口bootps 67及目的端口bootpc 68。
 
@@ -144,5 +144,68 @@ DHCP租期关乎每次DHCP分配，限定允许用户使用一个分配到的1P�
 租借过程有几个相关的计时器，因此可以肯定在所有网络设备上总是会有一个更新过的IP地址。下面是两个重要的DHCP计时器。
 
 + **续借（T1）计时器**（renewal(T1) timer, 默认是租期的一半）：在工作站取得一个IP地址后，此计时器就开始计时，当到达租期的50%时，DHCP客户端将向来源DHCP服务器重申租约。
-+ **重新绑定（T2）计时器**（rebinding(T2) timer, 默认是租期的87.5%）：这第二个计时器用在DHCP服务器未有在续借计时器超时后，进行回应或确认的情形。该计数器指出，如租期已过7/8, 那么客户端将尝试找到另一能够提供DHCP地址的DHCP服务器（发出一个DHCP请求）。
++ **重新绑定（T2）计时器**（rebinding(T2) timer, 默认是租期的87.5%）：这第二个计时器用在DHCP服务器未有在续借计时器超时后，进行回应或确认的情形。该计数器指出，如租期已过7/8, 那么客户端将尝试找到（发出一个DHCP请求）另一能够提供DHCP地址的DHCP服务器。
+
+有了租借过程及上述有关计时器，就可以肯定总是会及时拥有一个IP地址，且连带不会有任何停止时间，同时自动地有着一种构建于DHCP过程中的冗余机制。
+
+图14.3中展示了T1及T2计时器与租期的关系。
+
+![DHCP租期计时器](images/1403.png)
+
+*图14.3 -- DHCP租期计时器*
+
+###DHCP选项
+
+**DHCP Options**
+
+在DHCP中有一个特殊字段，可用于帮助扩展一些自动配置过程的性能。可在此字段中放入在DHCP RFC中给出的许多不同配置选项。
+
+> **注意：**BOOTP选项曾被称作“厂商扩展”。
+
+DHCP提供了256选项值，其中仅254个是可用的，因为0是垫底选项，而255是最后选项（0 is the pad option and 255 is the end option）。许多DHCP选项都是通常所了解的经常使用到的参数，包括下面这些。
+
++ 子网掩码，subnet mask
++ 域名服务器，domain name server
++ 域名，domain name
+
+这些年来，已加入一些额外的DHCP选项，尤其是VoIP用途的那些选项，比如下面这些。
+
++ 选项129: 呼叫服务器IP地址
++ 选项135: 话机相关应用的HTTP代理服务器
+
+所有这些选项都是直接在DHCP服务器上配置，但不是所有DHCP服务器都提供了设置DHCP选项的能力。如网络管理员要用到这些特性，就应该采用一种企业级别的DHCP服务器。在将小型路由器作为家庭办公环境的DHCP服务器是，就可能不会有这些功能上的益处。
+
+##配置DHCP
+
+**Configuring DHCP**
+
+###思科路由器上的DHCP服务器
+
+**DHCP Servers on Cisco Routers**
+
+第一步就是在路由器上开启DHCP服务。这是通过使用`service dhcp`命令完成的，如下面所示（as exemplified below）。
+
+```
+Router#configure terminal
+Enter configuration commands, one per line. End with CNTL/Z.
+Router(config)#service dhcp
+```
+
+下一步就是创建一个DHCP池，该DHCP池定义出将分配给客户端的IP地址池。在本例中，名为`SUBNET_A`的池将提供来自范围`192.168.1.0/24`的IP地址。
+
+```
+Router(config)#ip dhcp pool SUBNET_A
+Router(dhcp-config)#network 192.168.1.0 255.255.255.0
+Router(dhcp-config)#default-router 192.168.1.1
+Router(dhcp-config)#dns-server 8.8.8.8
+Router(dhcp-config)#domain-name Network+
+Router(dhcp-config)#lease 30
+```
+
+该DHCP池配置模式（the DHCP Pool Configuration mode）同时也是配置其它DHCP选项的地方。在上面的配置输出中，配置了以下这些参数。
+
++ 默认网关：192.168.1.1(指派到该路由器作为DHCP服务器所服务的网络中的路由器接口)
++ DNS服务器：8.8.8.8
++ 域名：Network+
++ 租期：30天
 

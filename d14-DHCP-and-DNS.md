@@ -204,8 +204,30 @@ Router(dhcp-config)#lease 30
 
 该DHCP池配置模式（the DHCP Pool Configuration mode）同时也是配置其它DHCP选项的地方。在上面的配置输出中，配置了以下这些参数。
 
-+ 默认网关：192.168.1.1(指派到该路由器作为DHCP服务器所服务的网络中的路由器接口)
-+ DNS服务器：8.8.8.8
++ 默认网关：`192.168.1.1`(指派到该路由器作为DHCP服务器所服务的网络中的路由器接口)
++ DNS服务器：`8.8.8.8`
 + 域名：Network+
 + 租期：30天
+
+在需要时，也可以配置一些从`192.168.1.0/24`范围中排除的地址。我们就说要排除路由器接口IP地址（`192.168.1.1`）及`192.168.1.250`到`192.168.1.255`地址范围，从该范围就可手动为网络中的服务器分配地址。这是通过下面的配置完成的。
+
+```
+Router(config)#ip dhcp excluded-address 192.168.1.1
+Router(config)#ip dhcp excluded-address 192.168.1.250 192.168.1.255
+```
+
+可使用下面的命令来查看当前由该路由器DHCP服务器所服务的客户端。
+
+```
+Router#show ip dhcp binding
+Bindings from all pools not associated with VRF:
+IP address      Client-ID/  Lease expiration    Type    Hardware address/
+192.168.1.2     Mar 02 2014 12:07 AM       Automatic    0063.6973.636f.2d63
+```
+
+在上面的输出中，由该DHCP服务器服务的是单独一台客户端，同时分到到DHCP范围的第一个非排除IP地址：192.168.1.2。还可以看到租期超时日期及设备MAC地址。
+
+###思科路由器上的DHCP客户端
+
+**DHCP Clients on Cisco Routers**
 

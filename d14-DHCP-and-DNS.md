@@ -261,3 +261,69 @@ FastEthernet0/1 unassigned  YES unset   administratively down   down
 
 为实际掌握在本模块中介绍的这些知识点，将生成一些上述示例中涉及到设备的流量捕获。在配置好DHCP服务器及客户端工作站启动起来后，就会发生4步的DHCP过程，可在下面的截屏中观察到。
 
+![DHCP 4步过程](images/1404.png)
+
+*图14.4 -- DHCP 4步过程*
+
+下面可以观察到DHCP发现数据包所包含的部分。
+
+![DCHP发现数据包](images/1405.png)
+
+*图14.5 -- DHCP发现数据包*
+
+正如你在截屏中看到的，该数据包（DHCP Discover packet）是由客户端发出，将其广播到网络上（目的地址是`255.255.255.255`）。同时还看到其报文类型为“Boot Request（1)”。
+
+下一个数据包就是DHCP提议数据包（DHCP Offer packet），如下面所示。
+
+![DHCP提议数据包](images/1406.png)
+
+*图14.6 -- DHCP提议数据包*
+
+该数据包是由服务器（源IP：192.168.1.1）发出到广播地址（目的地址：255.255.255.255）,同时包含了提议的IP地址（192.168.1.2）。同时也可看到报文类型为“Boot Reply(2)”。
+
+第三个数据包是DHCP请求数据包（DHCP Request packet）。
+
+![DHCP请求数据包](images/1407.png)
+
+*图14.7 -- DHCP请求数据包*
+
+DHCP请求数据包是由客户端发出到广播地址。可以看到报文类型是“Boot Request(1)”。该数据包与最初的DHCP发现数据包类似，但包含了一个非常重要的字段，就是50选项: 被请求的IP地址（192.168.1.2）（a very important field, which is Option 50: Requested IP Address(192.168.1.2)）。这就是在DHCP提议数据包中由DHCP服务器所提供的同一IP地址，而该客户端对其进行了确认和接受。
+
+DHCP分配过程的最后数据包就是由服务器发出的DCHP确认数据包了(the DHCP ACK packet)。
+
+![DHCP确认选项数据包](images/1408.png)
+
+*图14.8 -- DHCP确认选项数据包*
+
+该数据包发自DHCP服务器并被广播到网络上；其同样包含了在上面的截屏中所看到的一些额外字段。
+
++ DHCP服务器标识：该DHCP服务器的IP地址（192.168.1.1）
++ 路由器上配置的所有选项。
+    - 租期：30天（以及派生出的早前讨论的过续租时间和重新绑定时间值）
+    - 子网掩码：`255.255.255.0`
+    - 默认网关（路由器）: `192.168.1.1`
+    - DNS服务器：`8.8.8.8`
+    - 域名：Network+
+
+##DHCP故障排除
+
+**Troubleshooting DHCP Issues**
+
+跟NAT一样，DHCP故障基本上总是因为错误配置造成的（开玩笑说就是第8层问题，意思是人为疏忽，jokingly referred to as Layer 8 issue, meaning somebody messed up）。
+
+命令`service dhcp`默认是开启的，但有些时候其已被网络管理员因为某些原因关闭了。（作者就曾遇到过有管理员在他们的路由器上敲入`no ip routing`命令后因为紧急的路由故障打电话给思科 -- 真的！）
+
+如在另一子网上使用一台服务器来管理DHCP配置，就要允许路由器放行DHCP数据包。在地址分配过程中，DHCP用到广播报文（而路由器是不会转发广播报文的），那么就**需要将DHCP服务器的IP地址加入到路由器，以令到路由器将该广播报文作为单播数据包进行转发**。**命令`ip helper-address`**就可以实现这点。这是另一个考试喜欢的问题哦。
+
+同样可以使用下面的`debug`命令作为排错过程中的部分。
+
+```
+debug ip dhcp server events
+debug ip dhcp server packet
+```
+
+###DNS操作
+
+**DNS Operations**
+
+DNS将主机名映射到IP地址（）

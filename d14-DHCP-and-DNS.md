@@ -204,7 +204,7 @@ Router(dhcp-config)#lease 30
 
 该DHCP池配置模式（the DHCP Pool Configuration mode）同时也是配置其它DHCP选项的地方。在上面的配置输出中，配置了以下这些参数。
 
-+ 默认网关：`192.168.1.1`(指派到该路由器作为DHCP服务器所服务的网络中的路由器接口)
++ 默认网关：`192.168.1.1`(指派到将该路由器作为DHCP服务器所服务网络中的路由器接口地址)
 + DNS服务器：`8.8.8.8`
 + 域名：Network+
 + 租期：30天
@@ -230,4 +230,34 @@ IP address      Client-ID/  Lease expiration    Type    Hardware address/
 ###思科路由器上的DHCP客户端
 
 **DHCP Clients on Cisco Routers**
+
+除了DHCP服务器功能，思科路由器同样允许将其接口配置为DHCP客户端。这就是说接口将使用标准DHCP过程，请求到一个地址，而在特定子网上的任何服务器，都能分配该IP地址。
+
+将一个路由器接口配置为DHCP客户端的命令如下。
+
+```
+Router(config)#int FastEthernet0/0
+Router(config-if)#ip address dhcp
+```
+
+一旦某台DHCP服务器分配了一个IP地址，在路由器控制台上就可以看到下面的通知消息（该消息包含了地址和掩码）。
+
+```
+*Mar 1 00:29:15.779: %DHCP-6-ADDRESS_ASSIGN: Interface FastEthernet0/0 assigned DHCP address 10.10.10.2, mask 255.255.255.0, hostname Router
+```
+
+使用命令`show ip interface brief`，就可以观察到该DHCP分配方式。
+
+```
+Router#show ip interface brief
+Interface       IP-Address  OK? Method  Status                  Protocol
+FastEthernet0/0 10.10.10.2  YES DHCP    up                      up
+FastEthernet0/1 unassigned  YES unset   administratively down   down
+```
+
+###DHCP数据包分析
+
+**DHCP Packet Analysis**
+
+为实际掌握在本模块中介绍的这些知识点，将生成一些上述示例中涉及到设备的流量捕获。在配置好DHCP服务器及客户端工作站启动起来后，就会发生4步的DHCP过程，可在下面的截屏中观察到。
 

@@ -326,4 +326,28 @@ debug ip dhcp server packet
 
 **DNS Operations**
 
-DNS将主机名映射到IP地址（）
+DNS将主机名映射到IP地址（而不是反过来）。这就允许你在web浏览器中浏览一个网址，而无需输入服务器IP地址。
+
+在主机或路由器想要将一个域名解析到IP地址（或反过来将IP地址解析到域名时），DNS用到UDP 53号端口。而在两台DNS服务器之间打算同步或分享它们的数据库时，就使用TCP 53号端口。
+
+##配置DNS
+
+**Configuring DNS**
+
+如想要容许路由器找到web上的某台DNS服务器，就使用命令`ip name-server 1.1.1.1`，或是服务器相应的地址。
+
+也可以将某个主机名设置到路由器上的一个IP地址表中来节省时间，或是令到更易于记住要ping的或是连接到的哪台设备，如下面的输出所示。
+
+```
+Router(config)#ip host R2 192.168.1.2
+Router(config)#ip host R3 192.168.1.3
+Router(config)#exit
+Router#ping R2
+Router#pinging 192.168.1.2
+!!!!!
+```
+
+###DNS故障排除
+
+**Troubleshooting DNS Issues**
+

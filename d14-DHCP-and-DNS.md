@@ -416,3 +416,39 @@ Router(config)#ip dhcp excluded-address 172.16.1.1 172.16.1.10
 Router(config)#
 </pre>
 
+4. 执行一个`ipconfig /all`命令，查看是否有IP地址分配到PC。如旧地址仍在使用，就需要执行一下`ipconfig /renew`命令。
+
+```
+PC>ipconfig /all
+Physical Address................: 0001.C7DD.CB19
+IP Address......................: 172.16.0.1
+Subnet Mask.....................: 255.255.0.0
+Default Gateway.................: 0.0.0.0
+DNS Servers.....................: 0.0.0.0
+```
+
+5. 如想要的话，可回到DHCP地址池配置模式（DHCP Pool Configuration mode），加入一个默认网关及DNS服务器地址，它们也将在主机PC上得到设置。
+
+```
+Router(config)#ip dhcp pool 60days
+Router(dhcp-config)#default-router 172.16.1.2
+Router(dhcp-config)#dns-server 172.16.1.3
+PC>ipconfig /renew
+IP Address......................: 172.16.0.1
+Subnet Mask.....................: 255.255.0.0
+Default Gateway.................: 172.16.1.2
+DNS Server......................: 172.16.1.3
+```
+
+###路由器上的DNS实验
+
+**DNS on a Router lab**
+
+在一台有着某种到互联网连通性的路由器上完成此实验。确保该路由器可以ping通比如Google公司的DNS服务器`8.8.8.8`这样的公网IP地址。将该地址配置为一个名字服务器。
+
+`ip name-server 8.8.8.8`
+
+接着尝试解析一些公网网站名字，比如通过`ping www.cisco.com`。
+
+请访问[www.in60days.com](http://www.in60days.com), 观看我是怎么完成这个实验的。
+

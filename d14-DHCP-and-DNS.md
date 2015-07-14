@@ -410,7 +410,7 @@ Router#pinging 192.168.1.2
 Router#conf t
 Router(config)#ip dhcp pool 60days
 Router(dhcp-config)#network 172.16.0.0 255.255.0.0
-Router1(dhcp-config)#lease 3 3 5    <b>← command won’t work on Packet Trac</b>
+Router1(dhcp-config)#lease 3 3 5    <b>← command won’t work on Packet Trer</b>
 Router1(dhcp-config)#exit
 Router(config)#ip dhcp excluded-address 172.16.1.1 172.16.1.10
 Router(config)#

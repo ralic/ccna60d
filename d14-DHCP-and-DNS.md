@@ -351,3 +351,68 @@ Router#pinging 192.168.1.2
 
 **Troubleshooting DNS Issues**
 
+路由器配置默认将会有一个`ip domain-lookup`命令。如此命令已被关闭，则DNS将不工作。某些时候路由器管理员会因避免在输入错误命令时，等待路由器执行数秒DNS查询，而关闭该命令。可通过下面的命令关闭DNS查询。
+
+`Router(config)#no ip domain-lookup`
+
+访问控制清单（access control lists, ACL）常常拦阻DNS，那么这是另一个故障原因。使用命令`debug domain`，可在路由器上对DNS进行调试。
+
+
+##第14天问题
+
+1. DHCP simplifies network administrative tasks by automatically assigning `_______` to hosts on a network.
+2. DHCP uses UDP ports `_______` and `_______`.
+3. What are the six DHCP states for clients?
+4. Which command will prevent IP addresses `192.168.1.1` to `192.168.1.10` from being used in the pool?
+5. Which command will set a DHCP lease of 7 days, 7 hours, and 7 minutes?
+6. Which command will enable the router to forward a DHCP Broadcast as a Unicast?
+7. DNS uses UDP port `_______`.
+8. Which command will set a DNS server address of `192.168.1.1` on your router?
+9. If the `_______` `_______`-`_______` command has been disabled on your router, then DNS won’t work.
+10. Which command will debug DNS packets on your router?
+
+##第14天问题答案
+
+1. IP information (IP addresses).
+2. 67 and 68.
+3. Initialising, Selecting, Requesting, Bound, Renewing, and Rebinding.
+4. The `ip dhcp excluded-address 192.168.1.1 192.168.1.10`
+5. The `lease 7 7 7` command under DHCP Pool Configuration mode.
+6. The `ip helper-address` command.
+7. 53.
+8. The `ip name-server 192.168.1.1` command.
+9. `ip domain-lookup`.
+10. The `debug domain` command.
+
+##第14天实验
+
+###路由器上的DHCP实验
+
+**拓扑**
+
+![路由器上的DHCP实验拓扑图](images/1409.png)
+
+**实验目的**
+
+学习可如何将路由器用作DHCP服务器。
+
+**实验步骤**
+
+1. 如你使用着家用电脑或笔记本电脑，就将网络适配器设置为自动获取IP地址。在Packet Tracer中也可这样设置。让后使用交叉线将PC连接到路由器的以太网端口。
+
+![网络适配器设置](images/1410.png)
+
+2. 将IP地址`172.16.1.1 255.255.0.0`加入到路由器接口。如忘记了这个怎么配置，就请看看前面的实验。要确保`no shut`该接口。
+
+3. 配置DHCP地址池。接着为地址配置一个3天3小时5分的租期。最后将1到10的地址排除在分配给主机的地址之外。假设这些地址已为其它服务器或接口使用。
+
+<pre>
+Router#conf t
+Router(config)#ip dhcp pool 60days
+Router(dhcp-config)#network 172.16.0.0 255.255.0.0
+Router1(dhcp-config)#lease 3 3 5    <b>← command won’t work on Packet Trac</b>
+Router1(dhcp-config)#exit
+Router(config)#ip dhcp excluded-address 172.16.1.1 172.16.1.10
+Router(config)#
+</pre>
+

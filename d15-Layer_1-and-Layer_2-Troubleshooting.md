@@ -120,7 +120,7 @@ PoE LED只有在Catalyst 2960交换机型号上才能找到。
 
 <table>
 <tr><th>所选模式LED</th><th>端口模式</th><th>说明</th></tr>
-<td><td>1 -- 系统</td><td></td><td></td></td>
+<tr><td>1 -- 系统</td><td></td><td></td></tr>
 <tr><td>2 -- RPS</td><td></td><td>RPS状态</td></tr>
 <tr><td>3 -- 状态</td><td>端口状态</td><td>端口状态（默认模式）</td></tr>
 <tr><td>4 -- 复用</td><td>端口复用情况</td><td>复用模式：全双工或半双工</td></tr>

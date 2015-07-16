@@ -52,4 +52,26 @@ LAN交换一种用在局域网中的包交换形式。LAN交换是在数据链�
 
 **Troubleshooting Link Status Using Light Emitting Diodes(LEDs)**
 
-如可物理接触到交换机，那么LEDs就会是一类有用的排错工具。不同类型的思科Catalyst交换机，提供了不同的LED能力。掌握这些LEDs
+如可物理接触到交换机，那么LEDs就会是一项有用的排错工具。不同类型的思科Catalyst交换机，提供了不同的LED能力。掌握这些LEDs的意义，是Catalyst交换机链路状态及系统排错所不可或缺的部分。思科Catalyst交换机有一些可用于判断链路状态及其它一些诸如系统状态等变量的前面板LEDs。
+
+经由Google"Catalyst 2960 Switch Hardware Installation Guide"，来查看Catalyst 2960型号交换机的思科文档。该安装和配置手册包含了几百页的注记、建议和技术信息。通读一下该文档是值得的，但不要期望从该文档得到CCNA考试大纲的内容（CCNA考试大纲内容在这本书才有）。
+
+![思科2960交换机LEDs，图片版权归思科系统公司](images/1501.png)
+
+<table>
+<tr>
+<td>1</td><td>系统LED</td><td>5</td><td>速率LED</td>
+</tr>
+<tr>
+<td>2</td><td>RPS LED</td><td>6</td><td>PoE LED</td>
+</tr>
+<tr>
+<td>3</td><td>状态LED</td><td>7</td><td>模式按钮</td>
+</tr>
+<tr>
+<td>4</td><td>复用LED</td><td>8</td><td>端口LEDs</td>
+</tr>
+</table>
+
+*图15.1 -- 思科2960交换机LEDs，图片版权归思科系统公司*
+

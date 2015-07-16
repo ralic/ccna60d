@@ -63,7 +63,7 @@ LAN交换一种用在局域网中的包交换形式。LAN交换是在数据链�
 <td>1</td><td>系统LED</td><td>5</td><td>速率LED</td>
 </tr>
 <tr>
-<td>2</td><td>RPS LED</td><td>6</td><td>PoE LED</td>
+<td>2</td><td>冗余电源（redundant power supply, RPS） LED</td><td>6</td><td>PoE LED</td>
 </tr>
 <tr>
 <td>3</td><td>状态LED</td><td>7</td><td>模式按钮</td>
@@ -75,3 +75,87 @@ LAN交换一种用在局域网中的包交换形式。LAN交换是在数据链�
 
 *图15.1 -- 思科2960交换机LEDs，图片版权归思科系统公司*
 
+PoE LED只有在Catalyst 2960交换机型号上才能找到。
+
+**系统LED**
+
+**System LED**
+
+系统LED表明系统通电了的（或是未通电）且正常发挥功能。
+
+下表15.1列出了系统LED颜色及其所表明的状态。
+
+*表15.1 -- 系统LED*
+
+<table>
+<th><td>系统LED颜色</td><td>系统状态</td></th>
+<tr><td>不亮</td><td>系统未通电</td></tr>
+<tr><td>绿色</td><td>系统运行正常</td></tr>
+<tr><td>琥珀色（amber）</td><td>系统以通电，但未有正确发挥功能</td></tr>
+</table>
+
+**冗余电源LED**
+
+**RPS LED**
+
+冗余电源LED只在那些有着冗余电源的交换机上才有。下表15.2列出了RPS LED的颜色和其意义。
+
+*表15.2 -- 冗余电源LEDs*
+
+<table>
+<th><td>RPS LED颜色</td><td>状态</td></th>
+<tr><td>绿色</td><td>连接了RPS，且RPS在需要时就可提供后备电力</td></tr>
+<tr><td>绿色闪烁(Blinking Green)</td><td>连接了RPS，但因为其正为另一设备提供电力（冗余已被分配给一台相邻设备）而不可用</td></tr>
+<tr><td>琥珀色</td><td>RPS处于待机模式或故障状态（in standby mode or in a fault condition）。按下RPS上的Standby/Active按钮，此时该LED应变成绿色。如未变成绿色，则该RPS风扇可能损坏。请联系思科系统公司。</td></tr>
+<tr><td>琥珀色闪烁</td><td>交换机内部电源失效，且正由RPS给交换机供电（冗余电源已分配给该设备）</td></tr>
+</table>
+
+**端口LEDs及其模式**
+
+**Port LEDs and Modes**
+
+端口LEDs提供了一组端口或单个端口的信息，如下表15.3所示。
+
+*表15.3 -- 端口LEDs的模式*
+
+<table>
+<th><td>所选模式LED</td><td>端口模式</td><td>说明</td></th>
+<td><td>1 -- 系统</td><td></td><td></td></td>
+<tr><td>2 -- RPS</td><td></td><td>RPS状态</td></tr>
+<tr><td>3 -- 状态</td><td>端口状态</td><td>端口状态（默认模式）</td></tr>
+<tr><td>4 -- 复用</td><td>端口复用情况</td><td>复用模式：全双工或半双工</td></tr>
+<tr><td>5 -- 速率</td><td>端口速率</td><td>端口运行速率：10, 100或1000Mbps</td></tr>
+<tr><td>6 -- PoE</td><td>PoE端口供电</td><td>PoE状态</td></tr>
+<tr><td>7 -- 模式</td><td></td><td>循环显示端口状态、复用模式及速率LEDs</td></tr>
+<tr><td>8 -- 端口</td><td></td><td>依不同模式有不同含义</td></tr>
+</table>
+
+不停按下模式按钮（the Mode button）可在不同模式之间循环，直到需要的模式设置。这会改变端口LED颜色的意义，如下表15.4所示。
+
+*表15.4 -- 模式设置*
+
+<table>
+<tr><td>端口模式</td><td>LED颜色</td><td>系统状态</td></tr>
+<tr><td rowspan=6></td><td>不亮</td><td>未插入网线或管理性关闭</td></tr>
+<tr><td>绿色</td><td>有链路且链路无问题</td></tr>
+<tr><td>绿色闪烁</td><td>活动的：端口在发送或接收数据</td></tr>
+<tr><td>绿色琥珀色交替闪烁</td><td>链路故障（link fault）：出现可影响连通性的错误帧，以及过多的冲突、循环冗余校验（CRC），同时将对以太网的alignment及jabber问题进行检测（）</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td rowspan=2></td><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td rowspan=6></td><td colspan=2></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td colspan=2></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td rowspan=5></td><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+
+</table>

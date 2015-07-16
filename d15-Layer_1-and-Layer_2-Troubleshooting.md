@@ -141,21 +141,21 @@ PoE LED只有在Catalyst 2960交换机型号上才能找到。
 <tr><td>绿色闪烁</td><td>活动的：端口在发送或接收数据</td></tr>
 <tr><td>绿色琥珀色交替闪烁</td><td>链路故障（link fault）：出现可影响连通性的错误帧，以及过多的冲突、循环冗余校验（CRC），同时将对以太网的alignment及jabber问题进行检测（<a href="EthernetErrorDescription.pdf" >以太网错误描述</a>, <a href="EthernetErrors.pdf">以太网错误</a>）</td></tr>
 <tr><td>琥珀色</td><td>端口被生成树协议（Spanning Tree Protocol, STP）阻塞而未转发数据。<b>注意：</b>在某端口重新配置后，端口LED将保持琥珀色30秒，因为STP会检查网络拓扑有没有可能的环回。</td></tr>
-<tr><td></td><td></td></tr>
-<tr><td rowspan=2></td><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td rowspan=6></td><td colspan=2></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td colspan=2></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td rowspan=5></td><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
+<tr><td>琥珀色闪烁</td><td>端口被STP阻塞同时没有发送或接收数据。</td></tr>
+<tr><td rowspan=2>双工</td><td>不亮</td><td>端口以半双工方式运行。</td></tr>
+<tr><td>绿色</td><td>端口以全双工方式运行。</td></tr>
+<tr><td rowspan=6>速率</td><td colspan=2>10/100及10/100/1000Mbps端口</td></tr>
+<tr><td>不亮</td><td>端口以10Mbps速率运行。</td></tr>
+<tr><td>绿色</td><td>端口以100Mbps速率运行。</td></tr>
+<tr><td>绿色闪烁</td><td>端口以1000Mbps运行。</td></tr>
+<tr><td colspan=2>SPF(小封装可插拔，small form-factor pluggable, SPF)端口</td></tr>
+<tr><td>不亮</td><td>端口以10Mbps速率运行。</td></tr>
+<tr><td>绿色</td><td>端口以100Mbps速率运行。</td></tr>
+<tr><td>绿色闪烁</td><td>端口以1000Mbps速率运行。</td></tr>
+<tr><td rowspan=5>PoE</td><td>不亮</td><td>PoE关闭。如被供电设备从交流电源取得电力，那么就算被供电设备是连接到交换机的，PoE端口LED也会不亮。</td></tr>
+<tr><td>绿色</td><td>PoE开启。端口LED只在该交换机端口供电时才亮起绿色。</td></tr>
+<tr><td>绿色和琥珀色交替亮起</td><td>因为向被供电设备提供电力会超出交换机电源功率，而将PoE禁用了。Catalyst 2960-24PC-L、2960 48PST-L、2960-48PST-S及2960-24PC-S可以提供最高370W的电力。而Catalyst 2960-24LT-L和2960-24LC-S交换机只能提供最高124W的电力。</td></tr>
+<tr><td>琥珀色闪烁</td><td>PoE因为故障而关闭。<br><b>注意：</b>在布线不合规及加电的设备连接到PoE端口(non-compliant cabling or powered devices are connected to a PoE port)时，都会导致PoE故障。在将思科认证的IP电话、无线接入点或符合IEEE 802.3af规范的设备连接到PoE端口时，只能使用标准规范的布线。必须将导致PoE故障的网线或设备从网络上移除。（Only standard-compliant cabling can be used to connect Cisco prestandard IP phones, wireless access points, or IEEE 802.3af-compliant devices to PoE ports. You must remove the cable or device that cause the PoE fault from the network.）</td></tr>
 <tr><td></td><td></td></tr>
 
 </table>

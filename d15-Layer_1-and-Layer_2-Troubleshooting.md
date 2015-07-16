@@ -139,7 +139,7 @@ PoE LED只有在Catalyst 2960交换机型号上才能找到。
 <tr><td rowspan=6></td><td>不亮</td><td>未插入网线或管理性关闭</td></tr>
 <tr><td>绿色</td><td>有链路且链路无问题</td></tr>
 <tr><td>绿色闪烁</td><td>活动的：端口在发送或接收数据</td></tr>
-<tr><td>绿色琥珀色交替闪烁</td><td>链路故障（link fault）：出现可影响连通性的错误帧，以及过多的冲突、循环冗余校验（CRC），同时将对以太网的alignment及jabber问题进行检测（）</td></tr>
+<tr><td>绿色琥珀色交替闪烁</td><td>链路故障（link fault）：出现可影响连通性的错误帧，以及过多的冲突、循环冗余校验（CRC），同时将对以太网的alignment及jabber问题进行检测（[以太网错误的说明](EthernetErrorDescription.pdf), [以太网错误](EthernetErrors.pdf)）</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td></td><td></td></tr>
 <tr><td rowspan=2></td><td></td><td></td></tr>

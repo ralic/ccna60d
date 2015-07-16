@@ -144,7 +144,7 @@ PoE LED只有在Catalyst 2960交换机型号上才能找到。
 <tr><td>琥珀色闪烁</td><td>端口被STP阻塞同时没有发送或接收数据。</td></tr>
 <tr><td rowspan=2>双工</td><td>不亮</td><td>端口以半双工方式运行。</td></tr>
 <tr><td>绿色</td><td>端口以全双工方式运行。</td></tr>
-<tr><td rowspan=6>速率</td><td colspan=2>10/100及10/100/1000Mbps端口</td></tr>
+<tr><td rowspan=8>速率</td><td colspan=2>10/100及10/100/1000Mbps端口</td></tr>
 <tr><td>不亮</td><td>端口以10Mbps速率运行。</td></tr>
 <tr><td>绿色</td><td>端口以100Mbps速率运行。</td></tr>
 <tr><td>绿色闪烁</td><td>端口以1000Mbps运行。</td></tr>

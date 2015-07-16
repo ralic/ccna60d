@@ -88,7 +88,7 @@ PoE LED只有在Catalyst 2960交换机型号上才能找到。
 *表15.1 -- 系统LED*
 
 <table>
-<th><td>系统LED颜色</td><td>系统状态</td></th>
+<tr><th>系统LED颜色</th><th>系统状态</th></tr>
 <tr><td>不亮</td><td>系统未通电</td></tr>
 <tr><td>绿色</td><td>系统运行正常</td></tr>
 <tr><td>琥珀色（amber）</td><td>系统以通电，但未有正确发挥功能</td></tr>
@@ -103,7 +103,7 @@ PoE LED只有在Catalyst 2960交换机型号上才能找到。
 *表15.2 -- 冗余电源LEDs*
 
 <table>
-<th><td>RPS LED颜色</td><td>状态</td></th>
+<tr><th>RPS LED颜色</th><th>状态</th></tr>
 <tr><td>绿色</td><td>连接了RPS，且RPS在需要时就可提供后备电力</td></tr>
 <tr><td>绿色闪烁(Blinking Green)</td><td>连接了RPS，但因为其正为另一设备提供电力（冗余已被分配给一台相邻设备）而不可用</td></tr>
 <tr><td>琥珀色</td><td>RPS处于待机模式或故障状态（in standby mode or in a fault condition）。按下RPS上的Standby/Active按钮，此时该LED应变成绿色。如未变成绿色，则该RPS风扇可能损坏。请联系思科系统公司。</td></tr>
@@ -119,7 +119,7 @@ PoE LED只有在Catalyst 2960交换机型号上才能找到。
 *表15.3 -- 端口LEDs的模式*
 
 <table>
-<th><td>所选模式LED</td><td>端口模式</td><td>说明</td></th>
+<tr><th>所选模式LED</th><th>端口模式</th><th>说明</th></tr>
 <td><td>1 -- 系统</td><td></td><td></td></td>
 <tr><td>2 -- RPS</td><td></td><td>RPS状态</td></tr>
 <tr><td>3 -- 状态</td><td>端口状态</td><td>端口状态（默认模式）</td></tr>
@@ -135,7 +135,7 @@ PoE LED只有在Catalyst 2960交换机型号上才能找到。
 *表15.4 -- 模式设置*
 
 <table>
-<tr><td>端口模式</td><td>LED颜色</td><td>系统状态</td></tr>
+<tr><th>端口模式</th><th>LED颜色</th><th>系统状态</th></tr>
 <tr><td rowspan=6></td><td>不亮</td><td>未插入网线或管理性关闭</td></tr>
 <tr><td>绿色</td><td>有链路且链路无问题</td></tr>
 <tr><td>绿色闪烁</td><td>活动的：端口在发送或接收数据</td></tr>

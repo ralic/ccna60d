@@ -223,3 +223,53 @@ PoE LED只有在Catalyst 2960交换机型号上才能找到。
 + 检查收发器没有硬件故障（换另一个收发器并进行测试）
 + 依据所使用的收发器和线缆类别，检查设备端口有配置上正确的参数
 
+为令到连接停机时间最低，就应检测那些插入了SFP模块的端口，以观察出现在统计信息中的可能错误。而这可通过标准监测工具完成，最常用的就是SNMP。
+
+##使用命令行接口来对链路故障进行排错
+
+**Using the Command Line Interface to Troubleshoot Link Issues**
+
+思科IOS Catalyst交换机上，可使用好几个命令行接口命令来对一层故障进行排错。常用的命令包括`show interfaces`、`show controllers`以及`show interface [name] counters errors`命令。除了要知道这些命令，还要能解读这些命令的输出或所提供的信息。
+
+`show interfaces`命令是一个提供过剩信息的强大工具，提供包括以下这些信息。
+
++ 交换机端口的管理状态
++ 端口允许状态
++ 介质类型（对于特定交换机及端口，for select switches and ports）
++ 端口输入及输出数据包数目
++ 端口缓存失效数及端口错误数
++ 端口输入及输出错误
++ 端口输入及输出队列丢失情况
+
+下面是在一个GigabitEthernet交换端口上的`show interfaces`命令的输出。
+
+<pre>
+Catalyst-3750-1#<b>show interfaces GigabitEthernet3/0/1</b>
+GigabitEthernet0/1 is up, line protocol is down <b>(notconnect)</b>
+Hardware is GigabitEthernet, address is 000f.2303.2db1 (bia 000f.2303.2db1)
+MTU 1500 bytes, BW 10000 Kbit, DLY 1000 usec,
+    reliability 255/255, txload 1/255, rxload 1/255
+Encapsulation ARPA, Loopback not set
+Keepalive not set
+Auto-duplex, Auto-speed, link type is auto, media type is unknown
+input flow-control is off, output flow-control is desired
+ARP type: ARPA, ARP Timeout 04:00:00
+Last input never, output never, output hang never
+Last clearing of “show interface” counters never
+Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
+Queueing strategy: fifo
+Output queue: 0/40 (size/max)
+5 minute input rate 0 bits/sec, 0 packets/sec
+5 minute output rate 0 bits/sec, 0 packets/sec
+    0 packets input, 0 bytes, 0 no buffer
+    Received 0 broadcasts (0 multicasts)
+    0 runts, 0 giants, 0 throttles
+    0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+    0 watchdog, 0 multicast, 0 pause input
+    0 input packets with dribble condition detected
+    0 packets output, 0 bytes, 0 underruns
+    0 output errors, 0 collisions, 1 interface resets
+    0 babbles, 0 late collision, 0 deferred
+    0 lost carrier, 0 no carrier, 0 PAUSE output
+    0 output buffer failures, 0 output buffers swapped out
+</pre>

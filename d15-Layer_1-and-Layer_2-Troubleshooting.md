@@ -155,7 +155,7 @@ PoE LED只有在Catalyst 2960交换机型号上才能找到。
 <tr><td rowspan=5>PoE</td><td>不亮</td><td>PoE关闭。如被供电设备从交流电源取得电力，那么就算被供电设备是连接到交换机的，PoE端口LED也会不亮。</td></tr>
 <tr><td>绿色</td><td>PoE开启。端口LED只在该交换机端口供电时才亮起绿色。</td></tr>
 <tr><td>绿色和琥珀色交替亮起</td><td>因为向被供电设备提供电力会超出交换机电源功率，而将PoE禁用了。Catalyst 2960-24PC-L、2960 48PST-L、2960-48PST-S及2960-24PC-S可以提供最高370W的电力。而Catalyst 2960-24LT-L和2960-24LC-S交换机只能提供最高124W的电力。</td></tr>
-<tr><td>琥珀色闪烁</td><td>PoE因为故障而关闭。<br><b>注意：</b>在布线不合规及加电的设备连接到PoE端口(non-compliant cabling or powered devices are connected to a PoE port)时，都会导致PoE故障。在将思科认证的IP电话、无线接入点或符合IEEE 802.3af规范的设备连接到PoE端口时，只能使用标准规范的布线。必须将导致PoE故障的网线或设备从网络上移除。（Only standard-compliant cabling can be used to connect Cisco prestandard IP phones, wireless access points, or IEEE 802.3af-compliant devices to PoE ports. You must remove the cable or device that cause the PoE fault from the network.）</td></tr>
+<tr><td>琥珀色闪烁</td><td>PoE因为故障而关闭。<br><b>注意：</b>在做网线不合规及加电的设备连接到PoE端口(non-compliant cabling or powered devices are connected to a PoE port)时，都会导致PoE故障。在将思科认证的IP电话、无线接入点或符合IEEE 802.3af规范的设备连接到PoE端口时，只能使用标准规范的做网线方式。必须将导致PoE故障的网线或设备从网络上移除。（Only standard-compliant cabling can be used to connect Cisco prestandard IP phones, wireless access points, or IEEE 802.3af-compliant devices to PoE ports. You must remove the cable or device that cause the PoE fault from the network.）</td></tr>
 <tr><td>琥珀色</td><td>端口的PoE已被关闭。默认PoE是开启的。</td></tr>
 </table>
 
@@ -167,7 +167,7 @@ PoE LED只有在Catalyst 2960交换机型号上才能找到。
 
 **Troubleshooting Cable Issues**
 
-在对布线鼓掌进行排错时（一层排错），因为可以直接地查看及检查网线，所以通常都是非常容易找到问题的。但是，有些时候布线问题可以是看不见的，所以就不得不完成一个系统性的排错过程，以确保问题确实是在一层当中。一个一般性建议就是在进行复杂步骤之前，先适当地对所有网线进行测试（however, sometimes cabling problems can be invisible, so you will have to engage in a systematic troubleshooting process to make sure the problem is really localised at Layer 1. A general recommendation is to properly test all cabling before engaging in a complex infrastructure implementation）。下面是一些常见的布线问题。
+在对线路故障进行排错时（一层排错），因为可以直接地查看及检查网线，所以通常都是非常容易找到问题的。但是，有些时候线路问题可以是看不见的，所以就不得不完成一个系统性的排错过程，以确保问题确实是在一层当中。一个一般性建议就是在进行复杂步骤之前，先适当地对所有网线进行测试（however, sometimes cabling problems can be invisible, so you will have to engage in a systematic troubleshooting process to make sure the problem is really localised at Layer 1. A general recommendation is to properly test all cabling before engaging in a complex infrastructure implementation）。下面是一些常见的线路问题。
 
 + 有插入网线但没有连接
 + 有插入网线且有得到连接，但那条连接的吞吐量极低
@@ -308,4 +308,9 @@ Gi3/0/1       0
 
 接下来的部分对命令`show interfaces [name] counters errors`输出中的一些错误字段，以及这些字段所表示的故障或问题，进行讲述。
 
-`Align-Err`字段反应了接收到的**没有以偶数个字节结束，同时有着错误CRC的帧数目**。这些错误**通常是由不匹配的复用或物理问题**，比如布线问题、坏端口或坏的网卡造成的。
+`Align-Err`字段反应了接收到的**没有以偶数个字节结束，同时有着错误CRC帧的数目**。这些错误**通常是由不匹配的复用或物理问题**，比如线路问题、坏端口或坏网卡造成的。在网线头一次插入端口时，一些这类错误就会发生。此外，如有集线器连接到端口，集线器上其它设备之间的冲突也会造成这些错误。
+
+`FCS-Err`字段反应了有帧校验序列（Frame Check Sequence, FCS）错误的大小有效(valid-sized)、没有组帧错误的帧数目。这通常是因为物理故障，诸如网线做得不好、坏端口或者坏网卡造成的。此外，该字段下的非零值，可能表明存在复用不匹配。
+
+`Xmit-Err`字段中的非零值是内部发送（Tx）缓冲器充满的表征。当有来自多个入站高带宽链路（比如多条GigabitEthernet链路）的流量正转发到单一的出站低带宽链路（比如一条FastEthernet链路）时，通常会见到这种情形。
+

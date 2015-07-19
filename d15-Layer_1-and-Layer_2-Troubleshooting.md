@@ -287,4 +287,21 @@ Output queue: 0/40 (size/max)
 `show interfaces`的输出中的一些其它接口相关的可分析的，同时在一二层排错中非常有用的术语，有下面这些。
 
 + **帧数目**（frame number）：该字段给出了接收到的带有不正确的CRC及大小不是整数个字节的数据包数目。这通常是由不正常功能的以太网设备（硬件错误）而导致的冲突造成的。
-+ **循环冗余校验**（CRC）：该字段表示由发送设备生成的CRC与接收设备计算出的校验和不一致。这通常表示
++ **循环冗余校验**（CRC）：该字段表示由发送设备生成的CRC与接收设备计算出的校验和不一致。这通常表示LAN上的传输错误、冲突或是系统传输不良数据。
++ **畸形帧**（runts）: 此字段表示由于比最小数据包大小还小而丢弃的包数量。在以太网段上，比64字节还小的包都被看作畸形帧。
++ **巨大帧**（giants）: 此字段表示由于比最大数据包大小还大而丢弃的包数量。在以太网段上，比起1518字节还大的数据包被看作巨大帧。
++ **晚发冲突**(late collisions): 晚发冲突通常在网线过长或网络中有过多中继器时。冲突数目反应了因为以太网冲突而导致的重传报文数目。而这通常是由于对LAN的过度扩展造成的。
++ **输入错误**（input errors）: 该字段提供所有畸形帧、巨大帧、CRC错误帧、超出帧（overruns）及忽略数据包的总数。
++ **输出错误**（output errors）: 该字段提供了阻止数据报最后从接口发出的错误总数（this field provides the total sum of all errors that prevented the final transmission of datagrams out of the interface）。
+
+除了`show interfaces`命令，命令`show interfaces [name] counters errors`也可以用来查看接口错误及促进一层的排错。下面就是命令`show interface [name] counters errors`打印出的输出。
+
+<pre>
+Catalyst-3750-1#<b>show interfaces GigabitEthernet3/0/1 counters errors</b>
+Port        Align-Err   FCS-Err   Xmit-Err    Rcv-Err UnderSize
+Gi3/0/1         0         0          0          0         0
+Port     Single-Col Multi-Col Late-Col Excess-Col Carri-Sen Runts
+Gi3/0/1       0          0       0          0         0      0
+Port        Giants
+Gi3/0/1       0
+</pre>

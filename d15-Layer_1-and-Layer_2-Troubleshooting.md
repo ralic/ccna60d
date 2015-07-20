@@ -378,3 +378,24 @@ Transmit GigabitEthernet3/0/1   Receive
 
 > **注意：**根据该命令执行所在平台的不同，上面的输出会略有不同。比如，Catalyst 3650系列交换机还包含了一个`Discarded frames`字段，该字段显示因资源不可用而导致的放弃传输尝试的帧总数（a `Discarded frames` field, which shows the total number of frames whose transmission attempt is abandoned due to insufficient resources）。该字段中出现了较大的数值就典型地表明存在网络壅塞故障（a network congestion issue）。在上面的输出中，应探究一下`RxPortFifoFull drop`帧字段，该字段表示因为入口队列充满而丢弃的接口所接收到的帧总数（the `RxPortFifoFull drop` frame field, which indicates the total number of frames received on an interface that are dropped because the ingress queue is full）。
 
+##端口配置排错
+
+**Troubleshooting Port Configuration**
+
+各台网络设备都可以不同方式进行配置。多数类型的错误配置都产生网络中的问题，包括下面这些。
+
++ 极低的流量吞吐，poor throughput
++ 没有连通性，lack of connectivity
+
+某台设备可以连接到网络，有着网络信号，同时可以与Internet及其它设备通信，却有着以持续的、易于重现方式的低通信性能。这种情况可能在正常运行中，包括与网络其它部分进行文件传输或其它类型的通信中出现。
+
+在重大配置问题下，该故障可能以完全的连通性缺失，包括特定设备端口上连接信号灯不亮的形式出现（with major configuration issues, the issue might manifest as lack of connectivity, including no link lights on the specific device ports）。有时连接灯亮起但仍然没有任何类型的连通性。这显示在网线上有信号，也就是说没有网线问题，而是在端口上的端口问题故障或其它问题。这就要对设备的配置进行问题调查。
+
+配置端口时有几项不同的设置，包括下面这些。
+
++ 速率，speed
++ 双工，duplex
++ 封装/VLAN, encapsulation/VLAN
+
+大多数的这些参数都必须在链路两侧保持一致，要么通过手动配置，或是通过开启端口自动配置。
+

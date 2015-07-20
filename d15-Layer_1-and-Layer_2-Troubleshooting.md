@@ -314,3 +314,67 @@ Gi3/0/1       0
 
 `Xmit-Err`字段中的非零值是内部发送（Tx）缓冲器充满的表征。当有来自多个入站高带宽链路（比如多条GigabitEthernet链路）的流量正转发到单一的出站低带宽链路（比如一条FastEthernet链路）时，通常会见到这种情形。
 
+字段`Rcv-Err`表示收到帧错误的总和。该计数器在接口收到诸如畸形帧、巨大帧或FCS错误帧时增长。
+
+`UnderSize`字段在交换机接收到长度小于64字节的帧时增长。这通常是由故障发送设备造成的。
+
+不同的`collisions`字段表示接口上的冲突。接口上的冲突通常发生在半双工以太网上，而这在现代网络中几乎是不存在的。因此，这些计数器对于全双工链路不应增长。如果这些计数器下出现了非零数值，那么通常表明存在全双工不匹配故障。当探测到全双工不匹配时，交换机会在控制台或日志中打印出类似于下面的消息。
+
+```
+%CDP-4-DUPLEX_MISMATCH: duplex mismatch discovered on FastEthernet0/1 (not full duplex), with R2 FastEthernet0/0 (full duplex)
+```
+
+如同将在生成树协议（Spanning Tree Protocol, STP）章节中介绍的那样，全双工不匹配可能导致在某端口连接到另一交换机时，交换网络中的STP循环。这些不匹配**可通过手动配置交换机端口的速率和双工方式予以解决。**
+
+当以太网控制器每次想要在半双工连接上发送数据时，`Carri-Sen`（载波侦听，carrier sense）都会增长。控制器侦听线路并确保在传输前线路是空闲的。该字段下的非零值表示接口运行于半双工模式。这对半双工来说是正常的。
+
+因为双工不匹配或其它物理层问题，比如坏网线、坏端口以及所连接设备上的坏网卡，也可能导致`Runts`字段下可以看到非零值。畸形帧是指所接收到的有着错误的CRC、小于最小IEEE 802.3帧大小，也就是以太网的64字节的那些帧。
+
+最后，当接收到的帧超过IEEE 802.3最大帧大小，非巨大以太网（non-jumbo Ethernet, [Jumbo frame](https://en.wikipedia.org/wiki/Jumbo_frame), [Linux_Jumbo_frame](Linux_Jumbo_frame.pdf)）的1518字节时，并有着坏的FCS时，`Giants`计数器就会增长。对于那些连接到某台工作站的端口或接口，该字段下的非零数值典型地是由所连接设备上的坏网卡导致的。不过，对于那些连接到另一交换机（比如通过中继链路）的端口或接口，如采用的是802.1Q封装方式，则该字段将会包含一个非零数值。**在802.1Q下，其打标记机制（the tagging mechanism）对帧进行了修改，因为中继设备插入了一个4字节的标记，并随后再度计算了FCS。**
+
+对已有最大以太网帧大小的帧插入4字节后，就构成了一个1522字节的帧，那么接收设备就会将其看着是一个幼小巨大帧（a baby giant frame）。因此，尽管交换机仍将处理这些帧，该计数器将增长并包含一个非零值。为解决这个问题，802.3委员会建立一个名为802.3ac的小组来将以太网最大大小扩展到1522字节；这样以来，采行802.1Q中继时就不常见到该字段下的非零值了。
+
+类似与`show interfaces`及`show interfaces <name> counters errors`命令所提供的信息，命令`show controllers ethernet-controller <interface>`也可以用来现实流量计数及错误计数信息。`show controllers ethernet-controllers <interface>`命令的输出如下所示。
+
+```
+Catalyst-3750-1#show controllers ethernet-controller GigabitEthernet3/0/1
+Transmit GigabitEthernet3/0/1   Receive
+4069327795 Bytes                3301740741 Bytes
+  559424024 Unicast frames        376047608 Unicast frames
+   27784795 Multicast frames       1141946 Multicast frames
+    7281524 Broadcast frames       1281591 Broadcast frames
+          0 Too old frames       429934641 Unicast bytes
+          0 Deferred frames      226764843 Multicast bytes
+          0 MTU exceeded frames  137921433 Broadcast bytes
+          0 1 collision frames           0 Alignment errors
+          0 2 collision frames           0 FCS errors
+          0 3 collision frames           0 Oversize frames
+          0 4 collision frames           0 Undersize frames
+          0 5 collision frames           0 Collision fragments
+          0 6 collision frames
+          0 7 collision frames     257477 Minimum size frames
+          0 8 collision frames  259422986 65 to 127 byte frames
+          0 9 collision frames   51377167 128 to 255 byte frames
+          0 10 collision frames  41117556 256 to 511 byte frames
+          0 11 collision frames   2342527 512 to 1023 byte frames
+          0 12 collision frames   5843545 1024 to 1518 byte frames
+          0 13 collision frames         0 Overrun frames
+          0 14 collision frames         0 Pause frames
+          0 15 collision frames
+          0 Excessive collisions        0 Symbol error frames
+          0 Late collisions             0 Invalid frames, too large
+          0 VLAN discard frames  18109887 Valid frames, too large
+          0 Excess defer frames         0 Invalid frames, too small
+     264522 64 byte frames              0 Valid frames, too small
+   99898057 127 byte frames
+   76457337 255 byte frames             0 Too old frames
+    4927192 511 byte frames             0 Valid oversize frames
+   21176897 1023 byte frames            0 System FCS error frames
+  127643707 1518 byte frames            0 RxPortFifoFull drop frames
+  264122631 Too large frames
+          0 Good (1 coll) frames
+          0 Good (>1 coll) frames
+``
+
+> **注意：**根据该命令执行所在的平台的不同，上面的输出会略有不同。比如，Catalyst 3650系列交换机还包含了一个`Discarded frames`字段，该字段显示因资源不可用而导致的放弃传输尝试的帧总数（a `Discarded frames` field, which shows the total number of frames whose transmission attempt is abandoned due to insufficient resources）。该字段中出现了较大的数值就典型地表明存在网络壅塞故障（a network congestion issue）。在上面的输出中，应探究一下`RxPortFifoFull drop`帧字段，该字段表示因为入口队列充满而丢弃的接口所接收到的帧总数（the `RxPortFifoFull drop` frame field, which indicates the total number of frames received on an interface that are dropped because the ingress queue is full）。
+

@@ -417,3 +417,5 @@ Transmit GigabitEthernet3/0/1   Receive
 + 硬件故障，hardware issues
 + 软件故障, software issues
 + 资源过度预订, resource oversubscription, [Cisco MDS交换机端口组速率模式介绍](EMC_Community_Network-ECN_Cisco_MDS交换机端口组速率模式介绍.pdf)
++ 配置问题，configuration issues
+

@@ -409,3 +409,11 @@ Transmit GigabitEthernet3/0/1   Receive
 
 **Troubleshooting VLANs and Trunking**
 
+先前的小节中，我们谈到可用用于物理层故障排除的三个命令行命令的使用。本节将给出一些用于对VLAN内倍连通性故障进行鉴别及排错的常见方法（the use of three CLI commands that can be used for troubleshooting Physical Layer issues. this section describes some common approaches to identifying and troubleshooting intra-VLAN connectivitiy issues）。VLAN内部连通性故障的一些相对来讲更为常见的原因，有下面这些。
+
++ 双工不匹配，duplex mismatches
++ 坏的网卡或网线，bad NIC or cable
++ 壅塞，congestion
++ 硬件故障，hardware issues
++ 软件故障, software issues
++ 资源过度预订, resource oversubscription, [Cisco MDS交换机端口组速率模式介绍](EMC_Community_Network-ECN_Cisco_MDS交换机端口组速率模式介绍.pdf)

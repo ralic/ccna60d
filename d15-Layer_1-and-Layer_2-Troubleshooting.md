@@ -139,7 +139,7 @@ PoE LED只有在Catalyst 2960交换机型号上才能找到。
 <tr><td rowspan=6>状态</td><td>不亮</td><td>未插入网线或管理性关闭</td></tr>
 <tr><td>绿色</td><td>有链路且链路无问题</td></tr>
 <tr><td>绿色闪烁</td><td>活动的：端口在发送或接收数据</td></tr>
-<tr><td>绿色琥珀色交替闪烁</td><td>链路故障（link fault）：出现可影响连通性的错误帧，以及过多的冲突、循环冗余校验（CRC），同时将对以太网的alignment及jabber问题进行检测（<a href="EthernetErrorDescription.pdf" >以太网错误描述</a>, <a href="EthernetErrors.pdf">以太网错误</a>）</td></tr>
+<tr><td>绿色琥珀色交替闪烁</td><td>链路故障（link fault）：出现可影响连通性的错误帧，以及过多的冲突、循环冗余校验（CRC），同时将对以太网的alignment及jabber问题进行检测（<a href="pdfs/EthernetErrorDescription.pdf" >以太网错误描述</a>, <a href="pdfs/EthernetErrors.pdf">以太网错误</a>）</td></tr>
 <tr><td>琥珀色</td><td>端口被生成树协议（Spanning Tree Protocol, STP）阻塞而未转发数据。<b>注意：</b>在某端口重新配置后，端口LED将保持琥珀色30秒，因为STP会检查网络拓扑有没有可能的环回。</td></tr>
 <tr><td>琥珀色闪烁</td><td>端口被STP阻塞同时没有发送或接收数据。</td></tr>
 <tr><td rowspan=2>双工</td><td>不亮</td><td>端口以半双工方式运行。</td></tr>
@@ -280,7 +280,7 @@ Output queue: 0/40 (size/max)
 
 输出的第一部分是该命令打印出的第一行（也就是`[interface] is up`），表示特定接口的物理层状态。输出的第二部分（也就是`line protocol is down`）表明该接口的数据链路层状态。而如该该部分指示`up`，就意味着该接口可发送和接收保持活动信号。**记住交换机端口可能在物理层是起来的，却在数据链路层是宕掉的**，比如，当端口是一个SPAN(Switch)目的端口时，或者本地端口连接到一台CatOS交换机的一个关闭的端口时，都会这样（if this indicates an `"up"`, then it means that the interface can send and receive keepalives. Keep in mind that it is possible for the switch port to indicate that the Physical Layer is up while the Data Link Layer is down, for example, such as when the port is a SPAN destination port(for sniffer traffic) or if the local port is connected to a CatOS(older switch operating system) switch with its port disabled）。
 
-输入队列（the Input queue）表明因为超出最大队列尺寸而丢弃帧的实际数量。而其中的“fushes”列对Catalyst 6000系列交换机上的SPD（selective packet discard, 选择性数据包丢弃, [Selective Packet Discard](SelectivePacketDiscard.pdf)，[Understanding Selective Packet Discard](http://www.cisco.com/c/en/us/support/docs/routers/12000-series-routers/29920-spd.html)）丢弃数据包进行计数。SPD在CPU超负荷时将低优先级的数据包丢弃，从而为高优先级数据包节省下处理能力。`show interfaces`命令输出中的`flushes`计数器随SPD部分而增长，SPD对路由器IP处理队列运用一种选择性数据包丢弃策略（a selective packet drop policy）。因此SPD仅用在进程交换流量上（appliese only to process-switched traffic）。
+输入队列（the Input queue）表明因为超出最大队列尺寸而丢弃帧的实际数量。而其中的“fushes”列对Catalyst 6000系列交换机上的SPD（selective packet discard, 选择性数据包丢弃, [Selective Packet Discard](pdfs/SelectivePacketDiscard.pdf)，[Understanding Selective Packet Discard](http://www.cisco.com/c/en/us/support/docs/routers/12000-series-routers/29920-spd.html)）丢弃数据包进行计数。SPD在CPU超负荷时将低优先级的数据包丢弃，从而为高优先级数据包节省下处理能力。`show interfaces`命令输出中的`flushes`计数器随SPD部分而增长，SPD对路由器IP处理队列运用一种选择性数据包丢弃策略（a selective packet drop policy）。因此SPD仅用在进程交换流量上（appliese only to process-switched traffic）。
 
 总的输出丢弃数量（the total output drops）表示由于输出队列充满而丢弃的数据包数量。输出丢弃经常在正将来多个的高带宽入站链路（比如几条千兆以太网链路）的流量，交换到单个的出站低带宽链路(比如一条快速以太网)时见到。输出丢弃的增长，是因为入站和出站带宽不匹配而造成的超出流量将该接口击败造成的（this is often seen when traffic from multiple inbound high-bandwidth links(e.g., GigabitEthernet links) is being switched to a single outbound lower-bandwidth(e.g., a FastEthernet link). The output drops increment because the interface is overwhelmed by the excess traffic due to the speed mismatch between the inbound and outbound bandwidths）。
 
@@ -330,7 +330,7 @@ Gi3/0/1       0
 
 因为双工不匹配或其它物理层问题，比如坏网线、坏端口以及所连接设备上的坏网卡，也可能导致`Runts`字段下可以看到非零值。畸形帧是指所接收到的有着错误的CRC、小于最小IEEE 802.3帧大小，也就是以太网的64字节的那些帧。
 
-最后，当接收到的帧超过IEEE 802.3最大帧大小，非巨大以太网（non-jumbo Ethernet, [Jumbo frame](https://en.wikipedia.org/wiki/Jumbo_frame), [Linux_Jumbo_frame](Linux_Jumbo_frame.pdf)）的1518字节时，并有着坏的FCS时，`Giants`计数器就会增长。对于那些连接到某台工作站的端口或接口，该字段下的非零数值典型地是由所连接设备上的坏网卡导致的。不过，对于那些连接到另一交换机（比如通过中继链路）的端口或接口，如采用的是802.1Q封装方式，则该字段将会包含一个非零数值。**在802.1Q下，其打标记机制（the tagging mechanism）对帧进行了修改，因为中继设备插入了一个4字节的标记，并随后再度计算了FCS。**
+最后，当接收到的帧超过IEEE 802.3最大帧大小，非巨大以太网（non-jumbo Ethernet, [Jumbo frame](https://en.wikipedia.org/wiki/Jumbo_frame), [Linux_Jumbo_frame](pdfs/Linux_Jumbo_frame.pdf)）的1518字节时，并有着坏的FCS时，`Giants`计数器就会增长。对于那些连接到某台工作站的端口或接口，该字段下的非零数值典型地是由所连接设备上的坏网卡导致的。不过，对于那些连接到另一交换机（比如通过中继链路）的端口或接口，如采用的是802.1Q封装方式，则该字段将会包含一个非零数值。**在802.1Q下，其打标记机制（the tagging mechanism）对帧进行了修改，因为中继设备插入了一个4字节的标记，并随后再度计算了FCS。**
 
 对已有最大以太网帧大小的帧插入4字节后，就构成了一个1522字节的帧，那么接收设备就会将其看着是一个幼小巨大帧（a baby giant frame）。因此，尽管交换机仍将处理这些帧，该计数器将增长并包含一个非零值。为解决这个问题，802.3委员会建立一个名为802.3ac的小组来将以太网最大大小扩展到1522字节；这样以来，采行802.1Q中继时就不常见到该字段下的非零值了。
 
@@ -416,7 +416,7 @@ Transmit GigabitEthernet3/0/1   Receive
 + 壅塞，congestion
 + 硬件故障，hardware issues
 + 软件故障, software issues
-+ 资源过度预订, resource oversubscription, [Cisco MDS交换机端口组速率模式介绍](EMC_Community_Network-ECN_Cisco_MDS交换机端口组速率模式介绍.pdf)
++ 资源过度预订, resource oversubscription, [Cisco MDS交换机端口组速率模式介绍](pdfs/EMC_Community_Network-ECN_Cisco_MDS交换机端口组速率模式介绍.pdf)
 + 配置问题，configuration issues
 
 **双工不匹配**可导致甚低网络性能及连通性。尽管已有对自动协商的改进，同时采行自动协商被认为是有效的做法，双工不匹配仍有可能发生。比如，在网卡设置为100/Full，而交换机端口是自动协商时，网卡将保持其100/Full设置，但交换机端口将被设置为100/Half。而与此相反，也会出现双工不匹配的问题。也就是网卡设置自动协商，交换机端口设置为100/Full。此时，网卡将自动协商为100/Half，而交换机端口保持其静态的100/Full配置，导致双工不匹配。

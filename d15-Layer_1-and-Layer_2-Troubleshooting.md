@@ -454,5 +454,15 @@ Transmit GigabitEthernet3/0/1   Receive
 + 软件或硬件故障或缺陷，software or hardware issues or bugs
 + 交换机性能问题, switch performance issues
 
-为令到交换机采用VTP交换VLAN信息，交换机间必须建立中继链路。思科IOS交换机支持ISL和802.1Q两种中继机制。尽管一些交换机默认采用ISL这种思科专有中继机制，不过当前思科IOS Catalyst交换机默认都采用802.1Q了。在提供交换机间中继时，手动指定中继封装协议被认为是好的做法。这是通过在将链路配置为中继端口时，使用接口配置命令`switchport trunk encapsulation [isl|dot1q]`。
+为令到交换机采用VTP交换VLAN信息，交换机间必须建立中继链路。思科IOS交换机支持ISL和802.1Q两种中继机制。尽管一些交换机默认采用ISL这种思科专有中继机制，不过当前思科IOS Catalyst交换机默认都采用802.1Q了。在提供交换机间中继时，手动指定中继封装协议被认为是好的做法。这是通过在将链路配置为中继端口时，使用接口配置命令`switchport trunk encapsulation [isl|dot1q]`完成的。
+
+可用于对中继连通性问题进行排错的命令有好几个。可使用`show interfaces`命令来检查基本的端口运行及管理性状态（you can use the `show interfaces` command to verify basic port operational and administrative status）。此外，可通过在`show interfaces`命令后追加`trunk`或`errors`关键字来进行额外排错和检查。 而命令`show interfaces [name] counters trunk`则可用于查看中继端口上传输和接收到的帧数目。
+
+该命令的输出还包括了封装错误数，而封装错误数可用于检查802.1Q和ISL，以及中继封装不匹配数目，如下面的输出所示。
+
+```
+Cat-3550-1#show interfaces FastEthernet0/12 counters trunk
+Port    TrunkFramesTx   TrunkFramesRx   WrongEncap
+Fa0/12           1696           32257            0
+```
 

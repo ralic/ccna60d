@@ -429,7 +429,30 @@ Transmit GigabitEthernet3/0/1   Receive
 
 网络壅塞同样可能引起交换网络中的间隙性连通故障。VLAN超载的第一个表象就是某端口上的接收或发送缓冲过度预订(oversubscribed)。此外，端口上过多的帧丢弃也是网络壅塞的指标。而网络壅塞的常见原因，就是对主干连接的聚合带宽需求估计不足。那么，**壅塞问题就可以通过配置以太网信道或往现有以太网信道中加入更多的端口，得到解决。**同时网络壅塞又是连通性故障的常见原因，同时重要的是要知道**交换机本身可能经历壅塞问题，而交换机本身的壅塞问题有可能会对网络性能产生类似的影响**（a common cause of network congestion is due to underestimating aggregate bandwidth requirements for backbone connections. In such cases, congestion issues can be resolved by configuring EtherChannels or by adding additional ports to existing EtherChannels. While network congestion is a common cause of connectivity issues, it is also important to know that the switch itself can experience congestion issues, which can have a similar impact on network performance）。
 
-**交换机内容壅塞**
-有限的交换机带宽可能导致壅塞问题，由此造成的壅塞可能对网络性能造成极为严重的影响。在LAN交换中，带宽是指交换机内部交换线路（[the switch fabric](pdfs/the_Definition_of_a_Switch_Fabric-EtherealMind.pdf)）的传输能力。因此，如果交换线路的传输能力是5Gbps, 而要尝试将7Gbps的流量通过交换机传输，结果就是数据包丢失及差强人意的网络性能了。在那些所有端口的聚合传输容量可能超出总的骨干容量的超出预订平台上，这是一个常见的问题（this is a common issue in oversubscribed platforms, where the aggregate capacity of all ports can exceed the totoal backplane capacity）。
+**交换机内部壅塞**，有限的交换机带宽可能导致壅塞问题，由此造成的壅塞可能对网络性能造成极为严重的影响。在LAN交换中，带宽是指交换机内部交换线路（[the switch fabric](pdfs/the_Definition_of_a_Switch_Fabric-EtherealMind.pdf)）的传输能力。因此，如果交换线路的传输能力是5Gbps, 而要尝试将7Gbps的流量通过交换机传输，结果就是数据包丢失及差强人意的网络性能了。在那些所有端口的聚合传输容量可能超出总的骨干容量的超出预订平台上，这是一个常见的问题（this is a common issue in oversubscribed platforms, where the aggregate capacity of all ports can exceed the totoal backplane capacity）。
 
-在交换LAN中，硬件故障也可能引起连通性问题。这类问题的实例包括交换机的坏端口或坏模块。
+在交换LAN中，**硬件故障**也可能引起连通性问题。这类问题的实例包括交换机的坏端口或坏模块。尽管在可能的情况下可以通过查看诸如LEDs等物理指示器来对这类故障进行排错，某些时候这类问题是难于排错及诊断的。在怀疑存在潜在的硬件故障的多数情况下，都应需求技术支持中心（Technical Assistance Centre, TAC）的支持。
+
+相比上面这些问题，软件缺陷（software bugs）就更难于分辨出来，因为软件缺陷引起难于对其进行排错的偏差（deviation）。在怀疑有软件缺陷导致连通性问题时，应该就发现的问题，联系技术支持中心（TAC）。此外，如在控制台或日志中有打印出错误消息，就也可以使用思科提供的一些在线工具，来采取一些替代方法（implement a workaround）或是得到某个已经解决该问题并得到验证的软件版本的建议。
+
+与其它硬件设备相比，交换机有着受限的资源，比如物理内存。在这些资源过度使用时，就会导致严重的性能问题。而像是高CPU使用率这样的问题，就可能对交换机及网络性能造成极为严重的影响。
+
+最后，如同其它技术一样，**不正确的配置同样会直接或间接地造成连通性问题**。比如，根桥放置粗劣就会导致慢速用户连通性。而将一台不当配置的交换机直接加入到生产网络，则会导致一些或全部用户的网络连接完全中断（the poor placement of the Root Bridge may result in slow connectivity for users. Directly integrating or adding an incorrectly configured switch into the production network could result in an outright outage for some or all users）。下面的小节对一些常见的VLAN相关故障、其可能的原因，以及为排除这些故障可采取的做法，进行了讲解。
+
+###动态VLAN通告排错
+
+**Troubleshooting Dynamic VLAN Advertisements**
+
+思科Catalyst交换机使用VLAN中继协议（VLAN Trunk Protocol, VTP）来在交换域中传播VLAN信息（propagate VLAN information dynamically throughout the switched domain）。VTP是一个思科专有的二层报文发送协议，用于管理位处同一VTP域中的交换机上VLANs的添加、删除及重命名。
+
+某台交换机在加入到VTP域时无法动态接收任何VLAN信息的原因有好几个。下面是一些常见的原因。
+
++ 二层中继配置错误，Layer 2 trunking misconfiguration
++ 不正确的VTP配置，incorrect VTP configuration
++ 修订号的配置，configuration revision number
++ 物理层故障, Physical Layer issues
++ 软件或硬件故障或缺陷，software or hardware issues or bugs
++ 交换机性能问题, switch performance issues
+
+为令到交换机采用VTP交换VLAN信息，交换机间必须建立中继链路。思科IOS交换机支持ISL和802.1Q两种中继机制。尽管一些交换机默认采用ISL这种思科专有中继机制，不过当前思科IOS Catalyst交换机默认都采用802.1Q了。在提供交换机间中继时，手动指定中继封装协议被认为是好的做法。这是通过在将链路配置为中继端口时，使用接口配置命令`switchport trunk encapsulation [isl|dot1q]`。
+

@@ -12,9 +12,9 @@
 + 阅读ICND1记诵指南
 + 在[subnetting.org](http://www.subnetting.org)花15分钟
 
-先前数课中以涵盖了ICND1排错的许多要求，尤其是关于ACLs及IP分址方面。许多可能的故障都发生在一二层，一二层故障及其原因，是今天这课的重点。
+先前数课中已涵盖ICND1排错的许多要求，尤其是关于ACLs及IP分址方面。许多可能的故障都发生在一二层，一二层故障及其原因，是今天这课的重点。
 
-LAN交换一种用在局域网中的包交换形式。LAN交换是在数据链路层的硬件中完成的。因为LAN交换是基于硬件的，其使用被称为介质访问控制地址（Media Access Control addresses, MAC地址）的硬件地址。**LAN交换机使用MAC地址来转发帧。**
+LAN交换是一种用在局域网中的包交换形式。LAN交换是在数据链路层的硬件中完成的。正因为其是基于硬件的，使用到被称为介质访问控制地址（Media Access Control addresses, MAC地址）的硬件地址。**LAN交换机使用MAC地址来转发帧。**
 
 今天将学习以下内容。
 
@@ -46,7 +46,7 @@ LAN交换一种用在局域网中的包交换形式。LAN交换是在数据链�
 
 **Troubleshooting at the Phycical Layer**
 
-思科IOS交换机支持好几个可用于一层，或至少怀疑是一层故障排错的命令。但是，除了对这些软件命令工具包要熟悉外，对可用对对链路状态的排错，或指示出错误情形的物理指示器（也就是那些LEDs）的掌握，也是重要的。
+思科IOS交换机支持好几个可用于一层，或至少怀疑是一层故障排错的命令。但是，除了对这些软件命令工具包要熟悉外，对可用于链路状态排错，或示出错误情形的物理指示器（也就是那些LEDs）的掌握，也是重要的。
 
 ###使用发光二极管（LEDs）的链路状态排错
 
@@ -69,7 +69,7 @@ LAN交换一种用在局域网中的包交换形式。LAN交换是在数据链�
 <td>3</td><td>状态LED</td><td>7</td><td>模式按钮</td>
 </tr>
 <tr>
-<td>4</td><td>复用LED</td><td>8</td><td>端口LEDs</td>
+<td>4</td><td>双工LED</td><td>8</td><td>端口LEDs</td>
 </tr>
 </table>
 
@@ -123,10 +123,10 @@ PoE LED只有在Catalyst 2960交换机型号上才能找到。
 <tr><td>1 -- 系统</td><td></td><td></td></tr>
 <tr><td>2 -- RPS</td><td></td><td>RPS状态</td></tr>
 <tr><td>3 -- 状态</td><td>端口状态</td><td>端口状态（默认模式）</td></tr>
-<tr><td>4 -- 复用</td><td>端口复用情况</td><td>复用模式：全双工或半双工</td></tr>
+<tr><td>4 -- 双工</td><td>端口双工情况</td><td>双工模式：全双工或半双工</td></tr>
 <tr><td>5 -- 速率</td><td>端口速率</td><td>端口运行速率：10, 100或1000Mbps</td></tr>
 <tr><td>6 -- PoE</td><td>PoE端口供电</td><td>PoE状态</td></tr>
-<tr><td>7 -- 模式</td><td></td><td>循环显示端口状态、复用模式及速率LEDs</td></tr>
+<tr><td>7 -- 模式</td><td></td><td>循环显示端口状态、双工模式及速率LEDs</td></tr>
 <tr><td>8 -- 端口</td><td></td><td>依不同模式有不同含义</td></tr>
 </table>
 
@@ -308,9 +308,9 @@ Gi3/0/1       0
 
 接下来的部分对命令`show interfaces [name] counters errors`输出中的一些错误字段，以及这些字段所表示的故障或问题，进行讲述。
 
-`Align-Err`字段反应了接收到的**没有以偶数个字节结束，同时有着错误CRC帧的数目**。这些错误**通常是由不匹配的复用或物理问题**，比如线路问题、坏端口或坏网卡造成的。在网线头一次插入端口时，一些这类错误就会发生。此外，如有集线器连接到端口，集线器上其它设备之间的冲突也会造成这些错误。
+`Align-Err`字段反应了接收到的**没有以偶数个字节结束，同时有着错误CRC帧的数目**。这些错误**通常是由不匹配的双工不匹配或物理问题造成**，比如线路问题、坏端口或坏网卡造成的。在网线头一次插入端口时，一些这类错误就会发生。此外，如有集线器连接到端口，集线器上其它设备之间的冲突也会造成这些错误。
 
-`FCS-Err`字段反应了有帧校验序列（Frame Check Sequence, FCS）错误的大小有效(valid-sized)、没有组帧错误的帧数目。这通常是因为物理故障，诸如网线做得不好、坏端口或者坏网卡造成的。此外，该字段下的非零值，可能表明存在复用不匹配。
+`FCS-Err`字段反应了有帧校验序列（Frame Check Sequence, FCS）错误的大小有效(valid-sized)、没有组帧错误的帧数目。这通常是因为物理故障，诸如网线做得不好、坏端口或者坏网卡造成的。此外，该字段下的非零值，可能表明存在双工不匹配。
 
 `Xmit-Err`字段中的非零值是内部发送（Tx）缓冲器充满的表征。当有来自多个入站高带宽链路（比如多条GigabitEthernet链路）的流量正转发到单一的出站低带宽链路（比如一条FastEthernet链路）时，通常会见到这种情形。
 
@@ -378,7 +378,7 @@ Transmit GigabitEthernet3/0/1   Receive
 
 > **注意：**根据该命令执行所在平台的不同，上面的输出会略有不同。比如，Catalyst 3650系列交换机还包含了一个`Discarded frames`字段，该字段显示因资源不可用而导致的放弃传输尝试的帧总数（a `Discarded frames` field, which shows the total number of frames whose transmission attempt is abandoned due to insufficient resources）。该字段中出现了较大的数值就典型地表明存在网络壅塞故障（a network congestion issue）。在上面的输出中，应探究一下`RxPortFifoFull drop`帧字段，该字段表示因为入口队列充满而丢弃的接口所接收到的帧总数（the `RxPortFifoFull drop` frame field, which indicates the total number of frames received on an interface that are dropped because the ingress queue is full）。
 
-##端口配置排错
+###端口配置排错
 
 **Troubleshooting Port Configuration**
 
@@ -449,7 +449,7 @@ Transmit GigabitEthernet3/0/1   Receive
 
 + 二层中继配置错误，Layer 2 trunking misconfiguration
 + 不正确的VTP配置，incorrect VTP configuration
-+ 修订号的配置，configuration revision number
++ 配置修订号，configuration revision number
 + 物理层故障, Physical Layer issues
 + 软件或硬件故障或缺陷，software or hardware issues or bugs
 + 交换机性能问题, switch performance issues
@@ -537,4 +537,129 @@ MD5 digest                      : 0x26 0x99 0xB7 0x93 0xBE 0xDA 0x76 0x9C
 
 > **注意：**如在服务器上修改了VTP版本，那么此改变将自动传播到VTP域中的客户端交换机。
 
-VTP客户端/服务器（clinet/server）或服务器/服务器(server/server)设备上的VTP传播是开启的。而如果在某台交换机上VTP是关闭的（也就是透明模式），那么该交换机将不会经由VTP动态地接收VLAN信息。不过，要留意**VTP版本2的透明模式交换机，将自其中继端口转发出接收到的VTP通告，而充当VTP中继。**就算
+VTP客户端/服务器（clinet/server）或服务器/服务器(server/server)设备上的VTP传播是开启的。而如果在某台交换机上VTP是关闭的（也就是透明模式），那么该交换机将不会经由VTP动态地接收VLAN信息。不过，要留意**VTP版本2的透明模式交换机，将在其中继端口转发出接收到的VTP通告，而充当VTP中继。**就算VTP版本不一样，该过程也会照常进行。域中交换机上的VTP域名称也应保持一致。
+
+最后，`show vtp status`命令的输出也包含了用于认证目的的MD5散列值。该散列值是从VTP域名称和密码生成的，域中所有交换机上的该散列值应是一致的。而如在这些交换机上的域名称和密码不同，则计算出的MD5也会不同。而如域名称或密码不同，那么`show vtp status`命令就会示出一条MD5摘要校验和不匹配（an MD5 digest checksum mismatch）消息，如下面的输出所示。
+
+<pre>
+Cat-3550-1#<b>show vtp status</b>
+VTP Version                     : running VTP2
+Configuration Revision          : 0
+Maximum VLANs supported locally : 1005
+Number of existing VLANs        : 8
+VTP Operating Mode              : Server
+VTP Domain Name                 : TSHOOT
+VTP Pruning Mode                : Enabled
+VTP V2 Mode                     : Enabled
+VTP Traps Generation            : Disabled
+MD5 Digest                      : 0x26 0x99 0xB7 0x93 0xBE 0xDA 0x76 0x9C
+<b>*** MD5 digest checksum mismatch on trunk: Fa0/11 ***</b>
+<b>*** MD5 digest checksum mismatch on trunk: Fa0/12 ***</b>
+...
+[Truncated Output]
+</pre>
+
+最后，在应用VTP时，**配置修订号可能会造成严重破坏。VTP域中的交换机使用配置修订号来保持对域中最新信息的跟踪**（the configuration revision number can wreak havoc when using VTP. Switches use the configuration revision number to keep track of the most recent information in the VTP domain）。域中所有交换机都将其前一次从一条VTP通告中收听到的配置修订号存储起来，同时在每次接收到新信息时该号码都被增加。而在任何交换机接收到带有高于其自身配置修订号的通告报文时，都将覆写任何存储的VLAN信息，并将其自身存储的VLAN信息与所接收到的通告报文中的信息进行同步。
+
+因此，如想知道为何加入到VTP域中的交换机没有接收任何的VLAN信息，那么可能是该交换机已有一个较高的配置修订号，而导致所有其它交换机覆写了它们的本地VLAN信息，并将本地VLAN信息替换成了接收自新交换机的通告报文中的VLAN信息。为避免此种情形，**在将新的交换机加入到某VTP域之前，总是要确保其配置修订号被设置为0。**这可以通过在该交换机上修改VTP模式或修改VTP域名称完成。配置修订号在命令`show vtp status`的输出中有包含。
+
+###VLAN内部端到端连接丢失
+
+**Troubleshooting Loss of End-to-End Intra-VLAN Connectivity**
+
+某个VLAN中端到端连通性丢失有好几个原因。而最常见的原因包括下面这些。
+
++ 物理层故障，Physical Layer issues
++ VTP修剪，VTP pruning
++ VLAN中继链路过滤，VLAN trunk filtering
++ 新的交换机，new switches
++ 交换机性能问题，switch performance issues
++ 网络壅塞, network congestion
+
++ 软件或硬件问题或缺陷，software or hardware issues or bugs
+
+
+> **注意：**为简明扼要地讲解，这里只会对中继、VTP修剪、以及往域内新加入交换机三个方面进行说明。软件或硬件问题或缺陷及交换机性能问题在本书中已有说明。而物理层排错在本模块早前已经进行了讲解。
+
+
+**VTP修剪在没有本地端口属于某些VLANs时，将那些VLANs从本地交换机的VLAN数据库中移除。**VTP修剪通过消除不必要的广播、多播及通过网络泛洪的那些未知流量，而提升中继链路效率（VTP pruning increases the efficiency of trunks by eliminating unnecessary Broadcast, Multicast, and unknown traffic from being flooded across the network）。
+
+尽管VTP修剪是一项值得部署的特性，但不正确的配置或是部署可能导致端到端连通性的丢失。应仅在客户端/服务器环境中开启（in client/server environments）。在包含透明模式交换机的网络中应用修剪，就可能造成连通性丢失。如网络中有一或多台的交换机处于VTP透明模式，就应该要么对整个VTP域全局关闭修剪，否则就要通过在适当的接口下，使用接口配置命令`switchport trunk pruning vlan`, 以确保到上游的透明模式交换机中继链路上的VLANs都无资格修剪（也就是它们在这些链路上不被修剪，ensure that all VLANs on the trunk link(s) to the upstream transparent mode switch(es) are pruning ineligible, i.e., they are not pruned，using the `switchport trunk pruning vlan` interface configuration command under the applicable interfaces）。
+
+**对放行的VLANs及中继状态进行检查**
+
+**Verify Allowed VLANs and Trunk Status**
+
+除了VTP修剪外，交换机中继链路上对VLANs的不正确过滤，也可能导致端到端VLAN连通性的丢失。**默认允许所有VLANs通过所有中继链路；**但是思科IOS软件允许管理员通过使用接口配置命令`switchport trunk allowed vlan`，在指定中继链路上选择性地移除（或加入）VLANs。可以使用命令`show interfaces [name] trunk`及`show interfaces [name] switchport`，来查看中继链路上被修剪和限制的VLANs。作为检查某个中继端口上放行VLANs最容易的方式，命令`show interfaces [name] trunk`的输出如下所示。
+
+```
+Cat-3550-1#show interfaces trunk
+Port    Mode    Encapsulation   Status      Native vlan
+Fa0/1   on      802.1q          trunking    1
+Fa0/2   on      802.1q          trunking    1
+Port    Vlans allowed on trunk
+Fa0/1   1,10,20,30,40,50
+Fa0/2   1-99,201-4094
+Port    Vlans allowed and active in management domain
+Fa0/1   1,10,20,30,40,50
+Fa0/2   1,10,20,30,40,50,60,70,80,90,254
+Port    Vlans in spanning tree forwarding state and not pruned
+Fa0/1   1,10,20,30,40,50
+Fa0/2   1,40,50,60,70,80,90,254
+```
+
+同样要检查中继链路上通告的正确VLANs。在中继链路上放行的不适当VLANs可能引起功能缺失或安全问题。也想要确保中继链路两端有着同样的放行VLANs（Inproper VLANs allowed on the link can lead to a lack of functionality or security issues. Also, you want to make sure that the same VLANs are allowed on both ends of a trunk）。
+
+>**注意：**在将另外的需要在某条中继链路上放行的VLAN(s)加入进去时，应非常谨慎地不要忘记关键字`add`。比如，在已经配置了`switchport trunk allowed vlan 10, 20`，而打算同样放行VLAN 30时，就需要输入命令`switchport trunk allowed vlan add 30`。而如只是简单地配置`switchport trunk allowed vlan 30`，那么先前所允许的VLANs 10和20就会从中继链路上移除，这将导致VLANs 10和20的通信中断。
+
+由命令`show interfaces trunk`命令所提供的另一重要信息，就是中继端口状态。中继端口状态信息确认该中继链路是否形成，同时必须要在链路两端对此进行检查。如该端口未处于“中继”模式，此时最重要的就是必须对端口中继运作模式（the mode of operation, o/auto等）进行检查，看看在该模式下是否能与链路另一端形成中继状态。
+
+**检查封装类型**
+
+**Verify Encapsulation Type**
+
+解决中继故障的另一重要步骤，就是查明中继链路两端所配置的正确封装类型。大多数思科交换机都允许ISL及802.1Q封装类型。而尽管大多数现代网络都是设计使用dot1Q, 仍然可能存在一些网络优先使用ISL的情形。封装类型是通过使用接口配置命令`switchport trunk encapsulation <type>`配置的。而可用于查看封装类型的命令如下。
+
++ `show interfaces trunk`
++ `show interfaces <number> switchport`
+
+在某个已被静态配置为802.1Q中继链路端口上的`show interfaces [name] switchport`命令的输出如下所示。
+
+```
+Cat-3550-2#show interfaces FastEthernet0/7 switchport
+Name: Fa0/7
+Switchport: Enabled
+Administrative Mode: trunk
+Operational Mode: trunk
+Administrative Trunking Encapsulation: dot1q
+Operational Trunking Encapsulation: dot1q
+Negotiation of Trunking: On
+Access Mode VLAN: 1 (default)
+Trunking Native Mode VLAN: 1 (default)
+Administrative Native VLAN tagging: enabled
+Voice VLAN: none
+Administrative private-vlan host-association: none
+Administrative private-vlan mapping: none
+Administrative private-vlan trunk native VLAN: none
+Administrative private-vlan trunk native VLAN tagging: enabled
+Administrative private-vlan trunk encapsulation: dot1q
+Administrative private-vlan trunk normal VLANs: none
+Administrative private-vlan trunk associations: none
+Administrative private-vlan trunk mappings: none
+Operational private-vlan: none
+Trunking VLANs Enabled: 3,5,7
+Pruning VLANs Enabled: 2-8
+Capture Mode Disabled
+Capture VLANs Allowed: ALL
+Protected: false
+Unknown unicast blocked: disabled
+Unknown multicast blocked: disabled
+Appliance trust: none
+```
+
+如之前小节所说到的，网络中一台新交换机的加入，可能导致管理域中VLAN信息的丢失（the integration of a new switch into the network can result in a loss of VLAN information in the management domain）。而此VLAN信息丢失又可能导致同一VLAN中设备间连通性的丢失。所以在将新交换机加入到LAN之前，一定要确保其配置修订号被重置到0。
+
+###使用“show vlan”命令
+
+**Using the "show vlan" Command**
+

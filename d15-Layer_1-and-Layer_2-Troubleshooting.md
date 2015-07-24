@@ -663,3 +663,65 @@ Appliance trust: none
 
 **Using the "show vlan" Command**
 
+除了在前面几个小节中介绍的那些命令外，还有一些用于对VLAN配置进行检查和排错的有用思科IOS软件的命令。最常用到的VLAN检查和排错命令之一就是`show vlan`命令了。该命令显示管理域内所有VLANs的参数，如下面的输出所示。
+
+```
+Cat-3550-1#show vlan
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/11, Fa0/12,
+                                                Fa0/13, Fa0/14,
+                                                Fa0/20, Fa0/21,
+                                                Fa0/22, Fa0/23,
+                                                Fa0/24
+150  VLAN_150                         active    Fa0/2, Fa0/3, Fa0/4,
+                                                Fa0/5, Fa0/6, Fa0/7,
+                                                Fa0/8, Fa0/9, Fa0/10
+160  VLAN_160                         active    Fa0/15, Fa0/16,
+                                                Fa0/17, Fa0/18,
+                                                Fa0/19
+170  VLAN_170                         active    Gi0/1, Gi0/2
+1002 fddi-default                     active
+1003 token-ring-default               active
+1004 fddinet-default                  active
+1005 trnet-default                    active
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode
+---- ----- ---------- ----- ------ ------ -------- ---- --------
+1    enet  100001     1500  -      -      -        -    -
+150  enet  100150     1500  -      -      -        -    -
+160  enet  100160     1500  -      -      -        -    -
+170  enet  100170     1500  -      -      -        -    -
+1002 fddi  101002     1500  -      -      -        -    -
+1003 tr    101003     1500  -      -      -        -    -
+1004 fdnet 101004     1500  -      -      -        ieee -
+1005 trnet 101005     1500  -      -      -        ibm  -
+Trans1 Trans2
+------ ------
+0      0
+0      0
+0      0
+0      0
+0      0
+0      0
+0      0
+0      0
+Remote SPAN VLANs
+-------------------------------------------------------------------
+Primary Secondary Type              Ports
+------- --------- ----------------- -------------------------------
+```
+
+该命令打印出所有可用的VLANs，以及所分配到每个单独VLANs的那些端口。该命令的输出所包含的端口仅是接入端口，且不管这些端口是否开启或宕掉，都会显示出来。该命令输出不包括中继链路，因为这些输出属于所有所有VLANs。`show vlan`命令还提供了RSPAN(Remote Switch Port ANalyser, 远程交换机端口分析器) VLANs, 以及交换机上私有VLAN（Private VLAN, PVLAN， 这是一个CCNP考点）的信息。`show vlan`命令还可以带上一些额外关键字来使用，以提供更具体的信息。下面的输出显示了可与该命令一起使用的所支持的附加关键字。
+
+```
+Cat-3550-1#show vlan ?
+brief           VTP all VLAN status in brief
+id              VTP VLAN status by VLAN id
+ifindex         SNMP ifIndex
+name            VTP VLAN status by VLAN name
+private-vlan    Private VLAN information
+remote-span     Remote SPAN VLANs
+summary         VLAN summary information
+|               Output modifiers<cr>
+```
+

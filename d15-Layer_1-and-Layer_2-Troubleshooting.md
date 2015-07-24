@@ -472,29 +472,68 @@ Fa0/12           1696           32257            0
 
 ```
 Cat-3550-1#show interfaces trunk
-Port    Mode    Encapsulation   Status  Native vlan
-Fa0/12 desirable n-802.1q trunking 1
-Fa0/13 desirable n-802.1q trunking 1Fa0/14 desirable
-n-isl
-trunking
-1
-Fa0/15 desirable
-n-isl
-trunking
-1
-Port Vlans allowed on trunk
-Fa0/12 1-4094
-Fa0/13 1-4094
-Fa0/14 1-4094
-Fa0/15 1-4094
-Port Vlans allowed and active in management domain
-Fa0/12 1-4
-Fa0/13 1-4
-Fa0/14 1-4
-Fa0/15 1-4
-Port Vlans in spanning tree forwarding state and not pruned
-Fa0/12 1-4
-Fa0/13 none
-Fa0/14 none
-Fa0/15 none
+Port    Mode        Encapsulation   Status      Native vlan
+Fa0/12  desirable   n-802.1q        trunking    1
+Fa0/13  desirable   n-802.1q        trunking    1
+Fa0/14  desirable   n-isl           trunking    1
+Fa0/15  desirable   n-isl           trunking    1
+Port    Vlans allowed on trunk
+Fa0/12  1-4094
+Fa0/13  1-4094
+Fa0/14  1-4094
+Fa0/15  1-4094
+Port    Vlans allowed and active in management domain
+Fa0/12  1-4
+Fa0/13  1-4
+Fa0/14  1-4
+Fa0/15  1-4
+Port    Vlans in spanning tree forwarding state and not pruned
+Fa0/12  1-4
+Fa0/13  none
+Fa0/14  none
+Fa0/15  none
+```
+
+**另一个常见中继错误配置故障就是原生VLAN不匹配。**在配置802.1Q中继链路时，中继链路两端的原生VLAN必须匹配；否则该链路便不会工作。如存在原生VLAN不匹配，STP就会将该端口置为端口VLAN ID不一致状态（a port VLAN ID(PVID) inconsistent state），且不会在该链路上进行转发。在此情况下，将有类似于下面的消息在控制台或日志中打印出来。
+
+```
+*Mar 1 03:16:43.935: %SPANTREE-2-RECV_PVID_ERR: Received BPDU with inconsistent peer vlan id 1 on FastEthernet0/11 VLAN2.
+*Mar 1 03:16:43.935: %SPANTREE-2-BLOCK_PVID_PEER: Blocking FastEthernet0/11 on VLAN0001. Inconsistent peer vlan.
+*Mar 1 03:16:43.935: %SPANTREE-2-BLOCK_PVID_LOCAL: Blocking FastEthernet0/11 on VLAN0002. Inconsistent local vlan.
+*Mar 1 03:16:43.935: %SPANTREE-2-RECV_PVID_ERR: Received BPDU with inconsistent peer vlan id 1 on FastEthernet0/12 VLAN2.
+*Mar 1 03:16:43.935: %SPANTREE-2-BLOCK_PVID_PEER: Blocking FastEthernet0/12 on VLAN0001. Inconsistent peer vlan.
+*Mar 1 03:16:43.939: %SPANTREE-2-BLOCK_PVID_LOCAL: Blocking FastEthernet0/12 on VLAN0002. Inconsistent local vlan.
+```
+
+尽管STP排错将在本书后面进行讲解，该不一致状态仍可通过使用`show spanning-tree`命令进行查证，如下面所示。
+
+```
+Cat-3550-1#show spanning-tree interface FastEthernet0/11
+Vlan                Role    Sts     Cost        Prio.Nbr    Type
+------------------- ----    ---     --------    --------    ----------------
+VLAN0001            Desg    BKN*    19          128.11      P2p *PVID_Inc
+VLAN0002            Desg    BKN*    19          128.11      P2p *PVID_Inc
+```
+
+如已经查明该中继链路确实是正确配置，及两台交换机间是可运作的，接下来就应对VTP配置参数进行检查了。这些参数包括VTP域名、正确的VTP模式及VTP口令，如对该VTP域配置了某个参数，就要使用相应的`show vtp status`及`show vtp password`命令。`show vtp status`命令的输出如下所示。
+
+```
+Cat-3550-1#show vtp status
+VTP Version                     : running VTP2
+Configuration Revision          : 0
+Maximum VLANs supported locally : 1005
+Number of existing VLANs        : 8
+VTP Operating Mode              : Server
+VTP Domain Name                 : TSHOOT
+VTP Pruning Mode                : Enabled
+VTP V2 Mode                     : Enabled
+VTP Traps Generation            : Disabled
+MD5 digest                      : 0x26 0x99 0xB7 0x93 0xBE 0xDA 0x76 0x9C
+...
+[Truncated Output]
+```
+
+在应用`show vtp status`命令时，要确保交换机使用同一版本的VTP。默认情况下，Catalyst交换机允许VTP版本1。而运行VTP版本1的交换机是不能加入到VTP版本2的域中的。而如某交换机不兼容VTP版本2, 那么就要使用全局配置命令`vtp version`，将所有VTP版本2的交换机配置为运行版本1。
+
+> **注意：**如在服务器上修改了VTP版本，那么此改变将自动传播到VTP域中的客户端交换机。
 

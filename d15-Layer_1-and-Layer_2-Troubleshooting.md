@@ -466,3 +466,35 @@ Port    TrunkFramesTx   TrunkFramesRx   WrongEncap
 Fa0/12           1696           32257            0
 ```
 
+参考上面的输出，可以反复执行该命令，以确保Tx及Rx栏是持续增长的，并以此完成更多的排错。比如，假设该交换机没有发出任何帧，则该接口就可能并未配置为中继接口，或者其是宕掉的或关闭的（or it might be down or disabled）。而如果Rx栏没有增长，则可能是远端交换机未有正确配置。
+
+用于对可能的二层错误配置进行排错的另一个命令，就是`show interfaces [name] trunk`。该命令的输出包含了中继封装协议及模式、802.1Q的原生VLAN、允许通过中继链路VLANs、VTP域中活动的VLANs，以及被修剪掉的VLANs（the output of `show interfaces [name] trunk` includes the trunking encapsulation protocol and mode, the native VLAN for 802.1Q, the VLANs that are allowed to traverse the trunk, the VLANs that are active in the VTP domain, and the VLANs that are pruned）。**一个VLAN传播的常见问题，就是上游交换机已通过使用接口配置命令`switchport trunk allowed vlan`，被配置为对某些VLANs进行过滤。**命令`show interfaces [name] trunk`的输出如下所示。
+
+```
+Cat-3550-1#show interfaces trunk
+Port    Mode    Encapsulation   Status  Native vlan
+Fa0/12 desirable n-802.1q trunking 1
+Fa0/13 desirable n-802.1q trunking 1Fa0/14 desirable
+n-isl
+trunking
+1
+Fa0/15 desirable
+n-isl
+trunking
+1
+Port Vlans allowed on trunk
+Fa0/12 1-4094
+Fa0/13 1-4094
+Fa0/14 1-4094
+Fa0/15 1-4094
+Port Vlans allowed and active in management domain
+Fa0/12 1-4
+Fa0/13 1-4
+Fa0/14 1-4
+Fa0/15 1-4
+Port Vlans in spanning tree forwarding state and not pruned
+Fa0/12 1-4
+Fa0/13 none
+Fa0/14 none
+Fa0/15 none
+

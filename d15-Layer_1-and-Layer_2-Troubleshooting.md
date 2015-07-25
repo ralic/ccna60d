@@ -803,8 +803,59 @@ Fa0/12                0                  1                        0
 
 在交换机接收到一条带有与其计算出的MD5散列值不一致的MD5散列值的通告时，`Number of config digest errors counter`字段就会增长。这是在交换机上配置了不同VTP密码的结果。可使用`show vtp password`命令检查所配置的VTP密码是正确的。同样重要的是记住在密码一致时，硬件或软件的问题或缺陷也会造成VTP数据包的数据错误，从而也会导致这样的错误出现。
 
-最后，字段`VTP pruning statistics`将只在VTP域的VLAN修剪开启时，才会包含非零值。**修剪是在服务器上开启的，同时该配置在该VTP域中得以传播。**在某VTP域的修剪开启时，服务器将接收来自客户端的汇合（pruning is enabled on servers and this configuration is propagated throughtout the VTP domain. Servers will receive joins from clients when pruning has been enabled for the VTP domain, [VTP pruning, InformIT](pdfs/VTP-Pruning_InformIT.pdf)）。
+最后，字段`VTP pruning statistics`将只在VTP域的VLAN修剪开启时，才会包含非零值。**修剪是在服务器上开启的，同时该配置在该VTP域中得以传播。**在某VTP域的修剪开启时，服务器将接收来自客户端的Join报文（the VTP Join messages）（pruning is enabled on servers and this configuration is propagated throughtout the VTP domain. Servers will receive joins from clients when pruning has been enabled for the VTP domain, [VTP pruning, InformIT](pdfs/VTP-Pruning_InformIT.pdf)）。
 
 ![VTP Join报文及VTP修剪](images/03fig15.gif)
 
 *VTP Join报文及VTP修剪*
+
+##第15天问题
+
+1. What is the colour of the system LED under normal system operations?
+2. What is the colour of the RPS LED during a fault condition?
+3. You can cycle through modes by pressing the Mode button until you reach the mode setting you require. This changes the status of the port LED colours. True or false?
+4. What port speed is represented by a blinking green LED?
+5. If you want to be sure that you are not dealing with a cabling issue, one of the simplest things to do is to `_______` the cable and run the same tests again.
+6. Which command is generally used to troubleshoot Layer 1 issues (besides show interfaces )?
+7. The `_______` status is reflected when the connected cable is faulty or when the other end of the cable is not connected to an active port or device (e.g., if a workstation connected to the switch port is powered off).
+8. What are runts?
+9. The `_______` command can also be used to view interface errors and facilitate Layer 1 troubleshooting.
+10. Which command prints a brief status of all active VLANs?
+
+
+##第15天答案
+
+1. Green.
+2. Amber.
+3. True.
+4. 1000Mbps.
+5. Replace.
+6. The `show controllers` command.
+7. `notconnect`.
+8. Packets that are smaller than the minimum packet size (less than 64 bytes on Ethernet).
+9. `show interfaces [name] counters errors`.
+10. The `show vlan brief`command.
+
+##第15天实验
+
+###一层排错实验
+
+在真实设备上对本模块中提到的一层排错相关命令进行测试。
+
+    + 如同模块中所讲解的那样，检查不同场景下交换机系统及端口LED状态
+    + 执行一下`show interface`命令，并对本模块中所说明的有关信息进行查证
+    + 对`show controllers`及`show interface counters errors`进行同样的执行
+
+###二层排错使用
+
+在真实设备上对本模块中提到的二层排错相关命令进行测试。
+
+    + 在交换机之间配置VTP，并将一些VLANs从VTP服务器通告到VTP客户端（查看第三天的VTP实验）
+    + 在两台交换机之间配置一条中继链路，并生成一些流量（ping操作）
+    + 测试`show vlan`命令
+    + 测试`show interface counters trunk`命令
+    + 测试`show interface switchport`命令
+    + 测试`show interface trunk`命令
+    + 测试`show VTP status`命令
+    + 测试`show VTP counter`命令
+

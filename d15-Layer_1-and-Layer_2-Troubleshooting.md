@@ -797,4 +797,11 @@ Fa0/12                0                  1                        0
 
 图15.3演示了一个结合了冗余和负载均衡（incorporates redundancy and load sharing）的基本网络。应假设Sw1和Sw2都是配置成的VTP服务器，而Sw3是配置成的VTP客户端。Sw1是VLANs 10及30的根交换机，同时Sw2是VLANs 20及40的根交换机。假设在Sw1和Sw2上同时应用了改变，将VLAN 50加入到了Sw1, VLAN 60加入到了Sw2。在数据库的改变之后两台交换机都发出一条通告。
 
-变动在域中传播，覆写其它接收到该信息交换机先前的数据库。假设Sw5同时接收到来自邻居的同样信息，同时接收到的两条通告都包含了同样的配置修订号。那么在此情况下，该交换机就无法接受这两条通告，因为它们有着
+变动在域中传播，覆写其它接收到该信息交换机先前的数据库。假设Sw5同时接收到来自邻居的同样信息，同时接收到的两条通告都包含了同样配置修订号。那么在此情况下，该交换机就无法接受这两条通告，因为它们有着同样配置修订号，但却有着不同的MD5散列值。
+
+当这种情况发生时，交换机就将`Number of config revision errors counter`字段加一，同时不更新其VLANs数据库。而这种情况可能导致一个或多个VLANs中连通性的丢失，因为在该交换机上的VLAN信息没有得到更新。为解决此问题并确保该交换机上的本地数据库保持更新，就要在其中一台服务器交换机上配置一个虚构的VLAN（a dummy vlan），这样就导致对所有交换机本地数据库的覆写，从而允许Sw5也更新其数据库。切记这并不是一种常见现象（this is not a common occurance）; 但还是可能发生，因此，这里将这么多也是有必要的。
+
+在交换机接收到一条带有与其计算出的MD5散列值不一致的MD5散列值的通告时，`Number of config digest errors counter`字段就会增长。这是在交换机上配置了不同VTP密码的结果。可使用`show vtp password`命令检查所配置的VTP密码是正确的。同样重要的是记住在密码一致时，硬件或软件的问题或缺陷也会造成VTP数据包的数据错误，从而也会导致这样的错误出现。
+
+最后，字段`VTP pruning statistics`将只在VTP域的VLAN修剪开启时，才会包含非零值。**修剪是在服务器上开启的，同时该配置在该VTP域中得以传播。**在某VTP域的修剪开启时，服务器将接收来自客户端的汇合（pruning is enabled on servers and this configuration is propagated throughtout the VTP domain. Servers will receive joins from clients when pruning has been enabled for the VTP domain, [VTP pruning, InformIT](pdfs/VTP-Pruning_InformIT.pdf)）。
+

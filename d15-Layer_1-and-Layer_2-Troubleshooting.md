@@ -805,3 +805,6 @@ Fa0/12                0                  1                        0
 
 最后，字段`VTP pruning statistics`将只在VTP域的VLAN修剪开启时，才会包含非零值。**修剪是在服务器上开启的，同时该配置在该VTP域中得以传播。**在某VTP域的修剪开启时，服务器将接收来自客户端的汇合（pruning is enabled on servers and this configuration is propagated throughtout the VTP domain. Servers will receive joins from clients when pruning has been enabled for the VTP domain, [VTP pruning, InformIT](pdfs/VTP-Pruning_InformIT.pdf)）。
 
+![VTP Join报文及VTP修剪](images/03fig15.gif)
+
+*VTP Join报文及VTP修剪*

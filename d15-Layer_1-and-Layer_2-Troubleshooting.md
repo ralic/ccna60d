@@ -725,4 +725,27 @@ summary         VLAN summary information
 |               Output modifiers<cr>
 ```
 
-`brief`字段打印所有活动VLANs的简要信息。此命令的输出与上面的输出
+`brief`字段打印所有活动VLANs的简要信息。此命令的输出与上面的相同，唯一的区别就是省掉了后两个部分。`id`字段提供了和`show vlan`一样的信息，但如下面的输出所示，之包含特定VLAN的信息。
+
+```
+Switch-1#show vlan id 150
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- --------------------
+150  VLAN_150                         active    Fa0/1, Fa0/2, Fa0/3,
+                                                Fa0/4, Fa0/5, Fa0/6,
+                                                Fa0/7, Fa0/8, Fa0/9,
+                                                Fa0/10
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode
+---- ----- ---------- ----- ------ ------ -------- ---- --------
+150  enet  100150     1500  -      -      -        -    -
+Trans1 Trans2
+------ ------
+0      0
+0      0
+Remote SPAN VLAN
+----------------
+Disabled
+Primary Secondary Type              Ports
+------- --------- ----------------- --------------------------------
+```
+

@@ -725,3 +725,4 @@ summary         VLAN summary information
 |               Output modifiers<cr>
 ```
 
+`brief`字段打印所有活动VLANs的简要信息。此命令的输出与上面的输出

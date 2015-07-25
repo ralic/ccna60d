@@ -749,3 +749,48 @@ Primary Secondary Type              Ports
 ------- --------- ----------------- --------------------------------
 ```
 
+VLAN与属于该VLAN的接入端口一样，再度包含在了输出中。中继端口因为是属于所有VLANs，而不包含在输出中。额外信息包括了VLAN MTU、RSPAN配置（如适用），以及PVLAN配置参数（如适用）。
+
+`name`字段允许指定VLAN名称而不是其ID。该命令打印与`show vlan id <number>`命令同样的信息。`ifindex`字段现实VLAN的SNMP IfIndex(如适用)，而`private-vlan`及`remote-span`字段打印相应的PVLAN及RSPAN配置信息。最后, `summary`字段打印管理域（the management domain）中活动的VLANs数目的一个汇总信息。活动VLANs包括了标准和扩展VLANs。
+
+带上或不带参数的`show vlan`命令，在排错过程的以下方面，都是最为有用的命令。
+
++ 确认设备上所配置的VLANs
++ 判定端口成员关系
+
+另一个有用的VLAN排错命令，就是`show vtp counters`。该命令打印有关VTP数据包统计的信息。以下是在某台配置为VTP服务器的交换机上，`show vtp counters`的输出。
+
+```
+Cat-3550-1#show vtp counters
+VTP statistics:
+Summary advertisements received     : 15
+Subset advertisements received      : 10
+Request advertisements received     : 2
+Summary advertisements transmitted  : 19
+Subset advertisements transmitted   : 12
+Request advertisements transmitted  : 0
+Number of config revision errors    : 0
+Number of config digest errors      : 0
+Number of V1 summary errors         : 0
+VTP pruning statistics:
+Trunk   Join Transmitted    Join Received   Summary advts received
+                                            from non-pruning-
+                                            capable device
+-----   ----------------    --------------  -----------------------
+Fa0/11                0                  1                        0
+Fa0/12                0                  1                        0
+```
+
+`show vtp counters`命令打印输出的前六行，提供了三种类型VTP数据包的统计信息：通告请求（advertisement requests）、汇总通告（summary advertisements）以及子网通告（subnet advertisements）。随后小节将对这些不同报文进行讲解。
+
+**VTP通告请求**是对配置信息的请求。这些报文是由VTP客户端发出给VTP服务器，用以请求其没有的VLAN及VTP信息。在交换机重置、VTP域名称改变，或交换机接收到一条带有比其自身更高的配置修订号的VTP汇总通告帧时，客户端交换机便发出一条VTP通告请求报文。VTP服务器应仅显示接收计数器增长，而所有VTP客户端都应只显示发送计数器增长。
+
+**VTP汇总通告**是由服务器默认每隔5分钟发出的。这些报文类型用于告知邻接交换机当前VTP域名称、配置修订号及VLAN配置状态，及包括时间戳、MD5散列值及子网数目通告等其它VTP信息（VTP summary advertisements are used to tell an adjacent switch of the current VTP domain name, the configuration revision number and the status of the VLAN configuration, as well as other VTP information, which includes the time stamp, the MD5 hash, and the number of subnet advertisements to follow）。而如果服务器上的这些计数器在增长，那么在VTP域中就有不知一台交换机充当或配置为VTP服务器。
+
+**VTP子网通告**是由VTP服务器在某个VLAN配置改变时，比如有VLAN被加入、中止、改变、删除或其它VLAN指定参数（比如VLAN的MTU等）发生变化时所发出的。在VTP汇总通告之后，会有一或更多的子网通告发出。而一条子网通告包含了一个VLAN信息清单。而如果涉及多个VLANs，就需要多于一条的子网通告，以实现对所有VLANs的通告。
+
+字段`Number of config revision errors`显示了交换机因其接收到带有相同配置修订号，却有着不同MD5散列值的数据包，而无法接受的通告数目。在同一VTP域中有两台以上的服务器交换机上的VTP信息同时发生变动，且中间交换机于同一时间接收到来自这些服务器的通告时，这是常见会发生的。此概念在下图15.3中进行了演示，该图演示了一个基本的交换网络。
+
+![配置修订号错误的排错](images/1503.png)
+
+*图15.3 -- 配置修订号错误的排错*

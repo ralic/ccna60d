@@ -53,7 +53,7 @@ STP运行着一种算法，用于根据所考虑的特定VLAN，决定哪些端�
 
 BPDUs都是每两秒发出的，此特性允许实现快速网络循环探测及拓扑信息交换。BPDUs的两个类型分别是配置BPDUs及拓扑变化通知BPDUs（Configuration BPDUs and Topology Change Notification BPDUs）; 这里只会对配置BPDUs进行说明。
 
-##IEEE 802.1D配置BPDUs
+##IEEE 802.1D的配置BPDUs
 
 **IEEE 802.1D Configuration BPDUs**
 

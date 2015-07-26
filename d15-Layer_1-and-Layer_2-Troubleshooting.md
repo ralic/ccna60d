@@ -725,7 +725,7 @@ summary         VLAN summary information
 |               Output modifiers<cr>
 ```
 
-`brief`字段打印所有活动VLANs的简要信息。此命令的输出与上面的相同，唯一的区别就是省掉了后两个部分。`id`字段提供了和`show vlan`一样的信息，但如下面的输出所示，之包含特定VLAN的信息。
+`brief`字段打印所有活动VLANs的简要信息。此命令的输出与上面的相同，唯一的区别就是省掉了后两个部分。`id`字段提供了和`show vlan`一样的信息，但如下面的输出所示，只包含特定VLAN的信息。
 
 ```
 Switch-1#show vlan id 150

@@ -98,3 +98,28 @@ BPDUs都是每两秒发出的，此特性允许实现快速网络循环探测及
 3. Switch 2和Switch 3对接收到的配置BPDU进行修改（更新），让后在其指定端口上转发出去。**Switch 2就是该LAN网段上其自身及Switch 4的指定交换机，而Switch 3则是该LAN网段上其自身及Switch 5的指定交换机。**而存在于指定交换机上的指定端口，则是在转发来自该LAN网段的数据包到根交换机时，有着最低路径开销的端口。
 4. **在Switch 4和Switch 5之间的LAN网段上**，Switch 4被选举为指定交换机，同时指定端口也处于其上。因为在一个网段上只能有一台指定交换机，所以Switch 4和Switch 5之间网段Switch 5上的端口，就被阻塞掉了。该端口将不会转发任何BPDUs。
 
+##生成树端口的各种状态
+
+**Spanning Tree Port States**
+
+生成树算法（Spanning Tree Algorithm, STA）定义了STP控制下端口在进入到活动的转发状态之前，需要经历的几种状态。802.1D标准中端口状态有下面这些。
+
++ 阻塞中 -- 仅接收BPDUs（为期20s）， blocking -- BPDUs received only (20 seconds)
++ 侦听中 -- 有BPDUs发出和接收（为期15s），listening -- BPDUs sent and received (15 seconds)
++ 学习中 -- 桥接表被建立起来（为期15s），learning -- bridging table is built (15 seconds)
++ 转发中 -- 发送/接收数据，forwarding -- sending/receiving data
++ 关闭 -- 管理性关闭，disabled -- administratively down
+
+端口按以下方式在这些状态间依序移动。
+
+1. 从初始化状态到阻塞中状态
+2. 从阻塞中状态到侦听中状态或关闭状态
+3. 从侦听状态到学习状态或关闭状态
+4. 从学习状态到转发或关闭状态
+5. 从转发状态到关闭状态
+
+在该过程中用到**STP计时器**来控制收敛。
+
++ Hello计时器 -- 2s（每个配置BPDU直接的时间）
++ 转发延迟计数器 -- 15s（侦听/学习状态的控制时期），Forward Delay -- 15 seconds (controls durations of Listening/Learning states)
++

@@ -121,5 +121,107 @@ BPDUs都是每两秒发出的，此特性允许实现快速网络循环探测及
 在该过程中用到**STP计时器**来控制收敛。
 
 + Hello计时器 -- 2s（每个配置BPDU直接的时间）
-+ 转发延迟计数器 -- 15s（侦听/学习状态的控制时期），Forward Delay -- 15 seconds (controls durations of Listening/Learning states)
-+
++ 转发延迟计数器 -- 15s（侦听/控制学习状态的为期），Forward Delay -- 15 seconds (controls durations of Listening/Learning states)
++ 最大存活时间 -- 20s（控制阻塞状态的为期），Max Age -- 20 seconds (controls the duration of the Blocking state)
+
+**默认收敛时间是30到50秒。**
+
+###生成树阻塞状态
+
+**Spanning Tree Blocking State**
+
+处于阻塞状态的交换机端口，完成以下动作。
+
++ 在该端口上丢弃来自所连接网段的帧，discards frames received on the port from the attached segment
++ 丢弃交换自另一端口的帧，discards frames switched from another port
++ 不将工作站地址放入到其地址数据库中，does not incorporate station location into its address database
++ 接收BPDUs并将这些BPDUs引导给系统模块，receives BPDUs and directs them to the system module
++ 不将自系统模块接收到的BPDUs进行传送，does not transmit BPDUs received from the system module
++ 接收网络管理报文，并对这些报文进行响应，receives and responds to network management messages
+
+###生成树侦听状态
+
+**Spanning Tree Listening State**
+
+侦听状态是端口在阻塞状态之后所进入的第一个过渡状态。在STP确定端口应参与到帧转发时，该端口就进入此状态。处于侦听状态的交换机端口完成以下行为。
+
++ 丢弃接收自所连接网段的帧, discards frames received from the attached segment
++ 丢弃转发自另一端口的帧, discards frames switched from another port
++ 不将工作站地址加入到其地址数据库，does not incorporate station location into its address database
++ 接收BPDUs并将这些BPDUs引导给系统模块，receives BPDUs and directs them to the system module
++ 接收、处理并传送接收自系统模块的BPDUs, receives, processes, and transmits BPDUs received from the system module
++ 对网络管理报文进行接收和响应，receives and responds to network management messages
+
+###生成树学习状态
+
+**Spanning Tree Learning State**
+
+学习状态是端口所进入的第二个过渡状态。此状态在侦听状态之后，且在端口进入转发状态之前到来。在此状态汇中，端口学习并将MAC地址安装到其转发表中。处于学习状态的交换机端口完成以下动作。
+
++ 丢弃接收自所连接网段的帧, discards frames received from the attached segment
++ 丢弃转发自另一端口的帧, discards frames switched from another port
++ 将工作站地址加入到其地址数据库，incorporates(installs) station location into its address database
++ 接收BPDUs并将这些BPDUs引导给系统模块，receives BPDUs and directs them to the system module
++ 接收、处理并传送接收自系统模块的BPDUs, receives, processes, and transmits BPDUs received from the system module
++ 对网络管理报文进行接收和响应，receives and responds to network management messages
+
+###生成树转发状态
+
+**Spanning Tree Forwarding State**
+
+转发状态是端口在学习状态之后所进入的第三个过渡状态。处于转发状态的端口对帧进行转发。处于转发状态的交换机端口完成一下动作。
+
++ 转发接收自所连接网段的数据帧
++ 转发交换自另一端口的数据帧
++ 将站点地址信息加入（安装）到其地址数据库
++ 接收BPDUs并将这些BPDUs导向给系统模块
++ 处理接收自系统模块的BPDUs
++ 接收网络管理报文并对其进行响应
+
+###生成树关闭状态
+
+**Spanning Tree Disabled State**
+
+关闭状态不是端口正常STP进展的部分。而是端口被网络管理员进行管理性关闭，或因为某种错误条件而被系统所关闭，就被认为处于关闭状态。关闭的端口完成以下动作。
+
++ 丢弃接收自所连接网段的数据帧
++ 丢弃转发自另一端口的数据帧
++ 不将工作站地址加入其地址数据库
++ 接收BPDUs但不将这些BPDUs导向给系统模块
++ 不接收来自系统模块的BPDUs
++ 对网络管理报文进行接收和响应
+
+
+##生成树桥ID
+
+**Spanning Tree Bridge ID**
+
+位于某个生成树域中的交换机，都有一个用于对该STP域中的交换机，进行唯一性区分的桥ID（Bridge ID, BID）。BID还用于协助完成STP根桥(an STP Root Bridge)的选举，STP根桥将在稍后讲到。BID是由一个6字节的MAC地址及2字节的桥优先级（a 2-byte Bridge Priority）构成的8字节字段。下图31.3演示了BID。
+
+![桥ID格式](images/3103.png)
+
+*图31.3 -- 桥ID格式*
+
+**桥优先级是该交换机相对于其它交换机的优先级。**桥优先级取值范围是0到65535。思科Catalyst交换机的默认值为32768。
+
+<pre>
+Switch2#show spanning-tree vlan 2
+
+VLAN0002
+    Spanning tree enabled protocol ieee
+    <b>Root ID Priority    32768</b>
+                Address     0009.7c87.9081
+            Cost        19
+            Port        1 (FastEthernet0/1)
+            Hello Time  2 sec Max Age 20 sec Forward Delay 15 sec
+    Bridge ID Priority  32770 (priority 32768 sys-id-ext 2)
+            <b>Address     0008.21a9.4f80</b>
+            Hello Time  2 sec Max Age 20 sec Forward Delay 15 sec
+            Aging Time  300
+
+Interface   Port ID                 Designated                  Port ID
+Name        Prior.Nbr   Cost    Sts Cost        Bridge ID       Prior.Nbr
+----------  ---------   ----    --- ----------- --------------  ---------
+Fa0/1       128.1       19      FWD 0  32768    0009.7c87.9081  128.13
+Fa0/2       128.2       19      FWD 19  32770   0008.21a9.4f80  128.2
+</pre>

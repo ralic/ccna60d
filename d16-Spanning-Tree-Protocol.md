@@ -350,3 +350,35 @@ Vlan        Role    Sts    <b>Cost</b>    Prio.Nbr    Type
 ----        ----    ---    ----    --------    ----
 VLAN0050    Desg    FWD    <b>19</b>      128.2       P2p
 </pre>
+
+下面的输出显示了同样的长整数端口开销分配（the following output shows the same for long port cost assignment）。
+
+<pre>
+
+VTP-Server#<b>show spanning-tree interface FastEthernet0/2</b>
+Vlan        Role    Sts    <b>Cost</b>    Prio.Nbr    Type
+----        ----    ---    ----    --------    ----
+VLAN0050    Desg    FWD    <b>200000</b>      128.2       P2p
+</pre>
+
+重要的是记住带有更低的（数值）开销的端口是更为首选的端口；端口开销越低，那个特定端口被选举为根端口的可能性就越高（the lower the port cost, the higher the probability of that particular port being elected the Root Port）。**端口开销全局重要，并影响整个生成树网络。**该数值被配置在生成树域中的所有非根交换机上（on all Non-Root Switches in the Spanning Tree domain）。
+
+##生成树的根端口及指定端口
+
+**Spanning Tree Root and Designated Ports**
+
+STP选举出两种类型用于转发BPDUs的端口：指向根桥的根端口，以及指向根端口另一边的指定端口（STP elects two types of ports that are used to forward BPDUs: the Root Port, which points towards the Root Bridge, and the Designated Port, which points away from the Root Bridge）。掌握这两种端口类型的作用及其选举过程，十分重要。
+
+###生成树根端口选举
+
+**Spanning Tree Root Port Election**
+
+生成树算法定义了三种端口类型：**根端口、指定端口及非指定端口**。这些端口类型是有生成树算法选举出来，并被置为相应状态（比如转发中或阻塞中状态）。在生成树选举过程中，如存在悬而不决的情况，就会用到以下数值作为打破僵局方式。
+
+1. 最低的根桥ID, lowest Root Bridge ID
+2. 到根桥的最低根路径开销, lowest Root path cost to Root Bridge
+3. 最低的发送方桥ID, lowest sender Bridge ID
+4. 最低的发送方端口ID，lowest sender Port ID
+
+>**注意：**为掌握生成树选举及指定出在任何给定情形下不同端口类型，那么重要的是记住这些打破平局的标准了。这些标准不仅要对其进行测试，还要为真实世界中设计、部署及支持互联网络而牢固掌握这个知识点。
+

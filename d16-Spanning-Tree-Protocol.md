@@ -240,3 +240,113 @@ Fa0/2       128.2       19      FWD 19  32770   0008.21a9.4f80  128.2
 
 *图31.4 -- STP根桥的选举*
 
+在图31.4中，四台交换机--Switch 1、Switch 2、Switch 3及Switch 4, 处于同一STP域中。默认所有交换机都有着桥优先级32768。为确定哪台交换机将成为根桥，并由此打破不分胜负的局面，STP将基于最低顺序MAC地址选择出该根桥交换机（in order to determine which switch will become the Root Bridge, and thus break the tie, STP will select the switch based on the lowest-order MAC address）。那么基于此标准，并参考图31.4给出的信息，Switch 1将被选举为根桥。
+
+一旦选定，该根桥就成为该生成树网络的逻辑中心。这并不是说根桥位处该网络的物理中心。确保不要做出那样的错误假设。
+
+>**注意：**重要的是记住在STP根桥选举期间，是没有流量在该相同STP域上转发的。
+
+**思科IOS软件允许管理员对根桥选举施加影响。**此外，管理员**也可以配置一台备份根桥**（adminitrator can also configure a backup Root Bridge）。备份根桥是一台管理员优先选用的，在当前根桥失效或从网络中移除时成为根桥的交换机。
+
+为生成树域配置一台备份根桥交换机，始终是好的做法。这样做允许在根桥失效时，网络具有确定性。最常见的做法就是在根桥上配置最高的优先级（也就是优先级为最低的数值），并将第二高的优先级配置在当前根桥失效时作为根桥的交换机上。下图31.5对此进行了演示。
+
+![STP根桥选举（续）](images/3105.png)
+
+*图31.5 -- STP根桥选举（续）*
+
+基于图31.5中的配置，最有可能被选举作为根桥的交换机是Switch 1。这是因为尽管所有优先级都一样，但该交换机有着最低顺序的MAC地址。而加入Switch 1失效，STP就会选举Switch 2作为根桥，因此它有着第二低的MAC地址。但是这将导致一个次优的网络拓扑（however, this would result in a suboptimal network topology）。
+
+为解决此问题，管理员可手动修改Switch 1上的优先级到可能的最低值（0）, 以及Switch 2的优先级到可能的第二低优先级值（4096）。这样做将确保在根桥（Switch 1）失效时，Switch 2将被选举为根桥。因为管理员知道网络拓扑并了解哪台交换机将承担根桥功能，那么就建立了一个具有确定性、更容易排错的网络。根ID（the Root ID）承载于BPDUs中，包含了根桥的桥优先级及MAC地址。
+
+**考试技巧：**如要强制某台交换机成为根桥，可执行下面的命令（同时参见下图31.6）。
+
++ 可以手动设置优先级
+
+```
+Switch(config)#spanning-tree vlan 2 priority ?
+<0-61440>   bridge priority in increments of 4096
+```
+
++ 或者使用宏命令`primary`或`secondary`将其设置为根桥
+
+```
+Switch(config)#spanning-tree vlan 2 root ?
+    primary     Configure this switch as primary root for this spanning tree
+    secondary   Configure switch as secondary root
+```
+
+![强制某台交换机成为根桥](images/3106.png)
+
+*图31.6 -- 强制某台交换机成为根桥*
+
+<pre>
+SwitchC#show spanning-tree vlan 5
+VLAN0005
+Spanning tree enabled protocol ieee
+Root ID  <b>Priority   0</b>
+Address  0000.0000.000c
+<b>This bridge is the root</b>
+Bridge ID   Priority  0 (priority 0 sys-id-ext 5)
+SwitchD#show spanning-tree vlan 5
+VLAN0005
+Spanning tree enabled protocol ieee
+Root ID   <b>Priority  4096</b>
+Address  0000.0000.000d
+Bridge ID   Priority  4096 (priority 8192 sys-id-ext 5)
+SwitchD#show spanning-tree vlan 5
+VLAN0005
+Spanning tree enabled protocol ieee
+Root ID   <b>Priority  4096</b>
+Address  0000.0000.000d
+Bridge ID   Priority  4096 (priority 8192 sys-id-ext 5)
+</pre>
+
+注意到VLAN编号通常会被加到优先级数字上，如下面的输出展示的那样。
+
+<pre>
+SwitchA#show spanning-tree vlan 5
+Bridge ID   Priority <b>32773</b> (priority 32768 sys-id-ext 5)
+Address 0013.c3e8.2500
+Hello Time  2 sec Max Age 20 sec Forward Delay 15 sec
+Aging Time 300
+Interface  Role  Sts    Cost   Prio.Nbr  Type
+---------  ----  ----   ----   --------  ----
+Fa0/15     Desg  FWD    19     128.15    P2p
+Fa0/18     Desg  FWD    19     128.18    P2
+</pre>
+
+##生成树开销及优先级
+
+**Spanning Tree Cost and Priority**
+
+**STP使用开销及优先级数值来确定到根桥的最优路径。**这些数值此时用在根端口（the Root Port）的选举中，根端口选举将在接着的小节中讲到。**掌握开销及优先级数值的计算，对于理解为何生成树选举一个端口而不是另一个，是十分重要的。**
+
+生成树算法的一项关键功能，就是尝试提供出网络中的各台交换机自根桥的最短路径。而该最短路径一旦选定，就被用于转发数据，而将其它冗余链路置为阻塞状态。生成树算法用到两个数值来确定哪个端口将被置为转发状态（也就是到根桥的最优路径），以及哪些端口将被置为阻塞状态。这两个数值就是端口开销和端口优先级。二者都将在下面的小节讲到。
+
+###生成树端口开销
+
+**Spanning Tree Port Cost**
+
+802.1D规格分配16位（短整数）基于端口带宽的默认端口开销值给每个端口。因为管理员同时有着手动分配端口开销值（1和65535之间）的能力，所以该16位值就只用在那些未有具体配置了端口开销的端口。下表31.1列出了在应用短整数方式计算端口开销时各种类型端口的默认值。
+
+*表 31.1 -- 默认STP端口开销值*
+
+<table>
+<tr><th>带宽</th><th>默认端口开销</th></tr>
+<tr><td>4Mbps</td><td>250</td></tr>
+<tr><td>10Mbps</td><td>100</td></tr>
+<tr><td>16Mbps</td><td>62</td></tr>
+<tr><td>100Mbps</td><td>19</td></tr>
+<tr><td>1Gbps</td><td>4</td></tr>
+<tr><td>10Gbps</td><td>2</td></tr>
+</table>
+
+在思科IOS Catalyst交换机中，可通过执行`show spanning-tree interface [name]`查看默认端口开销值，如下面的输出中演示的那样，该输出展示了一个FastEthernet接口的默认短整数端口开销。
+
+<pre>
+
+VTP-Server#<b>show spanning-tree interface FastEthernet0/2</b>
+Vlan        Role    Sts    <b>Cost</b>    Prio.Nbr    Type
+----        ----    ---    ----    --------    ----
+VLAN0050    Desg    FWD    <b>19</b>      128.2       P2p
+</pre>

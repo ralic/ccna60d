@@ -225,3 +225,18 @@ Name        Prior.Nbr   Cost    Sts Cost        Bridge ID       Prior.Nbr
 Fa0/1       128.1       19      FWD 0  32768    0009.7c87.9081  128.13
 Fa0/2       128.2       19      FWD 19  32770   0008.21a9.4f80  128.2
 </pre>
+
+上面输出中的MAC地址是得自交换机背板或管理引擎的硬件地址（the hardware address derived from the switch backplane or supervisor engine）。在802.1D标准中，每个VLAN都需要一个唯一BID。
+
+大多数思科Catalyst交换机都有一个可用作VLANs的BIDs的，1024个MAC地址的地址池。这些MAC地址被顺序分配，也就是该范围中的第一个MAC地址分配给VLAN 1, 第二个给VLAN 2, 第三个给VLAN 3, 以致第四个第五个等等。这样就提供了支持标准范围VLANs的支持能力，但要支持扩展范围的VLANs，就需要更多的MAC地址。该问题在802.1t（802.1D的技术和编辑修正）标准（this issue was resolved in the 802.1t(Technical and Editoral corrections for 802.1D) standard）。
+
+##生成树根桥选举
+
+**Spanning Tree Root Bridge Election**
+
+默认情况下，紧接着初始化之后，所有交换机最初都假定它们是生成树的根，直到它们与其他交换机交换BPDUs为止。在交换机交换BPDUs时，就会举行一次选举，而**网络中有着最低桥ID的交换机就被选举为STP根桥**(the STP Root Bridge)。如过有两台或更多交换机有着相同的优先级，则选取有着最低顺序MAC地址的交换机作为根桥。下图31.4对此概念进行了演示。
+
+![STP根桥的选举](images/3104.png)
+
+*图31.4 -- STP根桥的选举*
+

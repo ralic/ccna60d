@@ -446,3 +446,16 @@ STP选举出两种类型用于转发BPDUs的端口：指向根桥的根端口，
 ![已收敛的生成树网络](images/3109.png)
 
 *图31.9 -- 已收敛的生成树网络*
+
+##思科生成树增强
+
+**Cisco Spanning Tree Enhancements**
+
+如早前指出的那样，STP对其所在环境做出以下两点假设。
+
++ 所有链路都是双向的，而能够发送和接收桥协议数据单元。
++ 所有交换机都能正常地接收、处理及发出BPDUs
+
+在现实世界的网络中，这两个假设并不总是正确。在这种情况下，STP就可能无法阻止网络中循环的形成（in situations where that is the case, STP may not be able to prevent loops from being formed within the network）。正是由于存在这种可能，且为提升基本的802.1D STA的性能，思科引入了一些对IEEE 802.1D标准的增强，将在下面进行说明。
+
+###

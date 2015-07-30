@@ -458,4 +458,48 @@ STP选举出两种类型用于转发BPDUs的端口：指向根桥的根端口，
 
 在现实世界的网络中，这两个假设并不总是正确。在这种情况下，STP就可能无法阻止网络中循环的形成（in situations where that is the case, STP may not be able to prevent loops from being formed within the network）。正是由于存在这种可能，且为提升基本的802.1D STA的性能，思科引入了一些对IEEE 802.1D标准的增强，将在下面进行说明。
 
-###
+###端口快速
+
+**Port Fast**
+
+端口快速是一项典型地对连接了一台主机的端口或接口开启的特性。当该端口上的链路起来时，交换机将跳过STA的第一阶段并直接过渡到转发状态。与通常的看法相反，端口快速特性并不在选定的端口上关闭生成树。这是因为就算带有端口快速特性，该端口仍能发送并接收BPDUs。
+
+这在该端口所连接的诸如某台工作站的网卡这样的，没有发送或响应BPDUs的网络设备时不是问题。但如该端口所连接的设备确实在发出BPDUs，比如另一台交换机，这可能造成交换循环。这是因为该端口跳过了侦听及学习阶段而立即进入到转发状态（this may result in a switching loop. This is because the port skips the Listening and Learning states and proceeds immediately to the Forwarding state）。端口快速简单地令到该端口相较经历所有STA步骤，快得多地开始转发以太网帧。
+
+###BPDU守护
+
+**BPDU Guard**
+
+**BPDU守护特性用于保护生成树域免受外部影响。BPDU默认是关闭的，但建议在所有开启了端口快速特性的端口上予以开启。**在配置了BPDU守护特性的端口接收到一个BPDU时，就立即转变成错误关闭状态（the errdisable state）。
+
+在那些关闭了生成树的端口上，这样做阻止了错误信息注入到生成树域中去。BPDU守护的运行，结合端口快速特性，在下面及后续的图31.10、31.11及31.12中，进行了演示。
+
+![掌握BPDU守护](images/3110.png)
+
+*图31.10 -- 掌握BPDU守护*
+
+图31.10中，Switch 1到Host 1的连接上**开启了端口快速。那么在初始化后，该端口便过渡到转发状态，这就消除了该端口在没有省略掉STA而要走完侦听及学习状态所要花掉的30秒。**因为该网络主机是一台工作站，其不在那个端口上发送BPDUs。
+
+要么因为偶然，或是由于一些其它恶意目的，Host 1从Switch 1上断开连接。使用同一端口，SWitch 3被连接到Switch 1。Switch 3同时也连接到Switch 2。因为端口快速在连接Switch 1到Switch 3的端口上开启，此端口就从初始化变成转发状态，从而省略掉了一般STP初始化过程。此端口将接收并处理所有由Switch 3发送的BPDUs，如下图31.11所示。
+
+![掌握BPDU守护（续）](images/3111.png)
+
+*图31.11 掌握BPDU守护（续）*
+
+基于上面所演示的端口状态，可很快看出一个循环将在此网络中如何建立起来。为阻止此情形的发生，就应在所有的那些开启了端口快速的端口上，开启BPDU守护。这在下面的图31.12中进行了演示。
+
+![掌握BPDU守护（续）](images/3112.png)
+
+*图31.12 -- 掌握BPDU守护（续）*
+
+在端口快速端口上带有BPDU守护下，在Switch 1接收到来自Switch 3的一个BPDU时，就立即将该端口转变成错误关闭状态（immediately transitions the port into the errdisable state）。结果就是STP计算不受该冗余链路的影响，且该网络不会有任何循环。
+
+###BPDU过滤器
+
+**BPDU Filter**
+
+BPDU守护与BPDU过滤器两个特性常常混淆或甚至被想成是同一个特性。但它们是不同的，而掌握它们之间的区别就很重要。在某个端口上开启了端口快速时，该端口将发出BPDUs且将接受及处理收到的BPDUs。BPDU守护特性阻止该端口接收任何的BPDUs，但不阻止其发送BPDUs。如有接收到任何BPDUs，该端口就将成为错误关闭端口（if any BPDUs received, the port will be errdisabled）。
+
+而BPDU过滤器特性有着两方面的功能（the BPDU Filter feature has dual functionality）。当在接口级别配置上BPDU过滤器时，它将有效地在选定端口上，通过阻止这些端口发送或接收所有BPDUs，而关闭这些端口的STP。而在全局配置了BPDU过滤器，并与全局端口快速配合使用是，它会将任何接收到BPDUs的端口，还原成端口快速模式。下图31.13对此进行了演示。
+
+![掌握BPDU过滤器](images/3113.png)

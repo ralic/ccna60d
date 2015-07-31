@@ -547,3 +547,10 @@ BPDU守护与BPDU过滤器两个特性常常混淆或甚至被想成是同一个
 
 **上行快速特性提升了在主要链路失效（根端口的直接失效）时，更快的到冗余链路的切换**（the Uplink Fast feature provides faster failover to a redundant link when the primary link fails(i.e., direct failure of the Root Port)）。该特性的主要目的是在出现上行链路失效时，提升STP的收敛时间。**该特性在带有到分布层冗余链路的接入层交换机上用的最多**；这也是其名称的由来。
 
+在接入层交换机有着到分布层的双宿主时，其中一条链路被被STP置为阻塞状态以防止环回（when Access Layer switches are dual-homed to the Distribution Layer, one of the links is placed into a Blocking state by STP to prevent loops）。在到分布层的主链路失效时，处于阻塞状态的端口就必须在开始转发流量之前，转换到侦听和学习状态。这导致在交换机能够转发以其它网段为目的的帧之前，有一个30秒的延迟。上行快速的运作，在下图31.16中进行演示。
+
+![掌握上行快速](images/3116.png)
+
+*图31.16 -- 掌握上行快速*
+
+图31.16中，

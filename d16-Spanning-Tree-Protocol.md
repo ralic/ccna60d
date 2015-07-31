@@ -553,4 +553,41 @@ BPDU守护与BPDU过滤器两个特性常常混淆或甚至被想成是同一个
 
 *图31.16 -- 掌握上行快速*
 
-图31.16中，
+图31.16中，在Access 1和Distribution 1之间的链路上出现了失效，Distribution 1是STP根桥，此失效意味着STP会将Access 1和Distribution 2之间的链路移入转发状态（也就是"阻塞中">"侦听中">"学习中">"转发中"，Blocking > Listening > Learning > Forwarding）。侦听和学习阶段各耗时15秒，所以该端口只需在总共30秒过去之后，便开始转发数据帧。**而在上行快速开启时，到分布层的后备端口被立即置为转发状态，从而带来无网络宕机时间的结果。**下图31.17对此概念进行了演示。
+
+![掌握上行快速（续）](images/3117.png)
+
+*图31.17 -- 掌握上行快速（续）*
+
+###骨干快速
+
+**Backbone Fast**
+
+骨干快速特性提供了STP域中一条非直连链路出现失效时的快速切换。在交换机从其指定桥（在其根端口上）接收到一个较差BPDU时，快速切换便发生了。一个较差BPDU表明指定桥失去了其到根桥的连接，所以该交换机知悉存在上游失效而无需等待计时器超时就改变根端口。下图31.18中对此进行了演示。
+
+![掌握骨干快速](images/3118.png)
+
+*图31.18 -- 掌握骨干快速*
+
+图31.18中，Switch 1和Switch 2之间的链路挂掉了。Switch 2探测到这个问题并发出BPDUs表明它是根桥。在来自Switch 1的BPDUs信息仍然保存着的Switch 3上，接收到较差的BPDUs。
+
+Switch 3将忽略这些较差BPDUs，直到最大存活值（the Max Age value）超时。在此期间，Switch 2继续将BPDUs发送给Switch 3。在最大存活时间超时后，Switch 3会将来自根桥、存储的BPDU信息老化排除，并转换到侦听状态，接着将把从根桥接收到的BPDU发送出去，发送给Switch 2。
+
+因为此BPDU好于Switch 2自己的，Switch 2将停止发送BPDUs，同时Switch 2和Switch 3之间的端口经历侦听及学习状态的转换，并最终进入到转发状态。STP过程的此默认运行方式将意味着Switch 2将至少在50秒内无法转发数据帧。
+
+骨干快速特性包含了一种允许在接收到一个较差的BPDU时，立即检查某个端口上存储的BPDU信息是否仍然有效的机制。此特性通过一种叫做RLQ PDU 的新协议数据单元及根链路请求实现的（this is implemented with a new PDU and the Root Link Query(RLQ), which is referred to as the RLQ PDU）。
+
+紧接着较差BPDU的接收，该交换机将在除接收该较差BPDU的端口外的所有非指定端口上，发出一个RLQ PDU。如该交换机是根桥或失去了到根桥的连接，就将对对该RLQ进行响应。否则，该RLQ将向上游传播（otherwise, the RLQ will be propagated upstream）。如该交换机在其根端口上接收到一个RLQ响应，那么到根桥的连通性仍然是完整的。如该响应实在非根端口上接收到的，就意味着到根桥的连通性已丢失，同时在交换机上的本地交换生成树必须重新计算且最大存活时间计数器被置为超时，如此就能重新找到一个新的根端口（if the response is received on a Non-Root Port, it means that connectivity to the Root Bridge is lost, and the local switch Spanning Tree must be recalculated on the switch and the Max Age timer expired so that a new Root Port can be found）。此概念在下图31.19中进行了演示。
+
+![掌握骨干快速（续）](images/3119.png)
+
+*图31.19 -- 掌握骨干快速（续）*
+
+参考图31.19, 紧接着较差BPDU的接收，Switch 3在除了该BPDU所接收到的端口之外的所有非指定端口上，发出一条RLQ请求。根桥功过一条从其指定端口发出的RLQ回应，对Switch 3的RLQ请求进行响应。因为是在Switch 3的根端口上接收到的该响应，该响应被认为是一条肯定响应（a positive response）。但如该响应是在非根端口上接收到的，那么该响应就被认为是否定的且该交换机将需要再度完成整个的生成树计算。
+
+基于Switch 3上接收到的肯定响应，就可以老化排除连接到Switch 2的端口而无需等待最大存活时间计数器过期（based on the positive response received on Switch 3, it can age out the port connected to Switch 2 without waiting for the Max Age timer to expire）。但是该端口仍必须经过侦听及学习状态。而通过立即将最大存活时间计数器进行老化清楚，骨干快速将收敛时间从50秒（20秒的最大存活时间 + 30秒的侦听和学习时间）减少到30秒（侦听和学习状态的时间）。
+
+RLQs的类型有两种：RLQ请求和RLQ响应。**RLQ请求典型地在根端口上发出，用以检查到根桥的连通性。所有RLQ响应都是在指定端口上发出的。**因为RLQ请求包含了发送该RLQ响应的根桥BID，如到根桥路径中其它交换机仍能到达该RLQ响应中所指定的根桥，其就会响应给发出RLQ请求的交换机（because the RLQ request contains the BID of the Root Bridge that sent it, if another switch in the path to the Root Bridge can still reach the Root Bridge specified in the RLQ response, it will respond back to the sending switch）。如路径上的交换机已不能到达RLQ响应中的根桥，该交换机就简单地通过其根端口，往根桥转发该查询。
+
+>**注意：**RLQ PDU有着与普通BPDU同样的包格式，唯一区别在于RLQ PDU包含了两个用于请求和回应的思科SNAP(子网接入协议，[Subnetwork Access Protocol](https://en.wikipedia.org/wiki/Subnetwork_Access_Protocol))地址。
+

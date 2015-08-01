@@ -591,3 +591,217 @@ RLQs的类型有两种：RLQ请求和RLQ响应。**RLQ请求典型地在根端�
 
 >**注意：**RLQ PDU有着与普通BPDU同样的包格式，唯一区别在于RLQ PDU包含了两个用于请求和回应的思科SNAP(子网接入协议，[Subnetwork Access Protocol](https://en.wikipedia.org/wiki/Subnetwork_Access_Protocol))地址。
 
+##STP排错
+
+**Troubleshooting STP**
+
+大多数二层故障都跟域中某种循环有关，而这又引起与其相关的多种问题，包括网络停机。在进行交换机配置的工作及将某台设备插入或拔出时，应确保没有在操作过程中建立循环。为缓和这类问题，就通常应在这些交换机上配置生成树协议，以避免出现在网络中的某处偶然创建出循环的情形（to mitigate against such problems, you should usually configure Spanning Tree Protocol on switches in order to avoid situations that might occur if you happen to accidently create a loop somewhere in the network）。
+
+网络中的所有交换机都是靠MAC地址进行通信的。在数据包进入时，就对MAC地址进行分析，从而基于二层头部中的目的MAC地址，确定出那个数据包的去向。网络中的所有设备都有着其自己的MAC地址，所以所有数据包在其走向上都是具体的。**不幸的是，像是广播及多播数据包前往交换机的所有端口。**如一个广播帧到达某个交换机端口，它将那个广播拷贝到可能连接到那台交换机的每台其它设备。此过程在网络中有着循环时，通常能是个问题。
+
+应记住MAC地址数据包内部没有超时机制。**在TCP/IP中（in the case of TCP/IP），IP协议在其头部有一个名为TTL（存活时间，Time to Live）的功能，该功能就是通过路由器的跳数, 而不是事实上的时间单位。**所以如果IP数据包碰巧处于循环中而通过多台路由器，它们将最终超时而被从网络中移除。但是，交换机并未提供那种机制。二层数据帧理论上可以永久循环，因为没有将其超时的机制，意味着如创建出一个循环，那个循环就会一直在那里，直到手动将其从网络中移除。
+
+如正将一台工作站插入到网络时，某个广播帧到达该工作站，那么该广播数据帧将在那个点终结而不会是个网络问题。但是，如在交换机侧端口进行了不当配置，或两端都插入了交换机而未开启STP，这将导致二层域内的广播风暴。广播风暴的发生，是因为广播数据包被转发到了所有其它端口，因此广播数据包保持继续存在并进入到同一网线上的另一交换机，引起二层循环。广播风暴能够引起高的资源使用甚至网络宕机。
+
+如在这样的配置不当的网络上开启STP，交换机将识别到循环的出现，并会阻塞确定端口以避免广播风暴。而所有交换机中的其它端口则继续正常运作，所以网络不受影响。如未有配置STP，那么唯一可做的就是拔掉引起问题的网线，或者在还能对交换机进行操作的时候，将其管理性关闭。
+
+STP故障通常有以下三类（STP issues usually fall within the following three categories）。
+
++ 不正确的根桥, incorrect Root Bridge
++ 不正确的根端口, incorrect Root Port
++ 不正确的指定端口，incorrect Designated Port
+
+###不正确的根桥
+
+优先级和基础MAC地址决定根桥是否是正确的（priority and base MAC addresss decide whether the Root Bridge is incorrect）。可以执行`show spanning-tree vlan <vlan#>`命令查看MAC地址及交换机优先级。而运用`spanning-tree vlan <vlan#> priority <priority>`命令修复此问题。
+
+###不正确的根端口
+
+根端口提供了自该交换机到根桥最快的路径，同时开销是跨越整个路径的累积（the Root Port provides the fastest path from the switch to the Root Bridge, and the cost is cumulative across the entire path）。如怀疑存在正确的根端口，就可执行`show spanning-tree vlan <vlan#>`命令。如根端口是不正确的，可执行`spanning-tree cost <cost>`命令对其进行修复。
+
+###不正确的指定端口
+
+指定端口是将某个网络区段连接到网络其它部分最低开销的端口（the Designated Port is the lowest cost port connecting a network segment to the rest of the network）。如怀疑存在指定端口问题，就可以执行`show spanning-tree vlan <vlan#>`及`spanning-tree cost <cost>`命令。
+
+而可对相关事件进行调试的一个有用的STP排错命令，就是`Switch#debug spanning-tree events`。
+
+##第31天问题
+
+1. How often do switches send Bridge Protocol Data Units ( BPDUs)?
+2. Name the STP port states in the correct order.
+3. What is the default Cisco Bridge ID?
+4. Which command will show you the Root Bridge and priority for a VLAN?
+5. What is the STP port cost for a 100Mbps link?
+6. When a port that is configured with the `_______` `_______` feature receives a BPDU, it immediately transitions to the errdisable state.
+7. The `_______` `_______` feature effectively disables STP on the selected ports by preventing them from sending or receiving any BPDUs.
+8. Which two commands will force the switch to become the Root Bridge for a VLAN?
+9. Contrary to popular belief, the Port Fast feature does not disable Spanning Tree on the selected port. This is because even with the Port Fast feature, the port can still send and receive BPDUs. True or false?
+10. The Backbone Fast feature provides fast failover when a direct link failure occurs. True or false?
+
+##第31天答案
+
+1. Every two seconds.
+2. Blocking, Listening, Learning, Forwarding, and Disabled.
+3. 32768.
+4. The `show spanning-tree vlan x` command.
+5. 19.
+6. BPDU Guard.
+7. BPDU Filter.
+8. The `spanning-tree vlan [number] priority [number]` and `spanning-tree vlan [number] root [primary|secondary]` commands.
+9. True.
+10. False.
+
+##第31天实验
+
+###生成树根选举实验
+
+**实验拓扑**
+
+![生成树根选举实验拓扑](images/3119.png)
+
+**实验目的**
+
+学习如何对哪台交换机成为生成树根桥施加影响。
+
+**实验步骤**
+
+1. 设置各台交换机的主机名并将其用交叉线连接起来。此时可以检查它们之间的接口是否被设置到“trunk”中继。
+
+`Switch#show interface trunk`
+
+2. 在将一侧设置为中继链路之前，可能看不到中继链路变成活动的。
+
+<pre>
+SwitchB#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+SwitchB(config)#int FastEthernet0/1
+SwitchB(config-if)#switchport mode trunk
+SwitchB(config-if)#^Z
+SwitchB#sh int trunk
+Port    Mode        Encapsulation   Status      Native vlan
+Fa0/1   <b>on</b>   802.1q          trunking    1
+Port    Vlans allowed on trunk
+Fa0/1   1-1005
+Port    Vlans allowed and active in management domain
+Fa0/1   1
+</pre>
+
+3. 将看到另一交换机是留作自动模式的。
+
+<pre>
+SwitchA#show int trunk
+Port    Mode        Encapsulation   Status      Native vlan
+Fa0/1   <b>auto</b> n-802.1q        trunking    1
+Port    Vlans allowed on trunk
+Fa0/1   1-1005
+Port    Vlans allowed and active in management domain
+Fa0/1   1
+</pre>
+
+4. 在每台交换机上创建出两个VLANs。
+
+```
+SwitchA#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+SwitchA(config)#vlan 2
+SwitchA(config-vlan)#vlan 3
+SwitchA(config-vlan)#^Z
+SwitchA#
+%SYS-5-CONFIG_I: Configured from console by console
+SwitchA#show vlan brief
+VLAN Name                   Status      Ports
+---- ------------------     -------     --------------------
+1    default                active      Fa0/2, Fa0/3, Fa0/4,
+                                        Fa0/5, Fa0/6, Fa0/7,
+                                        Fa0/8, Fa0/9, Fa0/10,
+                                        Fa0/11, Fa0/12, Fa0/13,
+                                        Fa0/14, Fa0/15, Fa0/16,
+                                        Fa0/17, Fa0/18, Fa0/19,
+                                        Fa0/20, Fa0/21, Fa0/22,
+                                        Fa0/23, Fa0/24
+2    VLAN0002               active
+3    VLAN0003               active
+1002 fddi-default           active
+1003 token-ring-default     active
+```
+
+同时也在交换机B上创建出VLANs（拷贝上面的命令）。
+
+5. 确定哪台交换机是VLANs 2和3的根桥。
+
+<pre>
+SwitchB#show spanning-tree vlan 2
+VLAN0002
+    Spanning tree enabled protocol ieee
+    Root ID     <b>Priority</b>    <b>32770</b>
+                Address 0001.972A.7A23
+                <b>This bridge is the root</b>
+                Hello Time  2 sec
+                Max Age     20 sec  Forward Delay 15 sec
+    Bridge ID   Priority    32770 (priority 32768 sys-id-ext 2)
+                Address     0001.972A.7A23
+                Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+                Aging Time  20
+Interface           Role  Sts  Cost      Prio.Nbr Type
+---------           ----  ---  ----      -------- ----
+Fa0/1               Desg  FWD  19        128.1    P2p
+</pre>
+
+可以看到，Switch B是根。在交换机A上完成同样的命令，并对VLAN 3进行检查。优先级是32768加上VLAN编号，这里就是2.最低MAC地址将确定出根桥。
+
+<pre>
+SwitchB#show spanning-tree vlan 3
+VLAN0003
+    Spanning tree enabled protocol ieee
+    Root ID     Priority    32771
+                Address 0001.972A.7A23
+                <b>This bridge is the root</b>
+                Hello Time  2 sec   Max Age 20 sec  Forward Delay 15 sec
+    Bridge ID   Priority    32771 (priority 32768 sys-id-ext 3)
+                Address 0001.972A.7A23
+                Hello Time  2 sec   Max Age 20 sec  Forward Delay 15 sec
+                Aging Time  20
+Interface           Role  Sts  Cost       Prio.Nbr Type
+----------          ----  ---  ----       -------- ----
+Fa0/1               Desg  FWD  19         128.1    P2p
+</pre>
+
+这里Switch A的MAC地址较高，这就是为何其不会成为根桥的原因：`0010：1123：D245`
+
+6. 将另一个交换机设置为VLANs 2和3的根桥。对VLAN 2使用命令`spanning-tree vlan 2 priority 4096`，以及对VLAN 3的`spanning-tree vlan 3 root primary`命令。
+
+<pre>
+SwitchA(config)#spanning-tree vlan 2 priority 4096
+SwitchA(config)#spanning-tree vlan 3 root primary
+SwitchA#show spanning-tree vlan 2
+VLAN0002
+    Spanning tree enabled protocol ieee
+    Root ID     <b>Priority     4098</b>
+                Address         0010.1123.D245
+                <b>This bridge is the root</b>
+                Hello Time      2 sec   Max Age 20 sec  Forward Delay 15 sec
+    Bridge ID   Priority        4098  (priority 4096 sys-id-ext 2)
+                Address         0010.1123.D245
+                Hello Time      2 sec   Max Age 20 sec  Forward Delay 15 sec
+                Aging Time      20
+Interface           Role  Sts      Cost       Prio.Nbr Type
+---------           ----  ---      ----       -------- ----
+Fa0/1               Desg  FWD      19         128.1    P2p
+SwitchA#show spanning-tree vlan 3
+VLAN0003
+    Spanning tree enabled protocol ieee
+    Root ID    Priority    24579
+               Address     0010.1123.D245
+               <b>This bridge is the root</b>
+               Hello Time  2 sec    Max Age 20 sec  Forward Delay 15 sec
+Bridge ID      Priority    24579 (priority 24576 sys-id-ext 3)
+               Address     0010.1123.D245
+               Hello Time  2 sec    Max Age 20 sec  Forward Delay 15 sec
+               Aging Time  20
+Interface          Role  Sts  Cost        Prio.Nbr Type
+---------          ----  ---  ----        -------- ----
+Fa0/1              Desg  FWD  19          128.1    P2p
+SwitchA#
+</pre>
+
+>**注意：**尽管Switch B有较低的桥ID，Switch A还是被强制作为根桥。

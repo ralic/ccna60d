@@ -279,35 +279,35 @@ Fa0/2       128.2       19      FWD 19  32770   0008.21a9.4f80  128.2
 
 上面输出中的MAC地址是得自交换机背板或管理引擎的硬件地址（the hardware address derived from the switch backplane or supervisor engine， 又名为基底MAC地址，the base MAC address）。**在802.1D标准中，每个VLAN都需要一个唯一BID。**
 
-大多数思科Catalyst交换机都有一个可用作VLANs的BIDs的、1024个MAC地址的地址池。这些MAC地址被顺序分配，也就是该范围中的第一个MAC地址分配给VLAN 1, 第二个给VLAN 2, 第三个给VLAN 3, 以致第四个第五个等等。这样就提供了支持标准范围VLANs的支持能力，但要支持扩展范围的VLANs，就需要更多的MAC地址。该问题在802.1t（802.1D的技术和编辑修正）标准得以解决（this issue was resolved in the 802.1t(Technical and Editoral corrections for 802.1D) standard）。
+大多数思科Catalyst交换机都有一个可用作VLANs的BIDs的、1024个MAC地址的地址池。这些MAC地址被顺序分配，也就是该范围中的第一个MAC地址分配给VLAN 1, 第二个给VLAN 2, 第三个给VLAN 3, 以致第四个第五个等等。这样就提供了支持标准范围VLANs的支持能力，但要支持扩展范围的VLANs，就需要更多的MAC地址。该问题在802.1t（802.1D的技术和编辑修正）标准中得以解决（this issue was resolved in the 802.1t(Technical and Editoral corrections for 802.1D) standard）。
 
 ##生成树根桥选举
 
 **Spanning Tree Root Bridge Election**
 
-默认情况下，紧接着初始化之后，所有交换机最初都假定它们是生成树的根，直到它们与其他交换机交换BPDUs为止。在交换机交换BPDUs时，就会举行一次选举，而**网络中有着最低桥ID的交换机就被选举为STP根桥**(the STP Root Bridge)。如过有两台或更多交换机有着相同的优先级，则选取有着最低顺序MAC地址的交换机作为根桥。下图31.4对此概念进行了演示。
+默认情况下，紧接着初始化之后，所有交换机最初都假定它们是生成树的根，直到它们与其他交换机交换BPDUs为止。在交换机交换BPDUs时，就举行一次选举，而**网络中有着最低桥ID的交换机就被选举为STP根桥**(the STP Root Bridge)。如有两台或更多交换机有着相同的优先级，则选取有着最低顺序MAC地址的交换机作为根桥。下图31.4对此概念进行了演示。
 
 ![STP根桥的选举](images/3104.png)
 
 *图31.4 -- STP根桥的选举*
 
-在图31.4中，四台交换机--Switch 1、Switch 2、Switch 3及Switch 4, 处于同一STP域中。默认所有交换机都有着桥优先级32768。为确定哪台交换机将成为根桥，并由此打破不分胜负的局面，STP将基于最低顺序MAC地址选择出该根桥交换机（in order to determine which switch will become the Root Bridge, and thus break the tie, STP will select the switch based on the lowest-order MAC address）。那么基于此标准，并参考图31.4给出的信息，Switch 1将被选举为根桥。
+在图31.4中，四台交换机--Switch 1、Switch 2、Switch 3及Switch 4, 处于同一STP域中。默认所有交换机都有着桥优先级32768。为确定哪台交换机将成为根桥，并由此打破不分胜负的局面，STP将基于最低顺序MAC地址选择出根桥交换机（in order to determine which switch will become the Root Bridge, and thus break the tie, STP will select the switch based on the lowest-order MAC address）。那么基于此标准，并参考图31.4给出的信息，Switch 1将被选举为根桥。
 
-一旦选定，该根桥就成为该生成树网络的逻辑中心。这并不是说根桥位处该网络的物理中心。确保不要做出那样的错误假设。
+一旦选定，根桥就成为生成树网络的逻辑中心。这并不是说根桥位处该网络的物理中心。确保不要做出那样的错误假设。
 
 >**注意：**重要的是记住在STP根桥选举期间，是没有流量在该相同STP域上转发的。
 
-**思科IOS软件允许管理员对根桥选举施加影响。**此外，管理员**也可以配置一台备份根桥**（adminitrator can also configure a backup Root Bridge）。备份根桥是一台管理员优先选用的，在当前根桥失效或从网络中移除时成为根桥的交换机。
+**思科IOS软件允许管理员对根桥选举施加影响。**此外，管理员**也可以配置一台备份根桥**（adminitrator can also configure a backup Root Bridge）。备份根桥是一台管理员优先选择、在当前根桥失效或从网络中移除时成为根桥的交换机。
 
-为生成树域配置一台备份根桥交换机，始终是好的做法。这样做允许在根桥失效时，网络具有确定性。最常见的做法就是在根桥上配置最高的优先级（也就是优先级为最低的数值），并将第二高的优先级配置在当前根桥失效时作为根桥的交换机上。下图31.5对此进行了演示。
+**为生成树域配置一台备份根桥交换机，始终是好的做法。**这样做允许在根桥失效时，网络具有确定性。最常见的做法就是在根桥上配置最高的优先级（也就是优先级为最低数值），并将第二高的优先级配置在当前根桥失效时作为根桥的备份交换机上。下图31.5对此进行了演示。
 
 ![STP根桥选举（续）](images/3105.png)
 
 *图31.5 -- STP根桥选举（续）*
 
-基于图31.5中的配置，最有可能被选举作为根桥的交换机是Switch 1。这是因为尽管所有优先级都一样，但该交换机有着最低顺序的MAC地址。而加入Switch 1失效，STP就会选举Switch 2作为根桥，因此它有着第二低的MAC地址。但是这将导致一个次优的网络拓扑（however, this would result in a suboptimal network topology）。
+基于图31.5中的配置，最有可能被选举作为根桥的交换机是Switch 1。这是因为尽管所有优先级都一样，但该交换机有着最低顺序的MAC地址。而假如Switch 1失效，STP就会选举Switch 2作为根桥，因为它有着第二低的MAC地址。但是这将导致一个次优的网络拓扑（however, this would result in a suboptimal network topology）。
 
-为解决此问题，管理员可手动修改Switch 1上的优先级到可能的最低值（0）, 以及Switch 2的优先级到可能的第二低优先级值（4096）。这样做将确保在根桥（Switch 1）失效时，Switch 2将被选举为根桥。因为管理员知道网络拓扑并了解哪台交换机将承担根桥功能，那么就建立了一个具有确定性、更容易排错的网络。根ID（the Root ID）承载于BPDUs中，包含了根桥的桥优先级及MAC地址。
+为解决此问题，管理员可手动修改Switch 1上的优先级到可能的最低值（0）, 以及Switch 2的优先级到可能的第二低优先级值（4096）。这样做将确保在根桥（Switch 1）失效时，Switch 2被选举为根桥。因为管理员知道网络拓扑并了解哪台交换机将承担根桥功能，那么就建立了一个具有确定性、更容易排错的网络。**根ID（the Root ID）承载于BPDUs中，包含了根桥的桥优先级及MAC地址。**
 
 **考试技巧：**如要强制某台交换机成为根桥，可执行下面的命令（同时参见下图31.6）。
 

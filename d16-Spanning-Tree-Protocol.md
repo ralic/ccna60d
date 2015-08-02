@@ -11,7 +11,7 @@
 + 阅读ICND2记诵指南
 + 在[subneting.org](http://subnetting.org/)上花15分钟
 
-生成树协议（Spanning Tree Protocol, STP）的作用是通过建立一个无循环的逻辑拓扑，阻止网络上循环的发生，同时还允许在具备冗余的交换网络拓扑中物理链路的存在（the role of Spanning Tree Protocol(STP) is to prevent loops from occuring on your network by creating a loop-free logical topology, while allowing physical links in redundant switched network topologies）。在网络中所用到的交换机数量极具增加，以及VLAN信息传播主要目的下，围绕网络的以太网帧的无尽循环问题开始出现。
+生成树协议（Spanning Tree Protocol, STP）的作用是在允许在具备冗余的交换网络拓扑中物理链路的同时, 通过建立一个无循环的逻辑拓扑，阻止网络上循环的发生（the role of Spanning Tree Protocol(STP) is to prevent loops from occuring on your network by creating a loop-free logical topology, while allowing physical links in redundant switched network topologies）。在网络中所用到交换机数量急剧增加，以及VLAN信息传播的主要目的下，围绕网络数据帧无尽循环问题开始出现。
 
 先前CCNA考试仅要求对STP有基本理解。但当前版本则希望对此方面有极好的掌握。
 

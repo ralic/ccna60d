@@ -37,66 +37,81 @@
 
 STP是在IEEE 802.1D标准中定义的。为维护起一个无循环的逻辑拓扑，交换机**每两秒**传递桥协议数据单元（Bridge Protocol Data Units, BPDUs）。BPDUs是一些在生成树拓扑中用到的用于传递有关端口、地址、优先级及开销等信息的数据报文。BPDUs打上了VLAN ID标签。
 
-下图31.1显示了网络中循环是如何能创建出来的。因为所有交换机都学到VLAN 20, 同时这些交换机又通告给其它交换机其各自又能到达VLAN 20。很快，所有交换机都认为其是VLAN 20流量的源，那么都造成了循环，因此所有以VLAN 20为目的地的帧将自一台交换机往另一台不停传递。
+下图31.1显示了网络中循环是如何能创建出来的。因为各台交换机都学到VLAN 20, 同时这些交换机也将其能达到VLAN 20的情况，通告给其它交换机。很快，所有交换机都认为其是VLAN 20流量的源，且造成了一个循环，因此所有以VLAN 20为目的地的帧将自一台交换机往另一台不停传递。
 
 ![循环是怎么建立的](images/3101.png)
 
 *图31.1 -- 循环是如何建立的*
 
-STP运行着一种算法，用于根据所考虑的特定VLAN，决定哪些端口保持开放或活动，以及那些端口需要对特定VLAN关闭。
+STP运行着一种算法，用于根据所考虑的特定VLAN，决定出哪些端口保持开放或活动，以及哪些端口需要对特定VLAN关闭。
 
-位处生成树域中的所有交换机都采用BPDUs来沟通和交换报文。STP利用BPDUs的交换，来决定出网络拓扑，而网络拓扑则是由以下三个变量决定的。
+**位处生成树域中的所有交换机，都使用BPDUs来沟通和交换报文。**STP利用BPDUs的交换，来确定网络拓扑，而网络拓扑则是由以下三个变量决定的。
 
-+ 所有交换机的相关唯一MAC地址（交换机识别符），the unique MAC address(switch identifier) that is associated with each switch
-+ 所有交换机端口的到根桥的路径开销，the path cost to the Root Bridge associated with each switch port
-+ 所有交换机端口的端口识别符（该端口的MAC地址），the port identifier(MAC address of the port) associated with each switch port
++ 与各台交换机相关联的唯一MAC地址（交换机识别符），the unique MAC address(switch identifier) that is associated with each switch
 
-BPDUs都是每两秒发出的，此特性允许实现快速网络循环探测及拓扑信息交换。BPDUs的两个类型分别是配置BPDUs及拓扑变化通知BPDUs（Configuration BPDUs and Topology Change Notification BPDUs）; 这里只会对配置BPDUs进行说明。
++ 各个交换机端口到根桥的路径开销，the path cost to the Root Bridge associated with each switch port
+
++ 各个交换机端口的端口识别符（该端口的MAC地址），the port identifier(MAC address of the port) associated with each switch port
+
+BPDUs都是每两秒发出的，此特性允许实现快速的网络循环探测及拓扑信息交换。BPDUs的两个类型分别是**配置BPDUs**及**拓扑变化通知BPDUs**（Configuration BPDUs and Topology Change Notification BPDUs）; 这里只会对配置BPDUs进行说明。
 
 ##IEEE 802.1D的配置BPDUs
 
 **IEEE 802.1D Configuration BPDUs**
 
-配置BPDUs是由LAN交换机发出，用于对生成树协议进行通信及计算。在交换机端口初始化后，该端口就被置为阻塞状态，同时一个BPDU被发送给交换机的所有端口。默认情况下，直到其与其它交换机进行配置BPDUs的交换为止，所有交换机最初都假定其为生成树的根。在某端口仍将其自身配置BPDUs视为最具吸引力（the most attractive）的时，其就会持续发送配置BPDUs。这些交换机基于以下4个因素（以列出顺序），决定出最佳配置BPDU。
+配置BPDUs是由LAN交换机发出，用于就生成树拓扑的通信和计算。在交换机端口初始化后，该端口就置为阻塞状态，同时一个BPDU被发送给交换机中的所有端口。**默认情况下，直到其与其它交换机进行配置BPDUs的交换为止，所有交换机最初都假定其为生成树的根。**在某端口仍将其自身配置BPDUs视为最具吸引力（the most attractive）的时，其就会持续发送配置BPDUs。这些交换机基于以下4个因素（以列出顺序），确定出最佳配置BPDU（the best Configuration BPDU）。
 
 1. 有着最低的根桥ID的, lowest Root Bridge ID
+
 2. 有着到根桥最低根路径开销的，lowest Root path cost to Root Bridge
+
 3. 有着最低发送者桥ID的，lowest sender Bridge ID
+
 4. 有着最低发送者端口ID的，lowest sender Port ID
 
-配置BPDU交换的完成，引起以下的这些行为。
+配置BPDU交换的完成，导致以下动作。
 
 + 选举出整个生成树域的根桥, a Root Switch is elected for the entire Spanning Tree domain
+
 + 选举出生成树域中所有非根交换机上的根端口，a Root Port is elected on every Non-Root Switch in the Spanning Tree domain
+
 + 选举出所有LAN网段中的指定交换机，a Designated Switch is elected for every LAN segment
+
 + 选举出所有网段的指定交换机的指定端口(根交换机上的所有活动端口也都是指定端口)，a Designated Port is elected on the Designated Switch for every segment(all active ports on the Root Switch are also designated)
+
 + 通过阻塞冗余路径，网络中的循环得以消除，loops in the network are eliminated by blocking redundant paths
 
 > **注意：**随着逐步深入本模块内容，这些特性将会一一介绍。
 
-一旦所有交换机端口都处于转发或阻塞状态，生成树网络（the Spanning Tree network）就完成了收敛, 此时配置BPDUs就由根桥以默认每两秒的间隔发出。这就是配置BPDUs的起源。配置BPDUs通过根桥上的指定端口，转发到下游邻居交换机（this is referred to as the origination of Configuration BPDUs. The Configuration BPDUs are forwarded to downstream neighboring switches via the Designated Port on the Root Bridge）。
+一旦所有交换机端口都处于转发或阻塞状态，生成树网络（the Spanning Tree network）就完成了收敛, 此时配置BPDUs就由根桥以默认每两秒的间隔发出。这就是**配置BPDUs的起源**。配置BPDUs通过根桥上的指定端口，转发到下游邻居交换机（this is referred to as the origination of Configuration BPDUs. The Configuration BPDUs are forwarded to downstream neighboring switches via the Designated Port on the Root Bridge）。
 
-在非根桥（a Non-Root Bridge）在提供了到根桥的最优路径的其根端口上，接收到一个配置BPDU时，就会通过其指定端口，发送出一个该BPDU的更新版本消息。这就是BPDUs的传播（when a Non-Root Bridge receives a Configuration BPDU on its Root Port, which is the port that provides the best path to the Root Bridge, it sends an updated version of the BPDU via its Designated Port(s). This is referred to as the propagation of BPDUs）。
+当非根桥（a Non-Root Bridge）在其提供了到根桥最优路径的根端口上，接收到一个配置BPDU时，就会通过其指定端口，发送出一个该BPDU的更新版本。这就是**BPDUs的传播**（when a Non-Root Bridge receives a Configuration BPDU on its Root Port, which is the port that provides the best path to the Root Bridge, it sends an updated version of the BPDU via its Designated Port(s). This is referred to as the propagation of BPDUs）。
 
-**指定端口**则是**指定交换机**上，在转发来自那个LAN网段数据包到根桥时，有着最低路径开销的端口（**the Designated Port** is a port on **the Designated Switch** that has the lowest cost when forwarding packets from that LAN segment to the Root Bridge）。
+**指定端口**则是**指定交换机**上，在转发来自那个LAN网段的数据包到根桥时，有着最低路径开销的端口（**the Designated Port** is a port on **the Designated Switch** that has the lowest cost when forwarding packets from that LAN segment to the Root Bridge）。
 
-一旦生成树网络得以收敛，就总是会有自根桥传输给STP域内其它交换机的一个配置BPDUs在传送。而要记住在生成树网络完成收敛后的配置BPDUs数据流的最简单方法，就是记住以下4条规则。
+一旦生成树网络得以收敛，便总是会有自根桥传输给STP域内其它交换机的一个配置BPDU在传送。而要记住在生成树网络完成收敛后的配置BPDUs数据流的最简单方法，就是记住以下4条规则。
 
 1. 配置BPDUs是从根桥发出且通过指定端口发送的, a Configuration BPDU originates on the Root Bridge and is sent via the Designated Port
-2. 配置BPDUs是由非根桥的根端口上接收的，a Configuration BPDU is received by a Non-Root Bridge on a Root Port
-3. 配置BPDU是由非根桥的指定端口上传送的，a Configuration BPDU is transmitted by a Non-Root Bridge on a Designated Port
-4. 在所有单个的LAN网段上，都只有一个指定端口（在某台指定交换机上），there is only one Designated Port (on a Designated Switch) on any single LAN segment
 
-下图31.2对该STP域中配置BPDU数据流进行了图解说明，从而对上面列出的4条简单规则进行了演示。
+2. 配置BPDUs是由非根桥的根端口上接收的，a Configuration BPDU is received by a Non-Root Bridge on a Root Port
+
+3. 配置BPDU是由非根桥的指定端口上传送的，a Configuration BPDU is transmitted by a Non-Root Bridge on a Designated Port
+
+4. 在所有单个LAN区段上，都只有一个指定端口（在某台指定交换机上），there is only one Designated Port (on a Designated Switch) on any single LAN segment
+
+下图31.2演示了该STP域中的配置BPDU数据流，对上面列出的4条简单规则进行了说明。
 
 ![STP域中的配置BPDU数据流](images/3102.png)
 
 *图31.2 -- STP域中的配置BPDU数据流*
 
-1. 参考图31.2, 该配置BPDU是源自根桥，同时通过根桥上的指定端口发送出来，前往非那些非根桥交换机，也就是Switch 2和Switch 3。
+1. 参考图31.2, 该配置BPDU源自根桥，且是通过根桥上的指定端口发送出来，前往那些非根桥交换机，也就是Switch 2和Switch 3。
+
 2. 非根桥Switch 2和Switch 3在其有着到根桥最优路径的根端口上，接收到配置BPDU。
-3. Switch 2和Switch 3对接收到的配置BPDU进行修改（更新），让后在其指定端口上转发出去。**Switch 2就是该LAN网段上其自身及Switch 4的指定交换机，而Switch 3则是该LAN网段上其自身及Switch 5的指定交换机。**而存在于指定交换机上的指定端口，则是在转发来自该LAN网段的数据包到根交换机时，有着最低路径开销的端口。
-4. **在Switch 4和Switch 5之间的LAN网段上**，Switch 4被选举为指定交换机，同时指定端口也处于其上。因为在一个网段上只能有一台指定交换机，所以Switch 4和Switch 5之间网段Switch 5上的端口，就被阻塞掉了。该端口将不会转发任何BPDUs。
+
+3. Switch 2和Switch 3对接收到的配置BPDU进行修改（更新），让后在其指定端口上转发出去。**Switch 2就是该LAN网段上其自身及Switch 4的指定交换机，Switch 3是该LAN网段上其自身及Switch 5的指定交换机。**而存在于指定交换机上的指定端口，则是在转发来自该LAN区段数据包到根交换机时，有着最低路径开销的端口。
+
+4. **在Switch 4和Switch 5之间的LAN网段上**，Switch 4被选举为指定交换机，同时指定端口也处于其上。因为在一个网段上只能有一台指定交换机，所以Switch 4和Switch 5之间网段上，Switch 5的端口，就被阻塞掉了。该端口将不会转发任何BPDUs。
 
 ##生成树端口的各种状态
 
@@ -105,23 +120,33 @@ BPDUs都是每两秒发出的，此特性允许实现快速网络循环探测及
 生成树算法（Spanning Tree Algorithm, STA）定义了STP控制下端口在进入到活动的转发状态之前，需要经历的几种状态。802.1D标准中端口状态有下面这些。
 
 + 阻塞中 -- 仅接收BPDUs（为期20s）， blocking -- BPDUs received only (20 seconds)
+
 + 侦听中 -- 有BPDUs发出和接收（为期15s），listening -- BPDUs sent and received (15 seconds)
+
 + 学习中 -- 桥接表被建立起来（为期15s），learning -- bridging table is built (15 seconds)
+
 + 转发中 -- 发送/接收数据，forwarding -- sending/receiving data
+
 + 关闭 -- 管理性关闭，disabled -- administratively down
 
 端口按以下方式在这些状态间依序移动。
 
 1. 从初始化状态到阻塞中状态
+
 2. 从阻塞中状态到侦听中状态或关闭状态
+
 3. 从侦听状态到学习状态或关闭状态
+
 4. 从学习状态到转发或关闭状态
+
 5. 从转发状态到关闭状态
 
 在该过程中用到**STP计时器**来控制收敛。
 
 + Hello计时器 -- 2s（每个配置BPDU直接的时间）
+
 + 转发延迟计数器 -- 15s（侦听/控制学习状态的为期），Forward Delay -- 15 seconds (controls durations of Listening/Learning states)
+
 + 最大存活时间 -- 20s（控制阻塞状态的为期），Max Age -- 20 seconds (controls the duration of the Blocking state)
 
 **默认收敛时间是30到50秒。**
@@ -132,63 +157,89 @@ BPDUs都是每两秒发出的，此特性允许实现快速网络循环探测及
 
 处于阻塞状态的交换机端口，完成以下动作。
 
-+ 在该端口上丢弃来自所连接网段的帧，discards frames received on the port from the attached segment
-+ 丢弃交换自另一端口的帧，discards frames switched from another port
++ 丢弃在该端口上接收到的来自所连接网段的数据帧，discards frames received on the port from the attached segment
+
++ 丢弃交换自另一端口的数据帧，discards frames switched from another port
+
 + 不将工作站地址放入到其地址数据库中，does not incorporate station location into its address database
+
 + 接收BPDUs并将这些BPDUs引导给系统模块，receives BPDUs and directs them to the system module
-+ 不将自系统模块接收到的BPDUs进行传送，does not transmit BPDUs received from the system module
+
++ 不传送自系统模块接收到的BPDUs，does not transmit BPDUs received from the system module
+
 + 接收网络管理报文，并对这些报文进行响应，receives and responds to network management messages
 
 ###生成树侦听状态
 
 **Spanning Tree Listening State**
 
-侦听状态是端口在阻塞状态之后所进入的第一个过渡状态。在STP确定端口应参与到帧转发时，该端口就进入此状态。处于侦听状态的交换机端口完成以下行为。
+侦听状态是端口在阻塞状态之后所进入的第一个过渡状态。在STP确定端口应参与到帧转发时，该端口就进入此状态。处于侦听状态的交换机端口完成以下动作。
 
 + 丢弃接收自所连接网段的帧, discards frames received from the attached segment
+
 + 丢弃转发自另一端口的帧, discards frames switched from another port
+
 + 不将工作站地址加入到其地址数据库，does not incorporate station location into its address database
+
 + 接收BPDUs并将这些BPDUs引导给系统模块，receives BPDUs and directs them to the system module
+
 + 接收、处理并传送接收自系统模块的BPDUs, receives, processes, and transmits BPDUs received from the system module
+
 + 对网络管理报文进行接收和响应，receives and responds to network management messages
 
 ###生成树学习状态
 
 **Spanning Tree Learning State**
 
-学习状态是端口所进入的第二个过渡状态。此状态在侦听状态之后，且在端口进入转发状态之前到来。在此状态汇中，端口学习并将MAC地址安装到其转发表中。处于学习状态的交换机端口完成以下动作。
+学习状态是端口所进入的第二个过渡状态。此状态在侦听状态之后，且在端口进入转发状态之前到来。在此状态中，端口学习MAC地址并将学习到的MAC地址装入到其转发表中。处于学习状态的交换机端口完成以下动作。
 
 + 丢弃接收自所连接网段的帧, discards frames received from the attached segment
+
 + 丢弃转发自另一端口的帧, discards frames switched from another port
+
 + 将工作站地址加入到其地址数据库，incorporates(installs) station location into its address database
+
 + 接收BPDUs并将这些BPDUs引导给系统模块，receives BPDUs and directs them to the system module
+
 + 接收、处理并传送接收自系统模块的BPDUs, receives, processes, and transmits BPDUs received from the system module
+
 + 对网络管理报文进行接收和响应，receives and responds to network management messages
 
 ###生成树转发状态
 
 **Spanning Tree Forwarding State**
 
-转发状态是端口在学习状态之后所进入的第三个过渡状态。处于转发状态的端口对帧进行转发。处于转发状态的交换机端口完成一下动作。
+转发状态是端口在学习状态之后所进入的第三个过渡状态。处于转发状态的端口对帧进行转发。处于转发状态的交换机端口完成以下动作。
 
 + 转发接收自所连接网段的数据帧
+
 + 转发交换自另一端口的数据帧
+
 + 将站点地址信息加入（安装）到其地址数据库
+
 + 接收BPDUs并将这些BPDUs导向给系统模块
+
 + 处理接收自系统模块的BPDUs
+
 + 接收网络管理报文并对其进行响应
+
 
 ###生成树关闭状态
 
 **Spanning Tree Disabled State**
 
-关闭状态不是端口正常STP进展的部分。而是端口被网络管理员进行管理性关闭，或因为某种错误条件而被系统所关闭，就被认为处于关闭状态。关闭的端口完成以下动作。
+关闭状态不是端口正常STP进展的部分。而是端口被网络管理员进行管理性关闭，或因为某种错误条件而被系统所关闭时，就被认为处于关闭状态。关闭的端口完成以下动作。
 
 + 丢弃接收自所连接网段的数据帧
+
 + 丢弃转发自另一端口的数据帧
+
 + 不将工作站地址加入其地址数据库
+
 + 接收BPDUs但不将这些BPDUs导向给系统模块
+
 + 不接收来自系统模块的BPDUs
+
 + 对网络管理报文进行接收和响应
 
 
@@ -196,7 +247,7 @@ BPDUs都是每两秒发出的，此特性允许实现快速网络循环探测及
 
 **Spanning Tree Bridge ID**
 
-位于某个生成树域中的交换机，都有一个用于对该STP域中的交换机，进行唯一性区分的桥ID（Bridge ID, BID）。BID还用于协助完成STP根桥(an STP Root Bridge)的选举，STP根桥将在稍后讲到。BID是由一个6字节的MAC地址及2字节的桥优先级（a 2-byte Bridge Priority）构成的8字节字段。下图31.3演示了BID。
+位于某个生成树域中的交换机，都有一个用于对其进行唯一性区分的桥ID（Bridge ID, BID）。BID还用于协助完成STP根桥(an STP Root Bridge)的选举，STP根桥将在稍后讲到。BID是由一个6字节的MAC地址及2字节的桥优先级（a 2-byte Bridge Priority）构成的8字节字段。下图31.3演示了BID。
 
 ![桥ID格式](images/3103.png)
 
@@ -226,9 +277,9 @@ Fa0/1       128.1       19      FWD 0  32768    0009.7c87.9081  128.13
 Fa0/2       128.2       19      FWD 19  32770   0008.21a9.4f80  128.2
 </pre>
 
-上面输出中的MAC地址是得自交换机背板或管理引擎的硬件地址（the hardware address derived from the switch backplane or supervisor engine）。在802.1D标准中，每个VLAN都需要一个唯一BID。
+上面输出中的MAC地址是得自交换机背板或管理引擎的硬件地址（the hardware address derived from the switch backplane or supervisor engine， 又名为基底MAC地址，the base MAC address）。**在802.1D标准中，每个VLAN都需要一个唯一BID。**
 
-大多数思科Catalyst交换机都有一个可用作VLANs的BIDs的，1024个MAC地址的地址池。这些MAC地址被顺序分配，也就是该范围中的第一个MAC地址分配给VLAN 1, 第二个给VLAN 2, 第三个给VLAN 3, 以致第四个第五个等等。这样就提供了支持标准范围VLANs的支持能力，但要支持扩展范围的VLANs，就需要更多的MAC地址。该问题在802.1t（802.1D的技术和编辑修正）标准（this issue was resolved in the 802.1t(Technical and Editoral corrections for 802.1D) standard）。
+大多数思科Catalyst交换机都有一个可用作VLANs的BIDs的、1024个MAC地址的地址池。这些MAC地址被顺序分配，也就是该范围中的第一个MAC地址分配给VLAN 1, 第二个给VLAN 2, 第三个给VLAN 3, 以致第四个第五个等等。这样就提供了支持标准范围VLANs的支持能力，但要支持扩展范围的VLANs，就需要更多的MAC地址。该问题在802.1t（802.1D的技术和编辑修正）标准得以解决（this issue was resolved in the 802.1t(Technical and Editoral corrections for 802.1D) standard）。
 
 ##生成树根桥选举
 

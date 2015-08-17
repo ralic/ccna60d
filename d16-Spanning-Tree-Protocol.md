@@ -31,11 +31,11 @@
     - 对根桥选举进行描述, describe root bridge election
     - 生成树的模式, spanning tree mode
 
-##STP的使用需求
+##STP的需求
 
 **The Need for STP**
 
-STP是在IEEE 802.1D标准中定义的。为维护起一个无循环的逻辑拓扑，交换机**每两秒**传递桥协议数据单元（Bridge Protocol Data Units, BPDUs）。BPDUs是一些在生成树拓扑中用到的用于传递有关端口、地址、优先级及开销等信息的数据报文。BPDUs打上了VLAN ID标签。
+STP是在IEEE 802.1D标准中定义的。为维护起一个无循环逻辑拓扑，交换机**每两秒**传递桥协议数据单元（Bridge Protocol Data Units, BPDUs）。BPDUs是一些在生成树拓扑中用到、用于传递有关端口、地址、优先级及开销等信息的数据报文。**BPDUs被打上VLAN ID标签。**
 
 下图31.1显示了网络中循环是如何能创建出来的。因为各台交换机都学到VLAN 20, 同时这些交换机也将其能达到VLAN 20的情况，通告给其它交换机。很快，所有交换机都认为其是VLAN 20流量的源，且造成了一个循环，因此所有以VLAN 20为目的地的帧将自一台交换机往另一台不停传递。
 

@@ -21,7 +21,7 @@
 + STP桥ID，STP Bridge ID
 + STP根桥选举，STP Root Bridge election
 + STP开销及优先级，STP cost and priority
-+ STP根及指定端口，STP Root and Designated Ports
++ STP根及候选端口，STP Root and Designated Ports
 + STP增强，STP enhancements
 + STP排错，Troubleshooting STP
 
@@ -59,7 +59,7 @@ BPDUs都是每两秒发出的，此特性允许实现快速的网络循环探测
 
 **IEEE 802.1D Configuration BPDUs**
 
-配置BPDUs是由LAN交换机发出，用于就生成树拓扑的通信和计算。在交换机端口初始化后，该端口就置为阻塞状态，同时一个BPDU被发送给交换机中的所有端口。**默认情况下，直到其与其它交换机进行配置BPDUs的交换为止，所有交换机最初都假定其为生成树的根。**在某端口仍将其自身配置BPDUs视为最具吸引力（the most attractive）的时，其就会持续发送配置BPDUs。这些交换机基于以下4个因素（以列出顺序），确定出最佳配置BPDU（the best Configuration BPDU）。
+配置BPDUs是由LAN交换机发出，用于就生成树拓扑进行通信和计算。在交换机端口初始化后，该端口被置为阻塞状态，同时一个BPDU被发送给交换机中的所有端口。**默认情况下，直到其与其它交换机进行配置BPDUs的交换为止，所有交换机最初都假定其为生成树的根。**在某端口仍将其自身配置BPDUs视为最具吸引力（the most attractive）时，其就会持续发送配置BPDUs。这些交换机基于以下4个因素（以列出顺序），确定出最佳配置BPDU（the best Configuration BPDU）。
 
 1. 有着最低的根桥ID的, lowest Root Bridge ID
 
@@ -75,29 +75,29 @@ BPDUs都是每两秒发出的，此特性允许实现快速的网络循环探测
 
 + 选举出生成树域中所有非根交换机上的根端口，a Root Port is elected on every Non-Root Switch in the Spanning Tree domain
 
-+ 选举出所有LAN网段中的指定交换机，a Designated Switch is elected for every LAN segment
++ 选举出所有LAN网段中的候选交换机，a Designated Switch is elected for every LAN segment
 
-+ 选举出所有网段的指定交换机的指定端口(根交换机上的所有活动端口也都是指定端口)，a Designated Port is elected on the Designated Switch for every segment(all active ports on the Root Switch are also designated)
++ 选举出所有网段的候选交换机的候选端口(根交换机上的所有活动端口也都是候选端口)，a Designated Port is elected on the Designated Switch for every segment(all active ports on the Root Switch are also designated)
 
 + 通过阻塞冗余路径，网络中的循环得以消除，loops in the network are eliminated by blocking redundant paths
 
 > **注意：**随着逐步深入本模块内容，这些特性将会一一介绍。
 
-一旦所有交换机端口都处于转发或阻塞状态，生成树网络（the Spanning Tree network）就完成了收敛, 此时配置BPDUs就由根桥以默认每两秒的间隔发出。这就是**配置BPDUs的起源**。配置BPDUs通过根桥上的指定端口，转发到下游邻居交换机（this is referred to as the origination of Configuration BPDUs. The Configuration BPDUs are forwarded to downstream neighboring switches via the Designated Port on the Root Bridge）。
+一旦所有交换机端口都处于转发或阻塞状态，生成树网络（the Spanning Tree network）就完成了收敛, 此时配置BPDUs就由根桥以默认每两秒的间隔发出。这就是**配置BPDUs的缘起**。配置BPDUs通过根桥上的候选端口，转发到下游邻居交换机（this is referred to as the origination of Configuration BPDUs. The Configuration BPDUs are forwarded to downstream neighboring switches via the Designated Port on the Root Bridge）。
 
-当非根桥（a Non-Root Bridge）在其提供了到根桥最优路径的根端口上，接收到一个配置BPDU时，就会通过其指定端口，发送出一个该BPDU的更新版本。这就是**BPDUs的传播**（when a Non-Root Bridge receives a Configuration BPDU on its Root Port, which is the port that provides the best path to the Root Bridge, it sends an updated version of the BPDU via its Designated Port(s). This is referred to as the propagation of BPDUs）。
+当非根桥（a Non-Root Bridge）在其提供了到根桥最优路径的根端口上，接收到一个配置BPDU时，就会通过其候选端口，发送出一个该BPDU的更新版本。这就是**BPDUs的传播**（when a Non-Root Bridge receives a Configuration BPDU on its Root Port, which is the port that provides the best path to the Root Bridge, it sends an updated version of the BPDU via its Designated Port(s). This is referred to as the propagation of BPDUs）。
 
-**指定端口**则是**指定交换机**上，在转发来自那个LAN网段的数据包到根桥时，有着最低路径开销的端口（**the Designated Port** is a port on **the Designated Switch** that has the lowest cost when forwarding packets from that LAN segment to the Root Bridge）。
+**候选端口**则是**候选交换机**上，在转发来自那个LAN网段的数据包到根桥时，有着最低路径开销的端口（**the Designated Port** is a port on **the Designated Switch** that has the lowest cost when forwarding packets from that LAN segment to the Root Bridge）。
 
 一旦生成树网络得以收敛，便总是会有自根桥传输给STP域内其它交换机的一个配置BPDU在传送。而要记住在生成树网络完成收敛后的配置BPDUs数据流的最简单方法，就是记住以下4条规则。
 
-1. 配置BPDUs是从根桥发出且通过指定端口发送的, a Configuration BPDU originates on the Root Bridge and is sent via the Designated Port
+1. 配置BPDUs是从根桥发出且通过候选端口发送的, a Configuration BPDU originates on the Root Bridge and is sent via the Designated Port
 
 2. 配置BPDUs是由非根桥的根端口上接收的，a Configuration BPDU is received by a Non-Root Bridge on a Root Port
 
-3. 配置BPDU是由非根桥的指定端口上传送的，a Configuration BPDU is transmitted by a Non-Root Bridge on a Designated Port
+3. 配置BPDU是由非根桥的候选端口上传送的，a Configuration BPDU is transmitted by a Non-Root Bridge on a Designated Port
 
-4. 在所有单个LAN区段上，都只有一个指定端口（在某台指定交换机上），there is only one Designated Port (on a Designated Switch) on any single LAN segment
+4. 在所有单个LAN区段上，都只有一个候选端口（在某台候选交换机上），there is only one Designated Port (on a Designated Switch) on any single LAN segment
 
 下图31.2演示了该STP域中的配置BPDU数据流，对上面列出的4条简单规则进行了说明。
 
@@ -105,13 +105,13 @@ BPDUs都是每两秒发出的，此特性允许实现快速的网络循环探测
 
 *图31.2 -- STP域中的配置BPDU数据流*
 
-1. 参考图31.2, 该配置BPDU源自根桥，且是通过根桥上的指定端口发送出来，前往那些非根桥交换机，也就是Switch 2和Switch 3。
+1. 参考图31.2, 该配置BPDU源自根桥，且是通过根桥上的候选端口发送出来，前往那些非根桥交换机，也就是Switch 2和Switch 3。
 
 2. 非根桥Switch 2和Switch 3在其有着到根桥最优路径的根端口上，接收到配置BPDU。
 
-3. Switch 2和Switch 3对接收到的配置BPDU进行修改（更新），让后在其指定端口上转发出去。**Switch 2就是该LAN网段上其自身及Switch 4的指定交换机，Switch 3是该LAN网段上其自身及Switch 5的指定交换机。**而存在于指定交换机上的指定端口，则是在转发来自该LAN区段数据包到根交换机时，有着最低路径开销的端口。
+3. Switch 2和Switch 3对接收到的配置BPDU进行修改（更新），让后在其候选端口上转发出去。**Switch 2就是该LAN网段上其自身及Switch 4的候选交换机，Switch 3是该LAN网段上其自身及Switch 5的候选交换机。**而存在于候选交换机上的候选端口，则是在转发来自该LAN区段数据包到根交换机时，有着最低路径开销的端口。
 
-4. **在Switch 4和Switch 5之间的LAN网段上**，Switch 4被选举为指定交换机，同时指定端口也处于其上。因为在一个网段上只能有一台指定交换机，所以Switch 4和Switch 5之间网段上，Switch 5的端口，就被阻塞掉了。该端口将不会转发任何BPDUs。
+4. **在Switch 4和Switch 5之间的LAN网段上**，Switch 4被选举为候选交换机，同时候选端口也处于其上。因为在一个网段上只能有一台候选交换机，所以Switch 4和Switch 5之间网段上，Switch 5的端口，就被阻塞掉了。该端口将不会转发任何BPDUs。
 
 ##生成树端口的各种状态
 
@@ -414,24 +414,24 @@ VLAN0050    Desg    FWD    <b>200000</b>      128.2       P2p
 
 重要的是记住带有更低的（数值）开销的端口是更为首选的端口；端口开销越低，那个特定端口被选举为根端口的可能性就越高（the lower the port cost, the higher the probability of that particular port being elected the Root Port）。**端口开销全局重要，并影响整个生成树网络。**该数值被配置在生成树域中的所有非根交换机上（on all Non-Root Switches in the Spanning Tree domain）。
 
-##生成树的根端口及指定端口
+##生成树的根端口及候选端口
 
 **Spanning Tree Root and Designated Ports**
 
-STP选举出两种类型用于转发BPDUs的端口：指向根桥的根端口，以及指向根端口另一边的指定端口（STP elects two types of ports that are used to forward BPDUs: the Root Port, which points towards the Root Bridge, and the Designated Port, which points away from the Root Bridge）。掌握这两种端口类型的作用及其选举过程，十分重要。
+STP选举出两种类型用于转发BPDUs的端口：指向根桥的根端口，以及指向根端口另一边的候选端口（STP elects two types of ports that are used to forward BPDUs: the Root Port, which points towards the Root Bridge, and the Designated Port, which points away from the Root Bridge）。掌握这两种端口类型的作用及其选举过程，十分重要。
 
 ###生成树根端口选举
 
 **Spanning Tree Root Port Election**
 
-生成树算法定义了三种端口类型：**根端口、指定端口及非指定端口**。这些端口类型是有生成树算法选举出来，并被置为相应状态（比如转发中或阻塞中状态）。在生成树选举过程中，如存在悬而不决的情况，就会用到以下数值作为打破僵局方式。
+生成树算法定义了三种端口类型：**根端口、候选端口及非候选端口**。这些端口类型是有生成树算法选举出来，并被置为相应状态（比如转发中或阻塞中状态）。在生成树选举过程中，如存在悬而不决的情况，就会用到以下数值作为打破僵局方式。
 
 1. 最低的根桥ID, lowest Root Bridge ID
 2. 到根桥的最低根路径开销, lowest Root path cost to Root Bridge
 3. 最低的发送方桥ID, lowest sender Bridge ID
 4. 最低的发送方端口ID，lowest sender Port ID
 
->**注意：**为掌握生成树选举及指定出在任何给定情形下不同端口类型，那么重要的是记住这些打破平局的标准了。这些标准不仅要对其进行测试，还要为真实世界中设计、部署及支持互联网络而牢固掌握这个知识点。
+>**注意：**为掌握生成树选举及候选出在任何给定情形下不同端口类型，那么重要的是记住这些打破平局的标准了。这些标准不仅要对其进行测试，还要为真实世界中设计、部署及支持互联网络而牢固掌握这个知识点。
 
 生成树**根端口是在该设备将数据包转发到根桥时，提供出最优路径，或最低开销的端口。**也就是说，根端口是接收到该交换机的最优BPDU的端口，而这又表明了在路径开销上其是到根桥的最短路径。根端口是基于根桥路径开销选举出的。
 
@@ -466,33 +466,33 @@ STP选举出两种类型用于转发BPDUs的端口：指向根桥的根端口，
 
 基于第三个选举标准，Switch 5将优先使用来自Switch 4的BPDU，因为Switch 4的BID（0000.0000.000D）低于Switch 6的BID（0000.0000.000F）。Switch 5选出端口GigabitEthernet0/1作为根端口。
 
-###生成树指定端口的选举
+###生成树候选端口的选举
 
 **Spanning Tree Designated Port Election**
 
-与根端口不同，指定端口是指向与STP根相反方向的端口。该端口是指定设备（交换机）连接LAN的端口。指定端口同时也是在将来自LAN的数据包转发给根桥时有着最低路径开销的端口。
+与根端口不同，候选端口是指向与STP根相反方向的端口。该端口是候选设备（交换机）连接LAN的端口。候选端口同时也是在将来自LAN的数据包转发给根桥时有着最低路径开销的端口。
 
->**注意：**一些人将指定端口当作是指定交换机。这两个术语是可以互换的，且指的是同一个东西。也就是说，这是用于将来自某个特定LAN网段的帧，转发到根桥的交换机，或端口。
+>**注意：**一些人将候选端口当作是候选交换机。这两个术语是可以互换的，且指的是同一个东西。也就是说，这是用于将来自某个特定LAN网段的帧，转发到根桥的交换机，或端口。
 
-**指定端口的主要目的是阻止循环。**在超过一台的交换机连接到同一网段时，所有交换机都将尝试对在那个网段上接收到的某个帧进行转发。这样的默认行为可能导致该帧的多个拷贝被多台交换机同时转发--从而造成网络循环。为避免这种默认行为，**STP在所有网段上都选举出一个指定端口。***这是因为根桥路径开销将始终为0。*STA的指定端口选举过程在下图31.8中进行了演示。
+**候选端口的主要目的是阻止循环。**在超过一台的交换机连接到同一网段时，所有交换机都将尝试对在那个网段上接收到的某个帧进行转发。这样的默认行为可能导致该帧的多个拷贝被多台交换机同时转发--从而造成网络循环。为避免这种默认行为，**STP在所有网段上都选举出一个候选端口。***这是因为根桥路径开销将始终为0。*STA的候选端口选举过程在下图31.8中进行了演示。
 
-![生成树指定端口选举](images/3108.png)
+![生成树候选端口选举](images/3108.png)
 
-*图31.8 -- 生成树指定端口选举*
+*图31.8 -- 生成树候选端口选举*
 
-1. 在根桥和Switch 2之间的网段上，根桥的GigabitEthernet0/1被选举为指定端口，因为该端口有着较低的根桥路径开销0。
+1. 在根桥和Switch 2之间的网段上，根桥的GigabitEthernet0/1被选举为候选端口，因为该端口有着较低的根桥路径开销0。
 
-2. 在根桥和Switch 3之间的网段，根桥的GigabitEthernet0/2端口被选举作为指定端口，因为其有着较低的根桥路径开销0。
+2. 在根桥和Switch 3之间的网段，根桥的GigabitEthernet0/2端口被选举作为候选端口，因为其有着较低的根桥路径开销0。
 
-3. 在Switch 2和Switch 4之间的网段，Switch 2上的GigabitEthernet0/2被选举为指定端口，因为Switch 2有着最低的根桥路径开销4。
+3. 在Switch 2和Switch 4之间的网段，Switch 2上的GigabitEthernet0/2被选举为候选端口，因为Switch 2有着最低的根桥路径开销4。
 
-4. 在Switch 3和Switch 6之间的网段，Switch 3上的GigabitEthernet0/2端口被选举为指定端口，因为Switch 3有着最低的根桥路径开销4。
+4. 在Switch 3和Switch 6之间的网段，Switch 3上的GigabitEthernet0/2端口被选举为候选端口，因为Switch 3有着最低的根桥路径开销4。
 
-5. 在Switch 4和Switch 5之间的网段，Switch 4上的GigabitEthernet0/2端口被选举为指定端口，因为Switch 4有着最低的根桥路径开销8。
+5. 在Switch 4和Switch 5之间的网段，Switch 4上的GigabitEthernet0/2端口被选举为候选端口，因为Switch 4有着最低的根桥路径开销8。
 
-6. 在Switch 5和Switch 6之间的网段，Switch 6上的GigabitEthernet0/2被选举为指定端口，因为Switch 6有着最低的根桥路径开销8。
+6. 在Switch 5和Switch 6之间的网段，Switch 6上的GigabitEthernet0/2被选举为候选端口，因为Switch 6有着最低的根桥路径开销8。
 
-非指定端口（the Non-Designated Port）实际上不是一种生成树端口类型。而是其作为一个术语，只是简单地表示某个不作为某LAN网段上指定端口的端口。**非指定端口将始终被STP置为阻塞状态。**基于根端口及指定端口的计算，下图31.9中展示了用于根端口和指定端口选举示例的交换网络的最终生成树拓扑（Based on the calculation of Root and Designated Ports, the resultant Spanning Tree Topology for the switched network that was used in the Root Port and Designated Port election examples is shown in Figure 31.9 below）。
+非候选端口（the Non-Designated Port）实际上不是一种生成树端口类型。而是其作为一个术语，只是简单地表示某个不作为某LAN网段上候选端口的端口。**非候选端口将始终被STP置为阻塞状态。**基于根端口及候选端口的计算，下图31.9中展示了用于根端口和候选端口选举示例的交换网络的最终生成树拓扑（Based on the calculation of Root and Designated Ports, the resultant Spanning Tree Topology for the switched network that was used in the Root Port and Designated Port election examples is shown in Figure 31.9 below）。
 
 ![已收敛的生成树网络](images/3109.png)
 
@@ -567,9 +567,9 @@ BPDU守护与BPDU过滤器两个特性常常混淆或甚至被想成是同一个
 
 *图31.14 -- 掌握循环守护*
 
-图31.14中，该生成树网络已完成收敛，从而所有端口都处于阻塞或转发状态。但是，因为一条单向链路，Switch 3上的阻塞端口停止了接收来自Switch 2上的指定端口的BPDUs。Switch 3假定该端口可被转换成转发状态，并开始此转换。该交换机此时就将接收到的BPDUs中继出那个端口，从而导致网络循环。
+图31.14中，该生成树网络已完成收敛，从而所有端口都处于阻塞或转发状态。但是，因为一条单向链路，Switch 3上的阻塞端口停止了接收来自Switch 2上的候选端口的BPDUs。Switch 3假定该端口可被转换成转发状态，并开始此转换。该交换机此时就将接收到的BPDUs中继出那个端口，从而导致网络循环。
 
-在循环守护开启时，Switch 3保持对所有非指定端口的追踪。在端口持续接收到BPDUs时，该端口就是好的；但如该端口停止接收到BPDUs，就被转移到循环不一致状态（a loop-inconsistent state）。也就是说，在循环守护开启时，STP端口状态机（the STP port state machine）被修改为在缺少BPDUs时，阻止该端口从非指定端口角色转变成指定端口角色（in other words, when Loop Guard is enabled, the STP port state machine is modified to prevent the port from transitioning from the Non-Designated Port role to the Designated Port role in the absence of BPDUs）。在应用循环守护时，应知道以下这些应用准则。
+在循环守护开启时，Switch 3保持对所有非候选端口的追踪。在端口持续接收到BPDUs时，该端口就是好的；但如该端口停止接收到BPDUs，就被转移到循环不一致状态（a loop-inconsistent state）。也就是说，在循环守护开启时，STP端口状态机（the STP port state machine）被修改为在缺少BPDUs时，阻止该端口从非候选端口角色转变成候选端口角色（in other words, when Loop Guard is enabled, the STP port state machine is modified to prevent the port from transitioning from the Non-Designated Port role to the Designated Port role in the absence of BPDUs）。在应用循环守护时，应知道以下这些应用准则。
 
 + 不能在开启了根守护（Root Guard）的交换机上开启循环守护, Loop Guard cannot be enabled on a switch that also has Root Guard enabled
 + 循环守护不影响上行快速（Uplink Fast）或骨干快速（Backbone Fast）的运行, Loop Guard does not affect Uplink Fast or Backbone Fast operation
@@ -582,15 +582,15 @@ BPDU守护与BPDU过滤器两个特性常常混淆或甚至被想成是同一个
 
 **Root Guard**
 
-**根守护特性阻止指定端口成为根端口。**如在某个根守护特性开启的端口上接收到一个优良BPDU（a superior BPDU）, 根守护将该端口移入根不一致状态（a root-inconsistent state）, 从而维持当前根桥状态（thus maintaining the current Root Bridge status quo）。下图31.15对此概念进行了演示。
+**根守护特性阻止候选端口成为根端口。**如在某个根守护特性开启的端口上接收到一个优良BPDU（a superior BPDU）, 根守护将该端口移入根不一致状态（a root-inconsistent state）, 从而维持当前根桥状态（thus maintaining the current Root Bridge status quo）。下图31.15对此概念进行了演示。
 
 ![掌握根守护](images/3115.png)
 
 *图31.15 -- 掌握根守护*
 
-图31.15中，Switch 3被加入到当前STP网络，并发出比当前根桥更优质的BPDUs。在通常情况下，STP将重新计算整个拓扑，同时Switch 3将会被选举为根桥。但因为当前根桥及Switch 2上的指定端口上开启了根守护特性，在接收到来自Switch 3的优良BPDUs时，两台交换机都会将这些指定端口置为根不一致状态。这样做保护了生成树拓扑。
+图31.15中，Switch 3被加入到当前STP网络，并发出比当前根桥更优质的BPDUs。在通常情况下，STP将重新计算整个拓扑，同时Switch 3将会被选举为根桥。但因为当前根桥及Switch 2上的候选端口上开启了根守护特性，在接收到来自Switch 3的优良BPDUs时，两台交换机都会将这些候选端口置为根不一致状态。这样做保护了生成树拓扑。
 
-**根守护阻止某个端口成为根端口，因此确保该端口始终是指定端口。**与其它可同时在全局基础上开启的思科STP增强不同，根守护必须手动在所有根桥不应出现的端口上开启（unlike other STP enhancements, which can also be enabled on a global basis, Root Guard must be manually enabled on all ports where the Root Bridge should not appear）。因为这点，在LAN中STP的设计和部署时确保拓扑的确定性就很重要（because of this, it is important to ensure a deterministic topology when designing and implementing STP in the LAN）。根守护令到网络管理员可以强制指定网络中的根桥（Root Guard enables an administrator to enforce the Root Bridge palcement in the network）, 确保不会有客户设备因疏忽或其它原因而成为生成树的根，所以根守护常用在ISP网络面向客户设备的边界（so it is usually used on the network edge of the ISP towards the customers's equipment）。
+**根守护阻止某个端口成为根端口，因此确保该端口始终是候选端口。**与其它可同时在全局基础上开启的思科STP增强不同，根守护必须手动在所有根桥不应出现的端口上开启（unlike other STP enhancements, which can also be enabled on a global basis, Root Guard must be manually enabled on all ports where the Root Bridge should not appear）。因为这点，在LAN中STP的设计和部署时确保拓扑的确定性就很重要（because of this, it is important to ensure a deterministic topology when designing and implementing STP in the LAN）。根守护令到网络管理员可以强制候选网络中的根桥（Root Guard enables an administrator to enforce the Root Bridge palcement in the network）, 确保不会有客户设备因疏忽或其它原因而成为生成树的根，所以根守护常用在ISP网络面向客户设备的边界（so it is usually used on the network edge of the ISP towards the customers's equipment）。
 
 ###上行快速
 
@@ -614,7 +614,7 @@ BPDU守护与BPDU过滤器两个特性常常混淆或甚至被想成是同一个
 
 **Backbone Fast**
 
-骨干快速特性提供了STP域中一条非直连链路出现失效时的快速切换。在交换机从其指定桥（在其根端口上）接收到一个较差BPDU时，快速切换便发生了。一个较差BPDU表明指定桥失去了其到根桥的连接，所以该交换机知悉存在上游失效而无需等待计时器超时就改变根端口。下图31.18中对此进行了演示。
+骨干快速特性提供了STP域中一条非直连链路出现失效时的快速切换。在交换机从其候选桥（在其根端口上）接收到一个较差BPDU时，快速切换便发生了。一个较差BPDU表明候选桥失去了其到根桥的连接，所以该交换机知悉存在上游失效而无需等待计时器超时就改变根端口。下图31.18中对此进行了演示。
 
 ![掌握骨干快速](images/3118.png)
 
@@ -628,17 +628,17 @@ Switch 3将忽略这些较差BPDUs，直到最大存活值（the Max Age value�
 
 骨干快速特性包含了一种允许在接收到一个较差的BPDU时，立即检查某个端口上存储的BPDU信息是否仍然有效的机制。此特性通过一种叫做RLQ PDU 的新协议数据单元及根链路请求实现的（this is implemented with a new PDU and the Root Link Query(RLQ), which is referred to as the RLQ PDU）。
 
-紧接着较差BPDU的接收，该交换机将在除接收该较差BPDU的端口外的所有非指定端口上，发出一个RLQ PDU。如该交换机是根桥或失去了到根桥的连接，就将对对该RLQ进行响应。否则，该RLQ将向上游传播（otherwise, the RLQ will be propagated upstream）。如该交换机在其根端口上接收到一个RLQ响应，那么到根桥的连通性仍然是完整的。如该响应实在非根端口上接收到的，就意味着到根桥的连通性已丢失，同时在交换机上的本地交换生成树必须重新计算且最大存活时间计数器被置为超时，如此就能重新找到一个新的根端口（if the response is received on a Non-Root Port, it means that connectivity to the Root Bridge is lost, and the local switch Spanning Tree must be recalculated on the switch and the Max Age timer expired so that a new Root Port can be found）。此概念在下图31.19中进行了演示。
+紧接着较差BPDU的接收，该交换机将在除接收该较差BPDU的端口外的所有非候选端口上，发出一个RLQ PDU。如该交换机是根桥或失去了到根桥的连接，就将对对该RLQ进行响应。否则，该RLQ将向上游传播（otherwise, the RLQ will be propagated upstream）。如该交换机在其根端口上接收到一个RLQ响应，那么到根桥的连通性仍然是完整的。如该响应实在非根端口上接收到的，就意味着到根桥的连通性已丢失，同时在交换机上的本地交换生成树必须重新计算且最大存活时间计数器被置为超时，如此就能重新找到一个新的根端口（if the response is received on a Non-Root Port, it means that connectivity to the Root Bridge is lost, and the local switch Spanning Tree must be recalculated on the switch and the Max Age timer expired so that a new Root Port can be found）。此概念在下图31.19中进行了演示。
 
 ![掌握骨干快速（续）](images/3119.png)
 
 *图31.19 -- 掌握骨干快速（续）*
 
-参考图31.19, 紧接着较差BPDU的接收，Switch 3在除了该BPDU所接收到的端口之外的所有非指定端口上，发出一条RLQ请求。根桥功过一条从其指定端口发出的RLQ回应，对Switch 3的RLQ请求进行响应。因为是在Switch 3的根端口上接收到的该响应，该响应被认为是一条肯定响应（a positive response）。但如该响应是在非根端口上接收到的，那么该响应就被认为是否定的且该交换机将需要再度完成整个的生成树计算。
+参考图31.19, 紧接着较差BPDU的接收，Switch 3在除了该BPDU所接收到的端口之外的所有非候选端口上，发出一条RLQ请求。根桥功过一条从其候选端口发出的RLQ回应，对Switch 3的RLQ请求进行响应。因为是在Switch 3的根端口上接收到的该响应，该响应被认为是一条肯定响应（a positive response）。但如该响应是在非根端口上接收到的，那么该响应就被认为是否定的且该交换机将需要再度完成整个的生成树计算。
 
 基于Switch 3上接收到的肯定响应，就可以老化排除连接到Switch 2的端口而无需等待最大存活时间计数器过期（based on the positive response received on Switch 3, it can age out the port connected to Switch 2 without waiting for the Max Age timer to expire）。但是该端口仍必须经过侦听及学习状态。而通过立即将最大存活时间计数器进行老化清楚，骨干快速将收敛时间从50秒（20秒的最大存活时间 + 30秒的侦听和学习时间）减少到30秒（侦听和学习状态的时间）。
 
-RLQs的类型有两种：RLQ请求和RLQ响应。**RLQ请求典型地在根端口上发出，用以检查到根桥的连通性。所有RLQ响应都是在指定端口上发出的。**因为RLQ请求包含了发送该RLQ响应的根桥BID，如到根桥路径中其它交换机仍能到达该RLQ响应中所指定的根桥，其就会响应给发出RLQ请求的交换机（because the RLQ request contains the BID of the Root Bridge that sent it, if another switch in the path to the Root Bridge can still reach the Root Bridge specified in the RLQ response, it will respond back to the sending switch）。如路径上的交换机已不能到达RLQ响应中的根桥，该交换机就简单地通过其根端口，往根桥转发该查询。
+RLQs的类型有两种：RLQ请求和RLQ响应。**RLQ请求典型地在根端口上发出，用以检查到根桥的连通性。所有RLQ响应都是在候选端口上发出的。**因为RLQ请求包含了发送该RLQ响应的根桥BID，如到根桥路径中其它交换机仍能到达该RLQ响应中所候选的根桥，其就会响应给发出RLQ请求的交换机（because the RLQ request contains the BID of the Root Bridge that sent it, if another switch in the path to the Root Bridge can still reach the Root Bridge specified in the RLQ response, it will respond back to the sending switch）。如路径上的交换机已不能到达RLQ响应中的根桥，该交换机就简单地通过其根端口，往根桥转发该查询。
 
 >**注意：**RLQ PDU有着与普通BPDU同样的包格式，唯一区别在于RLQ PDU包含了两个用于请求和回应的思科SNAP(子网接入协议，[Subnetwork Access Protocol](https://en.wikipedia.org/wiki/Subnetwork_Access_Protocol))地址。
 
@@ -660,7 +660,7 @@ STP故障通常有以下三类（STP issues usually fall within the following th
 
 + 不正确的根桥, incorrect Root Bridge
 + 不正确的根端口, incorrect Root Port
-+ 不正确的指定端口，incorrect Designated Port
++ 不正确的候选端口，incorrect Designated Port
 
 ###不正确的根桥
 
@@ -670,9 +670,9 @@ STP故障通常有以下三类（STP issues usually fall within the following th
 
 根端口提供了自该交换机到根桥最快的路径，同时开销是跨越整个路径的累积（the Root Port provides the fastest path from the switch to the Root Bridge, and the cost is cumulative across the entire path）。如怀疑存在正确的根端口，就可执行`show spanning-tree vlan <vlan#>`命令。如根端口是不正确的，可执行`spanning-tree cost <cost>`命令对其进行修复。
 
-###不正确的指定端口
+###不正确的候选端口
 
-指定端口是将某个网络区段连接到网络其它部分最低开销的端口（the Designated Port is the lowest cost port connecting a network segment to the rest of the network）。如怀疑存在指定端口问题，就可以执行`show spanning-tree vlan <vlan#>`及`spanning-tree cost <cost>`命令。
+候选端口是将某个网络区段连接到网络其它部分最低开销的端口（the Designated Port is the lowest cost port connecting a network segment to the rest of the network）。如怀疑存在候选端口问题，就可以执行`show spanning-tree vlan <vlan#>`及`spanning-tree cost <cost>`命令。
 
 而可对相关事件进行调试的一个有用的STP排错命令，就是`Switch#debug spanning-tree events`。
 

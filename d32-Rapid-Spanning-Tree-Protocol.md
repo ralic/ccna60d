@@ -87,7 +87,8 @@ RSTP包含了以下的端口角色。
 RSTP的配置只需一个命令！
 
 ```
-Switch(config)#spanning-tree mode rapid-pvstSwitch#show spanning-tree summary
+Switch(config)#spanning-tree mode rapid-pvst
+Switch#show spanning-tree summary
 Switch is in rapid-pvst mode
 Root bridge for: VLAN0050, VLAN0060, VLAN0070
 ```

@@ -93,3 +93,62 @@ Switch is in rapid-pvst mode
 Root bridge for: VLAN0050, VLAN0060, VLAN0070
 ```
 
+##第32天问题
+
+**Day 32 Questions**
+
+1. RSTP is not backward compatible with the original IEEE 802.1D STP standard. True or false?
+2. What are the RSTP port states?
+3. What are the four RSTP port roles?
+4. Which command enables RSTP?
+5. By default, when RSTP is enabled on a Cisco switch, R-PVST+ is enabled on the switch. True or false?
+
+##第32天问题答案
+
+**Day 32 Answers**
+
+1. False.
+2. Discarding, Learning, and Forwarding.
+3. Root, Designated, Alernate, and Backup.
+4. The `spanning-tree mode rapid-pvst` command.
+5. True.
+
+##第32天实验
+
+**Day 32 Lab**
+
+###RSTP实验
+
+**RSTP Lab**
+
+**拓扑图**
+
+![RSTP实验拓扑图](images/3204.png)
+
+**实验目的**
+
+学习RSTP的配置命令。
+
+**实验步骤**
+
+1. 检查交换机上的生成树模式。
+
+<pre>
+SwitchA#show spanning-tree summary
+Switch is in <b>pvst</b> mode
+Root bridge for: VLAN0002 VLAN0003
+</pre>
+
+2. 将模式改为RSTP并再度检查。
+
+<pre>
+SwitchA(config)#spanning-tree mode rapid-pvst
+SwitchA#show spanning-tree summary
+Switch is in <b>rapid-pvst</b> mode
+Root bridge for: VLAN0002 VLAN0003
+</pre>
+
+3. 用RSTP模式来重复第31天的实验。
+
+4. 你可以预先预测出那些端口将是根/候选/阻塞端口吗（can you predict which ports will be Root/Designated/Blocking beforehand）？
+

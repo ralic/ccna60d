@@ -82,4 +82,56 @@ PAgP支持不同的端口模式，而这些端口模式则决定在两台支持P
 
 我要模式（`desirable` mode）是一种导致该端口发起与另一PAgP端口就通道建立进行PAgP协商的PAgP端口模式（desirable mode is a PAgP mode that causes the port to initiate PAgP negotiation for a channel with another PAgP port）。也就是说，在此模式下，该端口主动尝试与运行了PAgP的另一交换机建立一个以太网通道。
 
-总的来说，要记住配置成`on`模式的那些交换机接口不交换PAgP数据包，**但会与那些配置为`auto`或`desirable`模式的伙伴接口进行PAgP数据包的交换**（but they do exchange PAgP packets with partner interfaces configured in the auto or desirable modes）。
+总的来说，要记住配置成`on`模式的那些交换机接口不交换PAgP数据包，**但会与那些配置为`auto`或`desirable`模式的伙伴接口进行PAgP数据包的交换**（but they do exchange PAgP packets with partner interfaces configured in the auto or desirable modes）。表33.1展示了不同的PAgP组合及其在建立一个以太网通道时使用的结果。
+
+*表 33.1 -- 采用不同PAgP模式的以太网通道形成*
+
+<table>
+<tr><th>交换机一PAgP模式</th><th>交换机二PAgP模式</th><th>以太网通道结果</th></tr>
+<tr><td>Auto</td><td>Auto</td><td>不会形成以太网通道</td></tr>
+<tr><td>Auto</td><td>Desirable</td><td>形成以太网通道</td></tr>
+<tr><td>Desirable</td><td>Auto</td><td>形成以太网通道</td></tr>
+<tr><td>Desirable</td><td>Desirable</td><td>形成以太网通道</td></tr>
+</table>
+##PAgP以太网通道协议数据包的转发
+
+**PAgP EtherChannel Protocol Packet Forwarding**
+
+尽管PAgP允许以太网通道中的所有链路用于转发和接收用户流量，但应熟知一些关于在转发来自其它协议的流量时的限制。**DTP及CDP透过以太网通道中的所有物理接口发送和接收（协议）数据包。而PAgP仅在那些起来（up）并开启了`auto`或`desirable`模式的接口上发送并接收PAgP协议数据单元**（while PAgP allows for all links within the EtherChannel to be used to forward and receive user traffic, there are some restrictions that you should be familiar with regarding the forwarding of traffic from other protocols. DTP and CDP send and receive packets over all the physical interfaces in the EtherChannel. PAgP sends and receives PAgP Protocol Data Units only from interfaces that are up and have PAgP enabled for auto or desirable modes）。
+
+在一个以太网通道捆绑（an EtherChannel bundle）被配置成一个中继端口时，该中继就在编号最低的VLAN上发送和接收PAgP数据帧。而生成树协议则总是选择以太网通道捆绑中的第一个可运作端口（when an EtherChannel bundle is configured as a trunk port, the trunk sends and receives PAgP frames on the lowest numbered VLAN. Spanning Tree Protocol(STP) always chooses the first operational port in an EtherChannel bundle）。命令`show pagp [channel number] neighbor`同样可用于验证STP将会用于发送和接收其数据包所用到的端口，确定出以太网通道捆绑中STP将使用的端口，如下面的输出所示。
+
+```
+Switch-1#show pagp neighbor
+Flags:  S - Device is sending Slow hello.   C - Device is in Consistent state.
+        A - Device is in Auto mode.         P - Device learns on physical port.
+Channel group 1 neighbors
+        Partner     Partner         Partner         Partner Group
+Port    Name        Device ID       Port    Age     Flags   Cap.
+Fa0/1   Switch-2    0014.a9e5.d640  Fa0/1   2s      SC      10001
+Fa0/2   Switch-2    0014.a9e5.d640  Fa0/2   1s      SC      10001
+Fa0/3   Switch-2    0014.a9e5.d640  Fa0/3   15s     SC      10001
+```
+
+根据上面的输出，STP将在端口`FastEthernet0/1`上发出其协议数据包，因为该端口是第一个可运作接口。而如那个端口失效，STP将在`FastEthernet0/2`上发出其协议数据包。而由PAgP所使用的默认端口则可由`show EtherChannel summary`命令进行查看，如下面的输出所示。
+
+```
+Switch-1#show EtherChannel summary
+Flags:  D - down
+        I - stand-alone
+        H - Hot-standby (LACP only)
+        R - Layer3
+        u - unsuitable for bundling
+        U - in use
+        d - default port
+        P - in port-channel
+        s - suspended
+        S - Layer2
+        f - failed to allocate aggregator
+Number of channel-groups in use: 1
+Number of aggregators: 1
+Group  Port-channel  Protocol    Ports
+------+-------------+-----------+--------------------------------
+1      Po1(SU)       PAgP        Fa0/1(Pd)  Fa0/2(P)    Fa0/3(P)
+```
+

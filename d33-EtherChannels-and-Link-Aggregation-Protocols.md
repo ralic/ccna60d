@@ -250,3 +250,152 @@ LACP主动模式将一个交换机端口置为通过发送LACP数据包，对远
 4. 作为可选步骤，如该接口或这些接口已被配置为接入端口，就要使用命令`switchport access vlan [number]`，将其指派到同样的VLAN中。而如该接口或这些接口已被配置为中继端口，就要通过执行接口配置命令`switchport trunk allowed vlan [range]`，选择允许通过该中继的那些VLANs；而如VLAN 1将不作为原生VLAN（802.1Q的），就要通过执行接口配置命令`switchport trunk native vlan [number]`, 输入原生VLAN。此项配置在所有端口通道成员接口上必须一致。
 5. 下一配置步骤就是通过接口配置命令`channel-group [number] mode on`, 将这些接口配置为无条件中继(the next configuration step is to configure the interfaces to unconditionally trunk via the `channel-group [number] mode on` interface configration command)。
 
+用到上述步骤的无条件以太网通道配置，将基于下图33.5中所演示的网络拓扑。
+
+![以太网通道配置输出示例的网络拓扑](images/3305.png)
+
+*图 33.5 -- 以太网通道配置输出示例的网络拓扑*
+
+下面的输出演示了如何在Switch 1及Switch 2上，基于图33.5中所描述的网络拓扑，配置无条件通道操作。该以太网通道将配置成一个使用默认参数的二层802.1Q中继。
+
+```
+Switch-1#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Switch-1(config)#interface range fa0/1 – 3
+Switch-1(config-if-range)#no shutdown
+Switch-1(config-if-range)#switchport
+Switch-1(config-if-range)#switchport trunk encapsulation dot1q
+Switch-1(config-if-range)#switchport mode trunk
+Switch-1(config-if-range)#channel-group 1 mode on
+Creating a port-channel interface Port-channel 1
+Switch-1(config-if-range)#exit
+Switch-1(config)#exit
+```
+
+>**注意：**注意到该交换机自动默认创建出`interface port-channel 1`（根据下面的输出）。**没有要配置该接口的显式用户配置**（notice that the switch automatically creates `interface port-channel 1` by default(refer to the output below). No explicit user configurtion is required to configure this interface）。
+
+```
+Switch-2#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Switch-2(config)#interface range fa0/1 - 3
+Switch-2(config-if-range)#switchport
+Switch-2(config-if-range)#switchport trunk encapsulation dot1q
+Switch-2(config-if-range)#switchport mode trunk
+Switch-2(config-if-range)#channel-group 1 mode on
+Creating a port-channel interface Port-channel 1
+Switch-2(config-if-range)#exit
+Switch-2(config)#exit
+```
+
+命令`show EtherChannel [options]`此时即可用于验证该以太网通道的配置。下面的输出中打印了可用选项（依据不同平台会有不同）。
+
+```
+Switch-2#show EtherChannel ?
+    <1-6>           Channel group number
+    detail          Detail information
+    load-balance    Load-balance/frame-distribution scheme among ports in port-channel
+    port            Port information
+    port-channel    Port-channel information
+    protocol        protocol enabled
+    summary         One-line summary per channel-group
+    |               Output modifiers
+    <cr>
+```
+
+下面的输出对命令`show EtherChannel summary`进行了演示。
+
+```
+Switch-2#show EtherChannel summary
+Flags:  D - down
+        I - stand-alone
+        H - Hot-standby (LACP only)
+        R - Layer3
+        u - unsuitable for bundling
+        U - in use
+        d - default port
+        P - in port-channel
+        s - suspended
+        S - Layer2
+        f - failed to allocate aggregator
+Number of channel-groups in use: 1
+Number of aggregators: 1
+Group  Port-channel  Protocol    Ports
+------+-------------+-----------+--------------------------------
+1      Po1(SU)          -        Fa0/1(Pd)  Fa0/2(P)    Fa0/3(P)
+```
+
+在上面的输出中，可以看到在通道组1（Channel Group 1）中有三条链路。接口FastEthernet0/1是默认端口；**该端口将用于发送比如的STP数据包**。如果该端口失效，FastEthernet0/2就将被指定为默认端口，如此延续（this port will be used to send STP pakcets, for example. If this port fails, FastEthernet0/2 will be designated as the default port, and so forth）。同时通过看看`Po1`后面的`SU`标志，还可以看到该端口组是一个活动的二层以太网通道。下面的输出现实了由`show EtherChannel detail`命令所打印出的信息。
+
+```
+Switch-2#show EtherChannel detail
+                Channel-group listing:
+----------------------
+Group: 1
+----------
+Group state = L2
+Ports: 3
+Maxports = 8
+Port-channels: 1 Max Port-channels = 1
+Protocol:
+-
+Ports in the group:
+-------------------
+Port: Fa0/1
+------------
+Port state
+= Up Mstr In-Bndl
+Channel group = 1 Mode = On/FEC
+Port-channel = Po1 GC
+Port index = 0 Load = 0x00
+= -
+Gcchange = -
+Pseudo port-channel = Po1
+Protocol = -
+Age of the port in the current state: 0d:00h:20m:20s
+Port: Fa0/2
+------------
+Port state
+= Up Mstr In-Bndl
+Channel group = 1 Mode = On/FEC
+Port-channel = Po1 GC
+Port index = 0 Load = 0x00
+= -
+Gcchange = -
+Pseudo port-channel = Po1
+Protocol = -
+Age of the port in the current state: 0d:00h:21m:20s
+Port: Fa0/3
+------------
+Port state
+= Up Mstr In-Bndl
+Channel group = 1 Mode = On/FEC
+Port-channel = Po1 GC
+Port index = 0 Load = 0x00
+= -
+Gcchange = -
+Pseudo port-channel = Po1
+Protocol = -
+Age of the port in the current state: 0d:00h:21m:20s
+Port-channels in the group:
+---------------------------
+Port-channel: Po1
+------------
+Age of the Port-channel
+= 0d:00h:26m:23s
+Logical slot/port = 1/0 Number of ports = 3
+GC = 0x00000000 HotStandBy port = null
+Port state = Port-channel Ag-InuseProtocol
+= -
+Ports in the Port-channel:
+Index
+Load
+Port
+EC state
+No of bits
+------+------+------+------------------+-----------
+0 00 Fa0/1 On/FEC 0
+0 00 Fa0/2 On/FEC 0
+0 00 Fa0/3 On/FEC 0
+Time since last port bundled:
+0d:00h:21m:20s
+Fa0/3

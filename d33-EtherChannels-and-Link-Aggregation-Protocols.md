@@ -177,3 +177,31 @@ LACP通过在端口之间交换LACP数据包，实现对端口通道自动建立
 
 LACP主动模式将一个交换机端口置为通过发送LACP数据包，对远端端口发起协商的主动协商状态（an active negotiating state in which the switch port initiates negotiations with remote ports by sending LACP packets）。主动模式与PAgP的`desirable`模式等价。也就是说，在此模式下，交换机端口主动尝试与另一台同样运行LACP的交换机建立一个以太网通道。
 
+###LACP被动模式
+
+**LACP Passive Mode**
+
+当某个交换机端口被配置为被动模式时，其只在接收到其它LACP数据包时，才就一个LACP通道进行协商。在被动模式下，该端口对其所接收到的LACP数据包进行响应，而并不发起LACP数据包协商。该设置减少了LACP数据包传输。在此模式下，该端口通道组将该接口附加到以太网通道捆绑。此模式与PAgP所用到的`auto`模式类似。
+
+重要的是记住**主动和被动模式只在非PAgP接口上是有效的**（the active and passive modes are valid on non-PAgP interfaces only）。但是，如有着一个PAgP以太网通道，并打算将其转换到LACP，那么**思科IOS软件允许随时对协议进行改变**。而其间唯一的限制，就是此**改变导致全部现有以太网通道重置为新协议的默认通道模式**。下表33.2展示了不同的LACP组合及它们在两台交换机之间建立一个以太网通道中应用的结果。
+
+*表 33.2 -- 使用不同LACP模式的以太网通道形成*
+
+*Table 33.2 -- EtherChannel Formation Using Different LACP Modes*
+
+<table>
+<tr><th>交换机一的LACP模式</th><th>交换机二的LACP模式</th><th>以太网通道结果</th></tr>
+<tr><td>被动模式</td><td>被动模式</td><td>没有以太网通道形成</td></tr>
+<tr><td>被动模式</td><td>主动模式</td><td>形成以太网通道</td></tr>
+<tr><td>主动模式</td><td>主动模式</td><td>形成以太网通道</td></tr>
+<tr><td>主动模式</td><td>被动模式</td><td>形成以太网通道</td></tr>
+</table>
+
+##以太网通道的负载分配方式
+
+**EtherChannel Load-Distribution Methods**
+
+对于PAgP及LACP以太网通道，Catalyst交换机使用到一种利用数据包头部的一些关键字段，生成一个随后匹配到以太网通道组中的某条物理链路的散列值的多态算法。也就是说，交换机通过通过将自帧中的地址所形成的二进制模式减少到一个从以太网通道中的多条链路选出一条的数值，而将流量负载在这些链路上进行分配（a polymorphic algorithm that utilises key fields from the header of the packet to generate a hash， which is then matched to a physical link in an EtherChannel group. In other words, the switch distributes the traffic ）。
+
+此操作可在MAC地址或IP地址上完成，并可仅基于源或目的地址，或同时基于源或目的地址。尽管对以太网通道的负载分配中所用到的该散列值的实际计算的深入探讨，是超出CCNA考试要求范围的，知道管理员可以定义头部中的哪些字段，用于作为确定某个数据包的传输物理链路所用到的算法的输入，是重要的。
+

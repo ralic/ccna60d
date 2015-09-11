@@ -205,3 +205,48 @@ LACP主动模式将一个交换机端口置为通过发送LACP数据包，对远
 
 此操作可在MAC地址或IP地址上完成，并可仅基于源或目的地址，或同时基于源或目的地址。尽管对以太网通道的负载分配中所用到的该散列值的实际计算的深入探讨，是超出CCNA考试要求范围的，知道管理员可以定义头部中的哪些字段，用于作为确定某个数据包的传输物理链路所用到的算法的输入，是重要的。
 
+负载分配方式通过全局配置命令`port-channel load-balance [method]`进行配置。在任何时间，都只能使用一种单一方式。下表33.3列出并解释了在配置以太网通道负载分配时，思科IOS Catalyst交换机中可用的不同方式。
+
+*表 33.3 -- 以太网通道负载分配（负载均衡）的可选项*
+
+*Table 33.3 -- EtherChannel Load-Distribution(Load-Balancing) Options*
+
+<table>
+<tr><th>方式</th><th>说明</th></tr>
+<tr><td>dst-ip</td><td>进行基于目的IP地址的负载分配，performs load distribution based on the destination IP address</td></tr>
+<tr><td>dst-mac</td><td>进行基于目的MAC地址的负载分配，performs load distribution based on the destination MAC address</td></tr>
+<tr><td>dst-port</td><td>进行基于基于目的第4层端口的负载分配，performs load distribution based on the destination Layer 4 port</td></tr>
+<tr><td>src-dst-ip</td><td>进行基于源和目的IP地址的负载分配，performs load distribution based on the source and destination IP address</td></tr>
+<tr><td>src-dst-port</td><td>进行基于源和目的第4层端口的负载分配，performs load distribution based on the source and destination Layer 4 port</td></tr>
+<tr><td>src-ip</td><td>进行基于源IP地址的负载分配，performs load distribution based on the source IP address</td></tr>
+<tr><td>src-mac</td><td>进行基于源MAC地址的负载分配, performs load distribution based on the source MAC address</td></tr>
+<tr><td>src-port</td><td>进行基于源第4层端口的负载分配，performs load distribution based on the source Layer 4 port</td></tr>
+</table>
+
+##以太网通道配置准则
+
+**EtherChannel Configuration Guidelines**
+
+以下小节列出并说明了配置二层PAgP以太网通道所需要的步骤。但在深入到这些配置步骤之前，有必要熟悉下面这些配置二层以太网通道时的限制。
+
++ 每个以太网通道可以有最多8个兼容配置的以太网接口。而LACP则允许一个以太网通道组中多于8个的端口。不过这些额外端口都是热备份（hot-standby）端口。
++ 以太网通道中的所有接口都必须以相同的速率及双工模式运行。记住，与PAgP不同，LACP并不支持半双工端口。
++ 确保以太网通道中的所有接口都是开启的。在某些情况下，如这些接口没有开启，那么该逻辑端口通道接口（the logical port channel interface）就不会被自动创建。
++ 在初次配置一个以太网通道组时，重要的是记住这些端口与所加入的第一个组端口参数集一致（when first configuring an EtherChannel group, it is important to remember that ports follow the parameters set for the first group port added）。
++ 如有为某个以太网通道中的某个成员端口配置交换机端口分析器（Switch Port Analyzer, SPAN）, 那么该端口将会从该以太网通道组中移除。
++ 将以太网通道中的所有端口都指派到同一个VLAN，或将它们配置成中继端口，是必要的。而如果这些参数不同，该通道就不会形成。
++ 记住有着不同STP路径开销（由某位管理员所修改的）的那些类似接口，仍可用于组成一个以太网通道。
++ 在开始通道配置之前，建议首先关闭所有成员接口（it is recommended to shut down all member interfaces prior to beginning channelling configuration）。
+
+###配置并验证二层以太网通道
+
+**Configuring and Verifying Layer 2 EtherChannels**
+
+该部分内容通过无条件地强制所选接口建立一个以太网通道，对二层以太网通道的配置进行了说明（this section describes the configuration of Layer 2 EtherChannels by unconditionally forcing the selected interfaces to establish an EtherChannel）。
+
+1. 第一个配置步骤是通过全局配置命令`interface [name]`或`interface range [range]`，进入那些所需要的以太网通道接口的接口配置模式；
+2. 配置的第二步是通过接口配置命令`switchport`，将这些接口配置为二层交换机接口；
+3. 第三个配置步骤是通过接口配置命令`switchport mode [access|trunk]`，将这些交换机端口配置为中继或接入链路；
+4. 作为可选步骤，如该接口或这些接口已被配置为接入端口，就要使用命令`switchport access vlan [number]`，将其指派到同样的VLAN中。而如该接口或这些接口已被配置为中继端口，就要通过执行接口配置命令`switchport trunk allowed vlan [range]`，选择允许通过该中继的那些VLANs；而如VLAN 1将不作为原生VLAN（802.1Q的），就要通过执行接口配置命令`switchport trunk native vlan [number]`, 输入原生VLAN。此项配置在所有端口通道成员接口上必须一致。
+5. 下一配置步骤就是通过接口配置命令`channel-group [number] mode on`, 将这些接口配置为无条件中继(the next configuration step is to configure the interfaces to unconditionally trunk via the `channel-group [number] mode on` interface configration command)。
+

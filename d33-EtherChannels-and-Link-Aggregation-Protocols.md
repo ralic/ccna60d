@@ -138,6 +138,42 @@ Group  Port-channel  Protocol    Ports
 当在以太网通道上配置诸如`Loop Guard`这样的附加STP特性时，非常重要的是记住就算该通道捆绑中的其它端口时可运作的，**在`Loop Guard`阻塞以太网通道捆绑的第一个端口时，就不会有BPDUs通过该通道得以发送了**。这是因为PAgP将强制令到作为以太网通道端口组中的所有端口在`Loop Guard`配置上一致（when configuring additional STP features such as Loop Guard on an EtherChannel, it is very important to remember that if Loop Guard blocks the first port, no BPDUs will be sent over the channel, even if other ports in the channel bundle are operational. This is because PAgP will enforce uniform Loop Guard configuration on all of the ports that are part of the EtherChannel group）。
 
 > **真实场景应用**
+
 > **Real-World Implementation**
+
 > 在生产网络中，可能会用到思科虚拟交换系统（the Cisco Virtual Switching System, VSS），该系统是由两台物理的Catalyst 6500系列交换机所构成的一台单一的逻辑交换机。在VSS中，一台交换机被选为主动交换机（the active switch），同时另一交换机就被选为了备用交换机（the standby switch）。这两台交换机就是通过以太网通道连接在一起，从而允许它们之间控制数据包的发送和接收。
-> 接入交换机通过采用多机以太网通道（Multichassis EtherChannel, MEC）与VSS连接起来。
+
+> 接入交换机通过采用多机以太网通道（Multichassis EtherChannel, MEC）与VSS连接起来。而一个MEC就是一个对两台物理的Catalyst 6500交换机进行跨越而端接至一台逻辑虚拟交换机系统的以太网通道（an MEC is simply an EtherChannel that spans the two physical Catalyst 6500 switches but terminates to the single logical VSS）。增强的端口聚合协议（Enhanced PAgP, PAgP+）可用于允许Catalyst 6500交换机在其相互之间的以太网通道失效，而导致两台交换机都假定其自身是主动角色（双主动）， 从而切实影响到交换网络中流量转发时，经由MEC进行通信（Enhanced PAgP(PAgP+) can be used to allow the Catalyst 6500 switches to communicate via the MEC in the event that the EtherChannel between them fails, which would result in both switches assuming the active role(dual active), effectively affecting forwarding of traffic within the switched network）。这在下面的图表中进行了演示。
+
+![PAgP+](images/3300.png)
+
+尽管VSS超出了CCNA考试要求范围，了解**只有PAgP才能用于承载VSS控制数据包**是有益处的。但是，如在一个VSS环境，或者在一个最终会部署上VSS的环境中部署一些以太网通道，就会打算考虑运行PAgP而不是LACP，因为LACP是一个开放标准，不支持专有的VSS数据帧。本书中不会更为深入地涉及VSS。
+
+##链路聚合控制协议概述
+
+**Link Aggregation Control Protocol Overview**
+
+链路聚合控制协议（Link Aggregation Control Protocol, LACP）是IEEE 802.3ad规格的组成部分，用于从多条物理链路建立起一条逻辑链路。因为LACP与PAgP是不兼容的，所以链路的两端需要运行LACP以令到以太网通道组自动形成（Because LACP and PAgP are incompatible, both ends of the link need to run LACP in order to automate the formation of EtherChannel groups）。
+
+与PAgP的情形一样，**在配置LACP以太网通道时，所有LAN端口都必须是同样速率，且都必须被配置成二层或三层LAN端口。**而当某个端口通道中的某条链路失效时，那么先前由该失效链路所承载的流量就为该端口通道中剩下的链路进行交换。此外，在对某个端口通道中的活动绑定端口编号进行修改后，流量模式将反应出该端口通道重新平衡之后的状态。
+
+LACP通过在端口之间交换LACP数据包，实现对端口通道的自动创建的支持。其对端口组别具备的各项能力进行动态学习，并通知给其它端口。而一旦LACP正确地识别出这些匹配的以太网链路，其就推进将这些链路编组为一个GigabitEthernet端口通道。与PAgP要求端口有着相同速率及双工设置不同，LACP要求端口只能是全双工，因为半双工是不支持的。某个LACP以太网通道中的那些半双工端口，被置为暂停状态。
+
+默认情况下，一条链路上的所有入口广播及多播数据包在该端口通道的其它链路上的返回都被阻止（by default, all inbound Broadcast and Multicast packets on one link in a port channel are blocked from returning on any other link of the port channel）。LACP数据包被发送到IEEE 802.3慢速协议多播组地址（the IEEE 802.3 Slow Protocols Multicast group address）`01-80-C2-00-00-02`。LACP数据帧以EtherType数值0x8809进行编码。下图33.4演示了一个以太网数据帧中的这些字段。
+
+![IEEE 802.3 LACP数据帧](images/3304.png)
+
+*图 33.4 -- IEEE 802.3 LACP数据帧*
+
+##LACP的端口模式
+
+**LACP Port Modes**
+
+LACP通过在端口之间交换LACP数据包，实现对端口通道自动建立的支持。而LACP又是通过动态地掌握端口组的各项能力并将其通告给其它端口完成的端口间数据交换。一旦LACP正确地识别出那些匹配的以太网链路，就推进这些链路编组为一个端口通道。而一旦LACP模式得以配置，其仅会在某单个接口被分配到指定通道组时被改变。LACP支持两种模式，**主动**（`acitve`）及**被动**（`passive`）模式。后续小节将对这两种模式的运作进行说明。
+
+###LACP主动模式
+
+**LACP Avtive Mode**
+
+LACP主动模式将一个交换机端口置为通过发送LACP数据包，对远端端口发起协商的主动协商状态（an active negotiating state in which the switch port initiates negotiations with remote ports by sending LACP packets）。主动模式与PAgP的`desirable`模式等价。也就是说，在此模式下，交换机端口主动尝试与另一台同样运行LACP的交换机建立一个以太网通道。
+

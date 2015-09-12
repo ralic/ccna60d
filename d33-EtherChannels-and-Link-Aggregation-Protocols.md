@@ -329,73 +329,52 @@ Group  Port-channel  Protocol    Ports
 ```
 Switch-2#show EtherChannel detail
                 Channel-group listing:
-----------------------
+                ----------------------
 Group: 1
 ----------
 Group state = L2
 Ports: 3
 Maxports = 8
 Port-channels: 1 Max Port-channels = 1
-Protocol:
--
-Ports in the group:
--------------------
+Protocol:    -
+                Ports in the group:
+                -------------------
 Port: Fa0/1
 ------------
-Port state
-= Up Mstr In-Bndl
-Channel group = 1 Mode = On/FEC
-Port-channel = Po1 GC
-Port index = 0 Load = 0x00
-= -
-Gcchange = -
-Pseudo port-channel = Po1
-Protocol = -
+Port state      = Up Mstr In-Bndl
+Channel group   = 1           Mode  = On/FEC           Gcchange = -
+Port-channel    = Po1         GC    = -     Pseudo port-channel = Pol
+Port index      = 0           Load  = 0x00             Protocol = -
 Age of the port in the current state: 0d:00h:20m:20s
 Port: Fa0/2
 ------------
-Port state
-= Up Mstr In-Bndl
-Channel group = 1 Mode = On/FEC
-Port-channel = Po1 GC
-Port index = 0 Load = 0x00
-= -
-Gcchange = -
-Pseudo port-channel = Po1
-Protocol = -
+Port state      = Up Mstr In-Bndl
+Channel group   = 1           Mode  = On/FEC           Gcchange = -
+Port-channel    = Po1         GC    = -     Pseudo port-channel = Pol
+Port index      = 0           Load  = 0x00             Protocol = -
 Age of the port in the current state: 0d:00h:21m:20s
 Port: Fa0/3
 ------------
-Port state
-= Up Mstr In-Bndl
-Channel group = 1 Mode = On/FEC
-Port-channel = Po1 GC
-Port index = 0 Load = 0x00
-= -
-Gcchange = -
-Pseudo port-channel = Po1
-Protocol = -
+Port state      = Up Mstr In-Bndl
+Channel group   = 1           Mode  = On/FEC           Gcchange = -
+Port-channel    = Po1         GC    = -     Pseudo port-channel = Pol
+Port index      = 0           Load  = 0x00             Protocol = -
 Age of the port in the current state: 0d:00h:21m:20s
-Port-channels in the group:
----------------------------
+                Port-channels in the group:
+                ---------------------------
 Port-channel: Po1
 ------------
-Age of the Port-channel
-= 0d:00h:26m:23s
-Logical slot/port = 1/0 Number of ports = 3
-GC = 0x00000000 HotStandBy port = null
-Port state = Port-channel Ag-InuseProtocol
-= -
+Age of the Port-channel     = 0d:00h:26m:23s
+Logical slot/port   = 1/0               Number of ports = 3
+GC                  = 0x00000000        HotStandBy port = null
+Port state          = Port-channel Ag-Inuse
+Protocol            = -
 Ports in the Port-channel:
-Index
-Load
-Port
-EC state
-No of bits
+Index   Load   Port     EC state        No of bits
 ------+------+------+------------------+-----------
-0 00 Fa0/1 On/FEC 0
-0 00 Fa0/2 On/FEC 0
-0 00 Fa0/3 On/FEC 0
-Time since last port bundled:
-0d:00h:21m:20s
-Fa0/3
+0       00     Fa0/1    On/FEC          0
+0       00     Fa0/2    On/FEC          0
+0       00     Fa0/3    On/FEC          0
+Time since last port bundled:   0d:00h:21m:20s     Fa0/3
+```
+

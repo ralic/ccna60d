@@ -541,4 +541,153 @@ Fa0/3   Switch-2    0014.a9e5.d640  Fa0/3   18s SAC     10001
 
 ###配置并验证LACP以太网通道
 
-****
+**Configuring and Verifying LACP EtherChannels**
+
+此部分对LACP的二层以太网通道的配置进行了讲述。为配置并建立一个LACP以太网通道，需要执行下面这些步骤。
+
+1. 第一个配置步骤是通过全局配置命令`interface [name]`或`interface range [range]`, 进入到所需要的以太网通道接口的接口配置模式；
+2. 第二个配置步骤时通过接口配置命令`switchport`，将这些接口配置为二层交换端口；
+3. 第三个配置步骤，时通过接口配置命令`switchport mode [access|trunk]`，将这些交换端口配置为中继或接入链路；
+4. 作为可选步骤，如该接口或这些接口已被配置为接入端口，就要使用命令`switchport access vlan [number]`将其指派到同样的VLAN中。而如该接口或这些接口已被配置为中继端口，就要通过执行接口配置命令`switchport trunk allowed vlan [range]`, 选择允许通过该中继的VLANs; 而如将不使用VLAN 1作为原生VLAN（802.1Q的），就要通过执行接口配置命令`switchport trunk native vlan [number]`，输入该原生VLAN。此项配置在所有的端口通道成员接口上一致；
+5. 通过执行接口配置命令`channel-protocol lacp`, 将LACP配置作为以太网通道协议。因为以太网通道协议默认时PAgP，该命令被认为时LACP所强制的，同时也是所要求输入的（because EtherChannels default to PAgP, this command is considered mandatory for LACP and is required）；
+6. 下一配置步骤时通过接口配置命令`channel-group [number] mode`，将这些接口配置为无条件中继（the next configuration step is to configure the interfaces to unconditionally trunk via the `channel-group [number] mode` interface configuration command）。
+
+下面的输出对在Switch 1和Switch 2上如何配置基于图33.5中所给出的网络拓扑的LACP通道，进行了演示，该以太网通道将被配置为一个使用默认参数的二层802.1Q中继，如下面的输出所示。
+
+```
+Switch-1#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Switch-1(config)#int range FastEthernet0/1 - 3
+Switch-1(config-if-range)#switchport
+Switch-1(config-if-range)#switchport trunk encapsulation dot1q
+Switch-1(config-if-range)#switchport mode trunk
+Switch-1(config-if-range)#channel-protocol lacp
+Switch-1(config-if-range)#channel-group 1 mode active
+Creating a port-channel interface Port-channel 1
+Switch-1(config-if-range)#exit
+Switch-2#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Switch-2(config)#interface range FastEthernet0/1 - 3
+Switch-2(config-if-range)#switchport
+Switch-2(config-if-range)#switchport trunk encapsulation dot1q
+Switch-2(config-if-range)#switchport mode trunk
+Switch-2(config-if-range)#channel-protocol lacp
+Switch-2(config-if-range)#channel-group 1 mode passive
+Creating a port-channel interface Port-channel 1
+Switch-2(config-if-range)#exit
+```
+
+下面的输出演示了如何通过在Switch 1及Switch 2上执行`show EtherChannel summary`命令，来对该LACP以太网通道配置进行验证。
+
+```
+Switch-1#show EtherChannel summary
+Flags:  D - down
+        I - stand-alone
+        H - Hot-standby (LACP only)
+        R - Layer3
+        u - unsuitable for bundling
+        U - in use
+        d - default port
+        P - in port-channel
+        s - suspended
+        S - Layer2
+        f - failed to allocate aggregator
+Number of channel-groups in use: 1
+Number of aggregators: 1
+Group  Port-channel  Protocol    Ports
+------+-------------+-----------+--------------------------------
+1      Po1(SU)       LACP        Fa0/1(Pd)  Fa0/2(P)    Fa0/3(P)
+```
+
+默认LACP允许最多16个端口进入到一个端口通道组中（by default, LACP allows up to 16 ports to be entered into a port channel group）。前8个运作接口将为LACP所使用，而剩下的8个接口将被置为热备份状态。命令`show EtherChannel detail`显示出一个LACP以太网通道中所支持的链路最大数量，如下面的输出所示。
+
+<pre>
+Switch-1#<b>show EtherChannel 1 detail</b>
+Group state = L2
+<b>Ports: 3   Maxports = 16
+Port-channels: 1 Max Port-channels = 16</b>
+Protocol:   LACP
+                Ports in the group:
+                -------------------
+Port: Fa0/1
+------------
+Port state    = Up Mstr In-Bndl
+Channel group = 1           Mode = Active       Gcchange = -
+Port-channel  = Po1         GC   = -        Pseudo port-channel = Po1
+Port index    = 0           Load = 0x00         Protocol = LACP
+Flags:  S - Device is sending Slow LACPDUs.   F - Device is sending fast
+                                                  LACPDUs.
+        A - Device is in active mode.         P - Device is in passive mode.
+Local information:
+                     LACP port     Admin      Oper    Port     Port
+Port   Flags  State  Priority      Key        Key     Number   State
+Fa0/1  SA     bndl   32768         0x1        0x1     0x0      0x3D
+Partner’s information
+          Partner                 Partner                    Partner
+Port      System ID               Port Number    Age         Flags
+Fa0/1     00001,0014.a9e5.d640    0x1            4s          SP
+          LACP Partner           Partner        Partner
+          Port Priority          Oper Key       Port State
+          32768                  0x1            0x3C
+Age of the port in the current state: 00d:00h:00m:35s
+Port: Fa0/2
+------------
+Port state      = Up Mstr In-Bndl
+Channel group   = 1           Mode  = Active       Gcchange = -
+Port-channel    = Po1         GC    = -        Pseudo port-channel = Po1
+Port index      = 0           Load  = 0x00         Protocol = LACP
+Flags:  S - Device is sending Slow LACPDUs.      F - Device is sending fast
+                                                 LACPDUs.
+        A - Device is in active mode.            P - Device is in passive mode.
+Local information:
+                      LACP port   Admin         Oper    Port     Port
+Port    Flags  State  Priority    Key           Key     Number   State
+Fa0/2   SA     bndl   32768       0x1           0x1     0x1      0x3D
+Partner’s information
+          Partner               Partner                         Partner
+Port      System ID             Port Number         Age         Flags
+Fa0/2     00001,0014.a9e5.d640  0x2                 28s         SP
+          LACP Partner         Partner             Partner
+          Port Priority        Oper Key            Port State
+          32768                0x1                 0x3C
+Age of the port in the current state: 00d:00h:00m:33s
+Port: Fa0/3
+------------
+Port state      = Up Mstr In-Bndl
+Channel group   = 1           Mode  = Active        Gcchange = -
+Port-channel    = Po1         GC    = -         Pseudo port-channel = Po1
+Port index      = 0           Load  = 0x00          Protocol = -
+Flags:  S - Device is sending Slow LACPDUs.       F - Device is sending fast
+                                                  LACPDUs.
+        A - Device is in active mode.             P - Device is in passive mode.
+Local information:
+                     LACP port     Admin          Oper    Port     Port
+Port   Flags  State  Priority      Key            Key     Number   State
+Fa0/3  SA     bndl   32768         0x1            0x1     0x2      0x3D
+Partner’s information:
+          Partner               Partner                          Partner
+Port      System ID             Port Number          Age         Flags
+Fa0/3     00001,0014.a9e5.d640  0x3                  5s          SP
+          LACP Partner         Partner              Partner
+          Port Priority        Oper Key             Port State
+          32768                0x1                  0x3C
+Age of the port in the current state: 00d:00h:00m:29s
+                Port-channels in the group:
+                ----------------------
+Port-channel: Po1    (Primary Aggregator)
+------------
+Age of the Port-channel = 00d:00h:13m:50s
+Logical slot/port   = 1/0          Number of ports = 3
+HotStandBy port = null
+Port state          = Port-channel Ag-Inuse
+Protocol            = LACP
+Ports in the Port-channel:
+Index   Load   Port    EC state
+------+------+------+------------
+0       00     Fa0/1   Active
+0       00     Fa0/2   Active
+0       00     Fa0/3   Active
+Time since last port bundled:    00d:00h:00m:32s    Fa0/3
+Time since last port Un-bundled: 00d:00h:00m:49s    Fa0/1
+</pre>
+

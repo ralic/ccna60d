@@ -333,8 +333,7 @@ Switch-2#show EtherChannel detail
 Group: 1
 ----------
 Group state = L2
-Ports: 3
-Maxports = 8
+Ports: 3    Maxports = 8
 Port-channels: 1 Max Port-channels = 1
 Protocol:    -
                 Ports in the group:
@@ -377,4 +376,37 @@ Index   Load   Port     EC state        No of bits
 0       00     Fa0/3    On/FEC          0
 Time since last port bundled:   0d:00h:21m:20s     Fa0/3
 ```
+
+在上面的输出中，可以看到这是一个带有通道组中最多8个中的3个端口的二层以太网通道。还可以从由短横所表示的协议，看出以太网通道模式是`on`。此外，还可以看到这是一个FastEtherChannel(FEC)。
+
+最后，还可通过执行命令`show interfaces port-channel [number] switchport`, 对该逻辑的端口通道接口（the logical port-channel interface）的二层运作状态进行查看。这在下面的输出中有所演示。
+
+```
+Switch-2#show interfaces port-channel 1 switchport
+Name: Po1
+Switchport: Enabled
+Administrative Mode: trunk
+Operational Mode: trunk
+Administrative Trunking Encapsulation: dot1q
+Operational Trunking Encapsulation: dot1q
+Negotiation of Trunking: On
+Access Mode VLAN: 1 (default)
+Trunking Native Mode VLAN: 1 (default)
+Voice VLAN: none
+Administrative private-vlan host-association: none
+Administrative private-vlan mapping: none
+Administrative private-vlan trunk native VLAN: none
+Administrative private-vlan trunk encapsulation: dot1q
+Administrative private-vlan trunk normal VLANs: none
+Administrative private-vlan trunk private VLANs: none
+Operational private-vlan: none
+Trunking VLANs Enabled: ALL
+Pruning VLANs Enabled: 2-1001
+Protected: false
+Appliance trust: none
+```
+
+###配置并验证PAgP以太网通道
+
+**Configuring and Verifying PAgP EtherChannels**
 

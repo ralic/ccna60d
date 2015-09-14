@@ -378,3 +378,165 @@ Index   Load   Port     EC state        No of bits
 Time since last port bundled:   0d:00h:21m:20s     Fa0/3
 ```
 
+在上面的输出中，可以看出这是一个带有通道组中最多8个可能端口中的三个的二层以太网通道。还可以看出，以太网通道模式是`on`, 这是基于由一条短横线所表示的协议字段看出的。此外，同样可以看出这是一个FastEtherChannel(FEC)（in the output above, you can see that this is a Layer 2 EtherChannel with three out of a maximum of eight possible ports in the channel group. You can also see that the EtherChannel mode is on, based on the protocol being denoted by a hash(-). In addition, you can also see that this is a FastEtherChannel(FEC)）。
+
+最后，还可以通过执行命令`show interface port-channel [number] switchport`，对该逻辑的port-channel接口的二层运行状态进行检查。这在下面的输出中进行了演示。
+
+```
+Switch-2#show interfaces port-channel 1 switchport
+Name: Po1
+Switchport: Enabled
+Administrative Mode: trunk
+Operational Mode: trunk
+Administrative Trunking Encapsulation: dot1q
+Operational Trunking Encapsulation: dot1q
+Negotiation of Trunking: On
+Access Mode VLAN: 1 (default)
+Trunking Native Mode VLAN: 1 (default)
+Voice VLAN: none
+Administrative private-vlan host-association: none
+Administrative private-vlan mapping: none
+Administrative private-vlan trunk native VLAN: none
+Administrative private-vlan trunk encapsulation: dot1q
+Administrative private-vlan trunk normal VLANs: none
+Administrative private-vlan trunk private VLANs: none
+Operational private-vlan: none
+Trunking VLANs Enabled: ALL
+Pruning VLANs Enabled: 2-1001
+Protected: false
+Appliance trust: none
+```
+
+###配置并验证PAgP以太网通道
+
+**Configuring and Verifying PAgP EtherChannels**
+
+此部分对PAgP二层以太网通道的配置进行了说明。为配置并建立一个PAgP以太网通道，需要执行以下步骤。
+
+1. 第一个配置步骤是通过全局配置命令`interface [name]`或`interface range [range]`，进入到所需的这些以太网接口的接口配置模式；
+2. 配置的第二步，是通过接口配置命令`switchport`, 将这些接口配置为二层交换端口；
+3. 第三个配置步骤，是通过接口配置命令`switchport mode [access|trunk]`，将这些交换端口，配置为中继或接入链路；
+4. 作为可选步骤，如果已将这些端口配置为接入端口，那么就要使用命令`switchport access vlan [number]`, 将其指派到同一个VLAN中；而如果这些接口已被配置为中继端口，那么就要通过执行接口配置命令`switchport trunk allowed vlan [range]`，来选择所允许通过该中继的那些VLANs；如未打算将VLAN 1用作原生VLAN（对于802.1Q），就要通过执行接口配置命令`switchport trunk native vlan [number]`，输入原生VLAN。此项配置在所有端口通道的成员接口上一致。
+5. 作为可选项，通过执行接口配置命令`channel-protocol pagp`，将PAgP配置作为以太网通道协议（the EtherChannel protocol）。因为以太网通道默认是PAgP的，所以此命令被认为是可选的而无需输入。但执行该命令被看作是良好实践，因为可以令到配置绝对确定（it is considered good practice to issue this command just to be absolutely sure of your configuration）。
+6. 下一步就是通过接口配置命令`channel-group [number] mode`，将这些接口配置为无条件中继。
+
+下面的输出演示了如何在基于上面的图33.5中所给出的网络拓扑的Switch 1和Switch 2上，配置PAgP的通道（PAgP channelling）。该以太网通道将被配置为使用默认参数的二层802.1Q中继。
+
+```
+Switch-1#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Switch-1(config)#interface range fa0/1 - 3
+Switch-1(config-if-range)#switchport
+Switch-1(config-if-range)#switchport trunk encap dot1q
+Switch-1(config-if-range)#switchport mode trunk
+Switch-1(config-if-range)#channel-group 1 mode desirable
+Creating a port-channel interface Port-channel 1
+Switch-1(config-if-range)#exit
+```
+
+>**注意：**在上面的输出中，选择了端口通道的`desirable`模式。可以在此命令（`channel-group 1 mode desirable`）之后加上一个额外关键字`[non-silent]`。这是因为，默认情况下，PAgP的`auto`模式默认是安静模式。当交换机被连接到一台不兼容PAgP的设备时，就用到安静模式，且绝不会传送数据包(an additional keyword, `[non-silent]`, may also be appended to the end of this command. This is because, by default, PAgP auto and desirable modes default to a silent mode. The silent mode is used when the switch is connected to a device that is not PAgP-capable and that seldom, if ever transmits packets)。一台安静相邻设备的例子（an example of a silent partner），就是一台文件服务器或未有生成流量的数据包分析器。而如果一台设备不会发出PAgP数据包（比如处于`auto`模式），也用到安静模式。
+
+在此示例中，在一个连接到一台安静相邻设备的物理端口上运行PAgP阻止了那个交换机端口成为运作端口；但是，该安静设置允许PAgP运行，从而将该接口加入到一个通道组，同时利用该接口进行传输。在本例中，因为Switch 2将被配置为`auto`模式（被动模式）, 该端口采用默认的安静模式运作，就是首先的了（In this case, running PAgP on a physical port connected to a silent partner prevents that switch port from ever becoming operational; however, the silent setting allows PAgP to operate, to attatch the interface to a channel group, and to use the interface for transmission. In this example, because Switch 2 will be configured for auto mode(passive mode), it is preferred that the port uses the default silent mode operation）。这在下面的PAgP以太网通道配置中进行了演示。
+
+```
+Switch-1#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Switch-1(config)#interface range fa0/1 - 3
+Switch-1(config-if-range)#switchport
+Switch-1(config-if-range)#switchport trunk encap dot1q
+Switch-1(config-if-range)#switchport mode trunk
+Switch-1(config-if-range)#channel-group 1 mode desirable ?
+    non-silent  Start negotiation only after data packets received
+    <cr>
+Switch-1(config-if-range)#channel-group 1 mode desirable non-silent
+Creating a port-channel interface Port-channel 1
+Switch-1(config-if-range)#exit
+```
+
+继续进行PAgP以太网通道的配置，则Switch 2被配置为以下这样。
+
+```
+Switch-2#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Switch-2(config)#int range fa0/1 - 3
+Switch-2(config-if-range)#switchport
+Switch-2(config-if-range)#switchport trunk encapsulation dot1q
+Switch-2(config-if-range)#switchport mode trunk
+Switch-2(config-if-range)#channel-group 1 mode auto
+Creating a port-channel interface Port-channel 1
+Switch-2(config-if-range)#exit
+```
+
+以下输出演示了怎样通过在Switch 1及Switch 2上使用命令`show EtherChannel summary`，验证该PAgP以太网通道的配置。
+
+```
+Switch-1#show EtherChannel summary
+Flags:  D - down
+        I - stand-alone
+        H - Hot-standby (LACP only)
+        R - Layer3
+        u - unsuitable for bundling
+        U - in use
+        d - default port
+        P - in port-channel
+        s - suspended
+        S - Layer2f - failed to allocate aggregator
+Number of channel-groups in use:    1
+Number of aggregators:              1
+Group  Port-channel  Protocol    Ports
+------+-------------+-----------+--------------------------------
+1      Po1(SU)         PAgP      Fa0/1(Pd)  Fa0/2(P)    Fa0/3(P)
+```
+
+还可以通过执行命令`show pagp [options]`, 查看到PAgP以太网通道的配置及统计数据。下面的输出，演示了此命令下可用的选项。
+
+```
+Switch-1#show pagp ?
+  <1-6>     Channel group number
+  counters  Traffic information
+  internal  Internal information
+  neighbor  Neighbor information
+```
+
+>**注意：**对需要的端口通道编号的进入，提供上面所打印出的后三个选项。这在下面的输出中进行了演示。
+
+```
+Switch-1#show pagp 1 ?
+  counters  Traffic information
+  internal  Internal information
+  neighbor  Neighbor information
+```
+
+关键字`[counters]`提供了有关PAgP发出及接收到的数据包的信息。关键字`[internal]`提供了诸如端口状态、Hello间隔时间、PAgP端口优先级以及端口学习方式等的信息。下面的输出对命令`show pagp internal`的使用进行了演示。
+
+```
+Switch-1#show pagp 1 internal
+Flags:  S - Device is sending Slow hello.   C - Device is in Consistent state.
+        A - Device is in Auto mode.         d - PAgP is down.
+Timers: H - Hello timer is running.         Q - Quit timer is running.
+        S - Switching timer is running.     I - Interface timer is running.
+Channel group 1
+                                Hello       Partner PAgP     Learning   Group
+Port    Flags   State   Timers  Interval    Count   Priority Method     Ifindex
+Fa0/1   SC      U6/S7   H       30s         1       128      Any        29
+Fa0/2   SC      U6/S7   H       30s         1       128      Any        29
+Fa0/3   SC      U6/S7   H       30s         1       128      Any        29
+```
+
+关键字`[neighbor]`打印出邻居名称、PAgP邻居的ID、邻居设备ID（MAC）以及邻居端口。同时在比如邻居是一台物理学习设备时（a physical learner）,这些标志同样表明了邻居运行的模式。下面的输出对命令`show pagp neighbor`的使用，进行了演示。
+
+```
+Switch-1#show pagp 1 neighbor
+Flags:  S - Device is sending Slow hello.   C - Device is in Consistent state.
+        A - Device is in Auto mode.         P - Device learns on physical port.
+Channel group 1 neighbors
+        Partner     Partner         Partner     Partner Group
+Port    Name        Device ID       Port    Age Flags   Cap.
+Fa0/1   Switch-2    0014.a9e5.d640  Fa0/1   19s SAC     10001
+Fa0/2   Switch-2    0014.a9e5.d640  Fa0/2   24s SAC     10001
+Fa0/3   Switch-2    0014.a9e5.d640  Fa0/3   18s SAC     10001
+```
+
+###配置并验证LACP以太网通道
+
+****

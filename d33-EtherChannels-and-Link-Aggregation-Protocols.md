@@ -691,3 +691,127 @@ Time since last port bundled:    00d:00h:00m:32s    Fa0/3
 Time since last port Un-bundled: 00d:00h:00m:49s    Fa0/1
 </pre>
 
+LACP的配置及统计数据也可以通过执行`show lacp [options]`命令进行查看。此命令可用的选项在下面的输出中进行了演示。
+
+<pre>
+Switch-1#<b>show lacp ?</b>
+  <1-6>     Channel group number
+  counters  Traffic information
+  internal  Internal information
+  neighbor  Neighbor information
+  sys-id    LACP System ID
+</pre>
+
+`[counters]`关键字提供了有关LACP发出和接收到的数据包的信息。该命令的打印输出如下面所示。
+
+<pre>
+Switch-1#<b>show lacp counters</b>
+          LACPDUs        Marker     Marker Response     LACPDUs
+Port    Sent   Recv    Sent   Recv    Sent   Recv       Pkts Err
+---------------------------------------------------------------------
+Channel group: 1
+Fa0/1   14     12      0      0       0      0          0
+Fa0/2   21     18      0      0       0      0          0
+Fa0/3   21     18      0      0       0      0          0
+</pre>
+
+而`[internal]`关键字提供了诸如端口状态、管理密钥（adminitrative key）、LACP端口优先级，以及端口编号等信息。下面的输出对此进行了演示。
+
+<pre>
+Switch-1#<b>show lacp internal</b>
+Flags:  S - Device is sending Slow LACPDUs. F - Device is sending Fast
+                                            LACPDUs.
+        A - Device is in Active mode.       P - Device is in Passive mode.
+Channel group 1
+                        LACP port    Admin    Oper   Port    Port
+Port      Flags  State  Priority     Key      Key    Number  State
+Fa0/1     SA     bndl   32768        0x1      0x1    0x0     0x3D
+Fa0/2     SA     bndl   32768        0x1      0x1    0x1     0x3D
+Fa0/3     SA     bndl   32768        0x1      0x1    0x2     0x3D
+</pre>
+
+关键字`[neighbor]`打印出邻居名称、LACP邻居的ID、邻居的设备ID（MAC），以及邻居端口等信息。这些标志还表明邻居运行所处状态，以及其是否时一个物理学习设备（the flags also indicate the mode the neighbor is operating in, as well as whether it is a physical learner, for example）。下面的输出对此进行了演示。
+
+<pre>
+Switch-1#show lacp neighbor
+Flags:  S - Device is sending Slow LACPDUs. F - Device is sending Fast
+                                            LACPDUs.
+        A - Device is in Active mode.       P - Device is in Passive mode.
+Channel group 1 neighbors
+Partner’s information
+          Partner               Partner                     Partner
+Port      System ID             Port Number     Age         Flags
+Fa0/1     00001,0014.a9e5.d640  0x1             11s         SP
+          LACP Partner         Partner         Partner
+          Port Priority        Oper Key        Port State
+          32768                0x1             0x3C
+Partner’s information:
+          Partner               Partner                     Partner
+Port      System ID             Port Number     Age         Flags
+Fa0/2     00001,0014.a9e5.d640  0x2             19s         SP
+          LACP Partner         Partner         Partner
+          Port Priority        Oper Key        Port State
+          32768                0x1             0x3C
+Partner’s information:
+          Partner               Partner                     Partner
+Port      System ID             Port Number     Age         Flags
+Fa0/3     00001,0014.a9e5.d640  0x3             24s         SP
+          LACP Partner         Partner         Partner
+          Port Priority        Oper Key        Port State
+          32768                0x1             0x3C
+</pre>
+
+最后，关键字`[sys-id]`提供了本地交换机的系统ID（finally, the `[sys-id]` keyword provides the system ID of the local switch）。这是一个该交换机MAC地址和LACP优先级的结合体，如下面的输出所示。
+
+```
+Switch-1#show lacp sys-id
+1    ,000d.bd06.4100
+```
+
+##第33天问题
+
+1. What type of ports does a FastEtherChannel contain?
+2. How many ports can a standard EtherChannel contain?
+3. What are the two protocol options you have when configuring EtherChannels on a Cisco switch?
+4. Which of the protocols mentioned above is Cisco proprietary?
+5. PagP packets are sent to the destination Multicast MAC address `01-00-0C-CC-CC-CC`. True
+or false?
+6. What are the two port modes supported by PagP?
+7. What are the two port modes supported by LACP?
+8. If more than eight links are assigned to an EtherChannel bundle running LACP, the protocol uses the port priority to determine which ports are placed into a standby mode. True or false?
+9. LACP automatically configures an administrative key value on each port configured to use LACP. The administrative key defines the ability of a port to aggregate with other ports. Only ports that have the same administrative key are allowed to be aggregated into the same port channel group. True or false?
+10. What is the command used to assign a port to a channel group?
+
+##第33天答案
+
+1. 100 Mbps ports.
+2. Up to eight ports.
+3. PagP and LACP.
+4. PagP.
+5. True.
+6. Auto and desirable.
+7. Active and passive.
+8. True.
+9. True.
+10. The `channel-group [number] mode` command in Interface Configuration mode.
+
+##第33天实验
+
+###以太网通道实验
+
+**EtherChannel Lab**
+
+在一个包含了两台直接相连的交换机（它们至今至少有两条链路）上，对本课程模块中出现的配置命令进行测试。通过Fa1/1及Fa2/2将它们连接起来（Fa1/1到Fa1/1及Fa2/2到Fa2/2）。
+
++ 在两条链路上以`auto-desirable`模式配置PAgP
++ 将该以太网通道配置为一条中继并允许一些VLANs通过它
++ 执行一条`show etherchannel summary`命令，并验证该端口通道是运行的
++ 执行一条`show mac-address-table`命令，并看看在两台交换机上所学习到的MAC地址
++ 执行一条`show pagp neighbor`命令，并检查结果
++ 采用LACP的`passive-active`模式，重复上述步骤
++ 使用命令`show EtherChannel detail`及`show lacp neighbor`命令，对配置进行验证
++ 使用`show interface port-channel [number] switchport`命令，对配置进行验证
++ 通过端口通道发出一些流量（ping）, 并使用`show lacp counters`命令对计数器进行检查
++ 配置一个不同的`lacp system-priority`输出，并使用`show lacp sys-id`命令予以验证
++ 配置一个不同的`lacp port-priority`输出，并使用命令`show lacp internal`予以验证
++ 使用命令`port-channel load-balance`，对LACP的负载均衡进行配置，并使用`show etherchannel load-balance`命令对此进行验证

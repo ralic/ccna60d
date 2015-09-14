@@ -377,15 +377,12 @@ Index   Load   Port     EC state        No of bits
 Time since last port bundled:   0d:00h:21m:20s     Fa0/3
 ```
 
-<<<<<<< HEAD
 在上面的输出中，可以看出这是一个带有通道组中最多8个可能端口中的三个的二层以太网通道。还可以看出，以太网通道模式是`on`, 这是基于由一条短横线所表示的协议字段看出的。此外，同样可以看出这是一个FastEtherChannel(FEC)（in the output above, you can see that this is a Layer 2 EtherChannel with three out of a maximum of eight possible ports in the channel group. You can also see that the EtherChannel mode is on, based on the protocol being denoted by a hash(-). In addition, you can also see that this is a FastEtherChannel(FEC)）。
 
 最后，还可以通过执行命令`show interface port-channel [number] switchport`，对该逻辑的port-channel接口的二层运行状态进行检查。这在下面的输出中进行了演示。
-=======
 在上面的输出中，可以看到这是一个带有通道组中最多8个中的3个端口的二层以太网通道。还可以从由短横所表示的协议，看出以太网通道模式是`on`。此外，还可以看到这是一个FastEtherChannel(FEC)。
 
 最后，还可通过执行命令`show interfaces port-channel [number] switchport`, 对该逻辑的端口通道接口（the logical port-channel interface）的二层运作状态进行查看。这在下面的输出中有所演示。
->>>>>>> 9661b7a1a8ec3430ae8fc708d90c917599811ac9
 
 ```
 Switch-2#show interfaces port-channel 1 switchport
@@ -416,7 +413,6 @@ Appliance trust: none
 
 **Configuring and Verifying PAgP EtherChannels**
 
-<<<<<<< HEAD
 此部分对PAgP二层以太网通道的配置进行了说明。为配置并建立一个PAgP以太网通道，需要执行以下步骤。
 
 1. 第一个配置步骤是通过全局配置命令`interface [name]`或`interface range [range]`，进入到所需的这些以太网接口的接口配置模式；
@@ -546,5 +542,3 @@ Fa0/3   Switch-2    0014.a9e5.d640  Fa0/3   18s SAC     10001
 ###配置并验证LACP以太网通道
 
 ****
-=======
->>>>>>> 9661b7a1a8ec3430ae8fc708d90c917599811ac9

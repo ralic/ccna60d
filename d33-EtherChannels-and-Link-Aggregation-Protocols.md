@@ -213,7 +213,7 @@ LACP主动模式将一个交换机端口置为经由发送LACP数据包，对远
 *Table 33.3 -- EtherChannel Load-Distribution(Load-Balancing) Options*
 
 <table>
-<tr><th width="15%">方 式</th><th>说 明</th></tr>
+<tr><th width="200">方 式</th><th>说 明</th></tr>
 <tr><td>dst-ip</td><td>进行基于目的IP地址的负载分配，performs load distribution based on the destination IP address</td></tr>
 <tr><td>dst-mac</td><td>进行基于目的MAC地址的负载分配，performs load distribution based on the destination MAC address</td></tr>
 <tr><td>dst-port</td><td>进行基于基于目的第4层端口的负载分配，performs load distribution based on the destination Layer 4 port</td></tr>

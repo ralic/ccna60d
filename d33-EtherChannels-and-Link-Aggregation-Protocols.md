@@ -202,7 +202,7 @@ LACP主动模式将一个交换机端口置为经由发送LACP数据包，对远
 
 **EtherChannel Load-Distribution Methods**
 
-对于PAgP及LACP以太网通道，Catalyst交换机使用到一种利用数据包头部的一些关键字段，生成一个随后匹配到以太网通道组中的某条物理链路的散列值的多态算法。也就是说，交换机通过将由帧中的地址所形成的二进制模式，减少到从以太网通道中多条链路选出一条的一个数值，从而实现流量负载在这些链路上的分配（a polymorphic algorithm that utilises key fields from the header of the packet to generate a hash， which is then matched to a physical link in an EtherChannel group. In other words, the switch distributes the traffic load across the links in an EtherChannel by reducing part of the binary pattern formed from the addresses in the frame to a numerical value that selects one of the links in the EtherChannel）。
+对于PAgP及LACP以太网通道，Catalyst交换机使用到一种利用数据包头部的一些关键字段，生成一个随后匹配到以太网通道组中的某条物理链路的散列值的多态算法。也就是说，交换机通过将由帧中的地址所形成的部分二进制模式，减少到一个用以从以太网通道中多条链路选出一条的数值，从而实现流量负载在这些链路上的分配（a polymorphic algorithm that utilises key fields from the header of the packet to generate a hash， which is then matched to a physical link in an EtherChannel group. In other words, the switch distributes the traffic load across the links in an EtherChannel by reducing part of the binary pattern formed from the addresses in the frame to a numerical value that selects one of the links in the EtherChannel）。
 
 此操作可在MAC地址或IP地址上完成，并可仅基于源或目的地址，或同时基于源或目的地址。尽管对以太网通道负载分配中所用到的该散列值的实际计算的深入探讨，是超出CCNA考试要求范围的，但知道管理员可以指定头部中的哪些字段，作为确定某个数据包的传输物理链路所用到的算法的输入，是重要的（while delving into detail on the actual computation of the hash used in EtherChannel load distribution is beyond the scope of the CCNA exam requirements, it is important to know that the adminitrator can define which fields in the header can be used as input to the algorithm used to determine the physical link transport to the packet）。
 
@@ -214,14 +214,14 @@ LACP主动模式将一个交换机端口置为经由发送LACP数据包，对远
 
 <table>
 <tr><th>方式</th><th>说明</th></tr>
-<tr><td>dst-ip</td><td>进行基于目的IP地址的负载分配，performs load distribution based on the destination IP address</td></tr>
+<tr><td width="20%">dst-ip</td><td>进行基于目的IP地址的负载分配，performs load distribution based on the destination IP address</td></tr>
 <tr><td>dst-mac</td><td>进行基于目的MAC地址的负载分配，performs load distribution based on the destination MAC address</td></tr>
-<tr><td>dst-port</td><td>进行基于基于目的第4层端口的负载分配，performs load distribution based on the destination Layer 4 port</td></tr>
-<tr><td>src-dst-ip</td><td>进行基于源和目的IP地址的负载分配，performs load distribution based on the source and destination IP address</td></tr>
-<tr><td>src-dst-port</td><td>进行基于源和目的第4层端口的负载分配，performs load distribution based on the source and destination Layer 4 port</td></tr>
-<tr><td>src-ip</td><td>进行基于源IP地址的负载分配，performs load distribution based on the source IP address</td></tr>
-<tr><td>src-mac</td><td>进行基于源MAC地址的负载分配, performs load distribution based on the source MAC address</td></tr>
-<tr><td>src-port</td><td>进行基于源第4层端口的负载分配，performs load distribution based on the source Layer 4 port</td></tr>
+<tr><td width="20%">dst-port</td><td>进行基于基于目的第4层端口的负载分配，performs load distribution based on the destination Layer 4 port</td></tr>
+<tr><td width="20%">src-dst-ip</td><td>进行基于源和目的IP地址的负载分配，performs load distribution based on the source and destination IP address</td></tr>
+<tr><td width="20%">src-dst-port</td><td>进行基于源和目的第4层端口的负载分配，performs load distribution based on the source and destination Layer 4 port</td></tr>
+<tr><td width="20%">src-ip</td><td>进行基于源IP地址的负载分配，performs load distribution based on the source IP address</td></tr>
+<tr><td width="20%">src-mac</td><td>进行基于源MAC地址的负载分配, performs load distribution based on the source MAC address</td></tr>
+<tr><td width="20%">src-port</td><td>进行基于源第4层端口的负载分配，performs load distribution based on the source Layer 4 port</td></tr>
 </table>
 
 ##以太网通道配置准则

@@ -735,7 +735,7 @@ Fa0/3     SA     bndl   32768        0x1      0x1    0x2     0x3D
 
 <pre>
 <code>
-Switch-1#show lacp neighbor
+Switch-1#<b>show lacp neighbor</b>
 Flags:  S - Device is sending Slow LACPDUs. F - Device is sending Fast
                                             LACPDUs.
         A - Device is in Active mode.       P - Device is in Passive mode.

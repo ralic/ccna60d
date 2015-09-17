@@ -734,6 +734,7 @@ Fa0/3     SA     bndl   32768        0x1      0x1    0x2     0x3D
 关键字`[neighbor]`打印出邻居名称、LACP邻居的ID、邻居的设备ID（MAC），以及邻居端口等信息。这些标志还表明邻居运行所处状态，以及其是否时一个物理学习设备（the flags also indicate the mode the neighbor is operating in, as well as whether it is a physical learner, for example）。下面的输出对此进行了演示。
 
 <pre>
+<code>
 Switch-1#show lacp neighbor
 Flags:  S - Device is sending Slow LACPDUs. F - Device is sending Fast
                                             LACPDUs.
@@ -760,6 +761,7 @@ Fa0/3     00001,0014.a9e5.d640  0x3             24s         SP
           LACP Partner         Partner         Partner
           Port Priority        Oper Key        Port State
           32768                0x1             0x3C
+</code>
 </pre>
 
 最后，关键字`[sys-id]`提供了本地交换机的系统ID（finally, the `[sys-id]` keyword provides the system ID of the local switch）。这是一个该交换机MAC地址和LACP优先级的结合体，如下面的输出所示。

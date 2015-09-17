@@ -603,6 +603,7 @@ Group  Port-channel  Protocol    Ports
 默认LACP允许最多16个端口进入到一个端口通道组中（by default, LACP allows up to 16 ports to be entered into a port channel group）。前8个运作接口将为LACP所使用，而剩下的8个接口将被置为热备份状态。命令`show EtherChannel detail`显示出一个LACP以太网通道中所支持的链路最大数量，如下面的输出所示。
 
 <pre>
+<code>
 Switch-1#<b>show EtherChannel 1 detail</b>
 Group state = L2
 <b>Ports: 3   Maxports = 16
@@ -690,22 +691,26 @@ Index   Load   Port    EC state
 0       00     Fa0/3   Active
 Time since last port bundled:    00d:00h:00m:32s    Fa0/3
 Time since last port Un-bundled: 00d:00h:00m:49s    Fa0/1
+</code>
 </pre>
 
 LACP的配置及统计数据也可以通过执行`show lacp [options]`命令进行查看。此命令可用的选项在下面的输出中进行了演示。
 
 <pre>
+<code>
 Switch-1#<b>show lacp ?</b>
   <1-6>     Channel group number
   counters  Traffic information
   internal  Internal information
   neighbor  Neighbor information
   sys-id    LACP System ID
+</code>
 </pre>
 
 `[counters]`关键字提供了有关LACP发出和接收到的数据包的信息。该命令的打印输出如下面所示。
 
 <pre>
+<code>
 Switch-1#<b>show lacp counters</b>
           LACPDUs        Marker     Marker Response     LACPDUs
 Port    Sent   Recv    Sent   Recv    Sent   Recv       Pkts Err
@@ -714,6 +719,7 @@ Channel group: 1
 Fa0/1   14     12      0      0       0      0          0
 Fa0/2   21     18      0      0       0      0          0
 Fa0/3   21     18      0      0       0      0          0
+</code>
 </pre>
 
 而`[internal]`关键字提供了诸如端口状态、管理密钥（adminitrative key）、LACP端口优先级，以及端口编号等信息。下面的输出对此进行了演示。

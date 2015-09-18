@@ -39,3 +39,18 @@
 
 *图34.1 -- 热备份路由器协议的运作*
 
+参考图34.1, HSRP是配置在三层（分配曾，the Layer 3, Distribution Layer）交换机之间，给VLAN 10提供了网关冗余。分配给三层上的Switch 1的交换机虚拟接口（the Switch Virtual Interface, SVI）IP地址为`10.10.10.2/24`，同时分配给三层上Switch 2的虚拟交换机接口IP地址为`10.10.10.3/24`。两台交换机都被配置为同一HSRP组的构成部分，并共享该虚拟网关的IP地址`10.10.10.1`。
+
+给Switch 1配置的优先级是105, Switch 2用的是默认优先级100。因为三层的Switch 1有着更高的优先级，而被选举作为主要交换机，同时三层的Switch 2被选为次要交换机。VLAN 10上的所有主机都被配置了一个`10.10.10.1`的默认网关地址。基于此种方案，Switch 1将转发所有发往地址`10.10.10.1`的数据包。但是，在Switch 1失效是，Switch 2将承担此项职能。该过程对网络主机是完全透明的。
+
+[真实世界](images/real-world.png)
+
+**真实世界应用**
+
+在生产网络中配置各种FHRPs时，确保某特定VLAN的活动（主要）网关同时也是其生成树的根桥，被认为是一种好的做法（in production networks, when configuring FHRPs, it is considered good practice to ensure that the active(primary) gateway is also the Spanning Tree Root Bridge for the particular VLAN）。比如参考图34.1中的图表，与将Switch 1配置为VLAN 10的HSRP主要网关一道，就应同时将其配置为该VLAN的根桥。
+
+这样做就得到一个确切的网络而避免在二层或三层上的次优转发（this results in a deterministic network and avoids suboptimal forwarding at Layer 2 or Layer 3）。比如，假如Switch 2是VLAN 10的根桥，而Switch 1是VLAN 10的主要网关，那么自那些网络主机到默认网关IP地址的数据包就会如下图34.2这样被转发。
+
+![将STP与HSRP的拓扑进行同步](images/3402.png)
+*图34.2 -- 将STP和HSRP的拓扑进行同步*
+

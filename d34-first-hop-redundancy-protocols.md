@@ -54,3 +54,31 @@
 ![将STP与HSRP的拓扑进行同步](images/3402.png)
 *图34.2 -- 将STP和HSRP的拓扑进行同步*
 
+在上面的网络中，自主机Host 1到`10.10.10.1`的数据包被下面这样进行转发。
+
+1. 接入层交换机收到一个来自Host 1的、以虚拟网关IP地址的MAC地址为目的地址的数据帧。此帧是在VLAN 10中接收到的，且该虚拟网关的MAC地址已被该接入交换机经由其根端口学习到。
+2. 因为VLAN 10的根桥是Switch 2，从而到Switch 1(该HSRP的主要路由器)的上行链路被置为阻塞状态（because the Root Bridge for VLAN 10 is Switch 2, the uplink towards Switch 1(the HSRP primary router) is placed into a Blocking state）。接入层交换机通过此上行链路转发该数据帧到Switch 2。
+3. Switch 2通过连接到Switch 1的候选端口（the Designated Port connected to Switch 1） , 转发该数据帧。而此次优转发路径也同样用于转发来自Host 2的数据帧。
+
+当前，思科IOS软件中所支持的HSRP有两个版本：版本1和2。接下来的小节将对这两个版本的相似和不同之处进行说明。
+
+###HSRP版本1
+
+**HSRP Version 1**
+
+默认下，当在思科IOS软件中开启热备份路由器协议时，开启的是版本1。HSRP版本1将可供配置的HSRP组数目限制为255。HSRP版本1下的路由器通过使用UDP端口`1985`, 将报文发送到多播组地址`224.0.0.2`, 进行通信（HSRP version 1 routers communicate by sending messages to Multicast group address `224.0.0.2` using UDP port 1985）。这在下图34.3中进行了展示。
+
+![HSRP版本1多播组地址](images/3403.png)
+*图34.3 -- HSRP版本1的多播组地址*
+
+虽然对HSRP数据包格式的细节探讨超出了CCNA考试要求的范围，下图34.4仍然对HSRP版本1数据包中所包含的信息进行了演示。
+
+![HSRP版本1数据包的那些字段](images/3404.png)
+*图34.4 -- HSRP版本1数据包的那些字段*
+
+在图34.4中，注意到版本字段（the Version field）给出的是值`0`。这是该字段在版本1开启时的默认值；但要记住这意味着HSRP版本1。
+
+###HSRP版本2
+
+**HSRP Version 2**
+

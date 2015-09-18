@@ -82,3 +82,35 @@
 
 **HSRP Version 2**
 
+HSRP版本2用到心的多播地址`224.0.0.102`，而不是版本1所使用的多播地址`224.0.0.102`，来发送Hello数据包。但使用的UDP端口号仍然一样。该新地址同样编码在IP数据包及以太网帧中，如下图34.5所示。
+
+![HSRP版本2的多播组地址](images/3405.png)
+*图34.5 -- HSRP版本2的多播组地址*
+
+尽管对HSRP版本2的细节探究超出了CCNA考试要求范围，但记住HSRP版本2并不使用与HSRP版本1同样的数据包格式是重要的。
+
+版本2数据包格式使用一个类型/长度/值格式（a Type/Length/Value(TLV）format)。一台HSRP版本1的路由器所接收到的HSRP版本2数据包将把类型字段（the Type field）映射到HSRP版本1的版本字段，且会被随后忽视（HSRP version 2 packets received by an HSRP version 1 router will have the Type field mapped to the Version field by HSRP version 1 and will be subsequently ignored）。图34.6对HSRP版本2数据包中的所包含的信息进行了演示。
+
+![HSRP版本2数据包的字段](images/3406.png)
+*图34.6 -- HSRP版本2数据包的字段*
+
+###HSRP版本1与版本2的比较
+
+**HSRP Version 1 and Version 2 Comparison**
+
+HSRP版本2包含了对HSRP版本1的一些增强。本小节将对版本2的这些增强以及与版本1的不同之处进行讲解。
+
+尽管HSRP版本1通告了计时器数值，但这些数值总是整数的秒，因为其不兼容对毫秒计时器数值的通告和学习。版本2就对毫秒计数器数值的通告和学习都兼容。下面的图34.7及34.8分别高亮显示了HSRP版本1及版本2的计时器字段的区别。
+
+![HSRP版本1的计时器字段](images/3407.png)
+*图34.7 -- HSRP版本1的计时器字段*
+
+![HSRP版本2的计时器字段](images/3408.png)
+*图34.8 -- HSRP版本2的计时器字段*
+
+HSRP版本1的组编号数字受限于范围`0`到`255`，而版本2的组编号已拓展到从`0`到`4095`。该区别将在本模块稍后将提供的一些HSRP配置示例中进行演示。
+
+版本2通过包含一个生成自物理路由器接口MAC地址、用于唯一识别HSRP活动Hello报文源的6字节识别符字段（a 6-byte Identifier field）, 从而提供了改进的管理及故障排除。在版本1中，这些报文包含的是作为源MAC地址的虚拟MAC地址，这就意味着无法确定出到底是哪一台HSRP路由器发送的该HSRP Hello报文。下图34.9对版本2的数据包中、而非HSRP版本1的数据包中的识别符字段进行了展示。
+
+![HSRP版本2数据包的识别符字段](images/3409.png)
+*图34.9 -- HSRP版本2数据包的识别符字段*

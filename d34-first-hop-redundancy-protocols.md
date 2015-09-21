@@ -225,4 +225,33 @@ R2(config-if)#
 
 在某些情况下，不一定要求使用这些默认的地址范围。这类情形的一个实例就是，在某个连接到配置了端口安全的交换机端口的路由器接口上配置多个HSRP分组的地方。在此情况下，该路由器就要对各个HSRP分组使用不同的MAC地址，结果就是这些MAC地址需要与交换机的端口安全相适应。在每次将HSRP分组加入到该接口时，此项配置都必须进行修改；否则就会出现端口安全冲突（otherwise, a port security violation would occur）。
 
-为解决此问题，思科IOS软件允许管理员使用配置了HSRP的物理接口的真实MAC地址作为虚拟网关IP地址的MAC地址。
+为解决此问题，思科IOS软件允许管理员使用配置HSRP的物理接口真实MAC地址作为其MAC地址。结果就是一个单一MAC地址为所有HSRP分组所使用（也就是说活动网关的MAC地址被使用），同时端口安全配置无需在连接到交换机之间的HSRP分组配置时，进行修改。此操作是通过接口配置命令`stangby use-bia`完成的。下面的输出对`show standby`命令进行了演示，该命令对配置了两个不同HSRP分组的网关接口进行了展示。
+
+<pre>
+<code>
+Gateway-1#show standby
+FastEthernet0/0 - Group 1
+  State is Active
+    8 state changes, last state change 00:13:07
+  Virtual IP address is 192.168.1.254
+  <b>Active virtual MAC address is 0000.0c07.ac01
+    Local virtual MAC address is 0000.0c07.ac01 (v1 default)</b>
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 2.002 secs
+  Preemption disabled
+  Active router is local
+  Standby router is 192.168.1.2, priority 100 (expires in 9.019 sec)
+  Priority 105 (configured 105)
+  IP redundancy name is “hsrp-Fa0/0-1” (default)
+FastEthernet0/0 - Group 2
+  State is Active
+    2 state changes, last state change 00:09:45
+  Virtual IP address is 172.16.1.254
+  <b>Active virtual MAC address is 0000.0c07.ac02
+Local virtual MAC address is 0000.0c07.ac02 (v1 default)</b>
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 2.423 secs
+  Preemption disabled
+  Active router is local
+</code>
+</pre>

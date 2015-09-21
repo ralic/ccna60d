@@ -318,3 +318,27 @@ FastEthernet0/0 is up, line protocol is up
 [Truncated Output]
 </code>
 </pre>
+
+>**注意：**除了将HSRP配置为使用烧入的地址（the burnt-in address, BIA）外，管理员还有着通过接口配置命令`standby [number] mac-address [mac]`, 静态地指定虚拟网关所要使用的MAC地址的选项。此选项通常需要避免使用，因为其可造成交换网络中的重复MAC地址，而交换网络中的重复MAC地址则可导致非常严重的网络故障，甚至网络中断。
+
+###HSRP明文验证
+
+**HSRP Plain Text Authentication**
+
+默认情况下，HSRP报文都是以明文密钥字串（the plain text key string）`cisco`作为一直简单HSRP对等点认证方式发出的。如某个报文中的密钥字串与一个HSRP对等点上所配置的键匹配，那么该报文就被接受。而如不匹配，HSRP就忽视该未认证的报文。
+
+明文密钥提供了非常低的安全性，因为使用诸如Wireshark或Ethereal这类简单的数据包捕获工具，就可对其进行在线路上的抓取（`captured on the wire`）。下图34.13显示了在HSRP报文中所使用的默认明文认证密钥（the default plain text authentication key used in HSRP messages）。
+
+![对默认HSRP明文密钥的查看](images/3413.png)
+*图34.13 -- 对默认HSRP明文密钥的查看*
+
+因为明文认证提供非常低的安全性，下一小节将要说到的报文摘要5(Message Digest 5, MD5），就是HSRP的推荐认证方式了。
+
+###HSRP MD5验证
+
+**HSRP MD5 Authenticaiton**
+
+这并非是一个CCNA知识点，但这里因为完整性，同时为让大家将所学应用在工作中，在现场网络上，而将其包含了进来。
+
+报文摘要5(MD5）验证通过为多播HSRP协议数据包的HSRP部分生成一个MD5摘要，从而为HSRP提供了比明文验证更强的安全性。应用MD5验证，允许各个HSRP分组的成员使用一个密钥，来生成作为发出数据包一部分的上锁了的MD5散列值（a keyed MD5 hash）。而进入HSRP数据包的上锁散列值也被生成出来，同时如进入数据包内的散列值与MD5生成的散列值（the MD5-generated hash）不匹配，则该数据包就为接收路由器所简单地忽视。
+

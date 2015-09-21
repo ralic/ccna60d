@@ -302,3 +302,19 @@ FastEthernet0/0 - Group 2
   IP redundancy name is “hsrp-Fa0/0-2” (default)
 </code>
 </pre>
+
+两个HSRP分组都使用的MAC地址`0013.1986.0a20`，就是分配给那个物理网关接口的MAC地址。这在下面的输出中有所演示。
+
+<pre>
+<code>
+Gateway-1#show interface FastEthernet0/0
+FastEthernet0/0 is up, line protocol is up
+  Hardware is AmdFE, <b>address is 0013.1986.0a20 (bia 0013.1986.0a20)</b>
+  Internet address is 192.168.1.1/24
+  MTU 1500 bytes, BW 100000 Kbit/sec, DLY 100 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+...
+[Truncated Output]
+</code>
+</pre>

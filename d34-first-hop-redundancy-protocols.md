@@ -255,3 +255,50 @@ Local virtual MAC address is 0000.0c07.ac02 (v1 default)</b>
   Active router is local
 </code>
 </pre>
+
+在上面的输出中，基于默认HSRP版本，HSRP分组1的虚拟MAC地址为`0000.0c07.ac01`，同时HSRP分组2的为`0000.0c07.ac02`。这意味着该网关所连接的交换机端口学习到3个不同的地址：分配给实际物理的`FastEthernet0/0`接口实际或烧入的MAC地址，HSRP分组1的虚拟MAC地址，以及HSRP分组2的虚拟MAC地址。
+
+下面的输出演示了如何将HSRP配置为使用网关接口的真实MAC作为不同HSRP分组的虚拟MAC地址。
+
+```
+Gateway-1#conf
+Configuring from terminal, memory, or network [terminal]?
+Enter configuration commands, one per line. End with CNTL/Z.
+Gateway-1(config)#int f0/0
+Gateway-1(config-if)#standby use-bia
+Gateway-1(config-if)#exit
+```
+
+基于上面输出中的配置，命令`show standby`反映出HSRP分组的新的MAC地址，如下面的输出所示。
+
+<pre>
+<code>
+Gateway-1#show standby
+FastEthernet0/0 - Group 1
+  State is Active
+    8 state changes, last state change 00:13:30
+  Virtual IP address is 192.168.1.254
+  <b>Active virtual MAC address is 0013.1986.0a20
+    Local virtual MAC address is 0013.1986.0a20 (bia)</b>
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 2.756 secs
+  Preemption disabled
+  Active router is local
+  Standby router is 192.168.1.2, priority 100 (expires in 9.796 sec)
+  Priority 105 (configured 105)
+  IP redundancy name is “hsrp-Fa0/0-1” (default)
+FastEthernet0/0 - Group 2
+  State is Active
+    2 state changes, last state change 00:10:09
+  Virtual IP address is 172.16.1.254
+  <b>Active virtual MAC address is 0013.1986.0a20
+    Local virtual MAC address is 0013.1986.0a20 (bia)</b>
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 0.188 secs
+  Preemption disabled
+  Active router is local
+  Standby router is unknown
+  Priority 105 (configured 105)
+  IP redundancy name is “hsrp-Fa0/0-2” (default)
+</code>
+</pre>

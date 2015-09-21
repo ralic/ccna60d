@@ -158,3 +158,71 @@ HSRP的Resign报文是在活动路由器将要关机或一个有着较高优先�
 
 >**注意：**抢占并不意味着生成树拓扑的同时改变（preemmption does not necessarily mean that the Spanning Tree topology changes also）。
 
+###HSRP的各种状态
+
+**HSRP States**
+
+在某个接口上开启了HSRP时，与开放最短路径优先（Open Shortest Path First, OSPF）有着类似，该网关接口经历以下的系列状态（In a manner similar to Open Shortest Path First(OSPF), shen HSRP is enabled on an interface, the gateway interface goes through the following series of states）。
+
+1. 关闭的，disabled
+2. 初始化, init
+3. 侦听，listen
+4. 讲话, speak
+5. 备用，standby
+6. 活动，active
+
+> **注意：**这些接口状态过渡之间没有时间值的设置（there is no set time values for these interface transitions）。
+
+在HSRP关闭或初始化状态，网关不是已处于可用或可以加入到HSRP中，这可能是由于相关接口没有起来（in either the Disabled or the Init states, the gateway is not yet ready or is unable to participate in HSRP, possibly because the associated interface is not up）。
+
+侦听状态（the Listen state）对备份网关是可用的。仅有备用网关是在监听来自活动网关的报文。如备份网关在10秒内没有接收到Hello报文，其就假定活动网关宕机，并接下活动网关的角色。如在同一网段存在其他网关，它们也对Hello报文进行侦听，同时如它们有着下一最高优先级数值或IP地址，就将被选为该HSRP分组的活动网关。
+
+在讲话阶段（during the Speak phase），备份网关与活动网关进行报文交换。紧接着此阶段的完成，主要网关就过渡到活动状态（the Active state），同时备份网关过渡到备用状态（the Standby state）。备用状态表明该网关已准备好在主要网关失效时，承担活动网关的角色，而活动状态表明该网关已准备好有效地转发数据包。
+
+下面的输出显示了在一个刚刚开启HSRP的网关上，命令`debug standby`中所显示的状态过渡。
+
+```
+R2#debug standby
+HSRP debugging is on
+R2#
+R2#conf t
+Configuring from terminal, memory, or network [terminal]?
+Enter configuration commands, one per line. End with CNTL/Z.
+R2(config)#logging con
+R2(config)#int f0/0
+R2(config-if)#stand 1 ip 192.168.1.254
+R2(config-if)#
+*Mar 1 01:21:55.471: HSRP: Fa0/0 API 192.168.1.254 is not an HSRP address
+*Mar 1 01:21:55.471: HSRP: Fa0/0 Grp 1 Disabled -> Init
+*Mar 1 01:21:55.471: HSRP: Fa0/0 Grp 1 Redundancy “hsrp-Fa0/0-1” state Disabled -> Init
+*Mar 1 01:22:05.475: HSRP: Fa0/0 Interface up
+...
+[Truncated Output]
+...
+*Mar 1 01:22:06.477: HSRP: Fa0/0 Interface min delay expired
+*Mar 1 01:22:06.477: HSRP: Fa0/0 Grp 1 Init: a/HSRP enabled
+*Mar 1 01:22:06.477: HSRP: Fa0/0 Grp 1 Init -> Listen
+*Mar 1 01:22:06.477: HSRP: Fa0/0 Redirect adv out, Passive, active 0 passive 1
+...
+[Truncated Output]
+...
+*Mar 1 01:22:16.477: HSRP: Fa0/0 Grp 1 Listen: d/Standby timer expired (unknown)
+*Mar 1 01:22:16.477: HSRP: Fa0/0 Grp 1 Listen -> Speak
+...
+[Truncated Output]
+...
+*Mar 1 01:22:26.478: HSRP: Fa0/0 Grp 1 Standby router is local
+*Mar 1 01:22:26.478: HSRP: Fa0/0 Grp 1 Speak -> Standby
+*Mar 1 01:22:26.478: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 1 state Speak -> Standby
+*Mar 1 01:22:26.478: HSRP: Fa0/0 Grp 1 Redundancy “hsrp-Fa0/0-1” state Speak -> Standby
+```
+
+###HSRP地址分配
+
+**HSRP Addressing**
+
+在本模块的早前部分，已学到HSRP 版本1中，虚拟IP地址所用到的二层地址会是一个有`0000.0C07.ACxx`所构成的虚拟MAC地址，其中的`xx`就是HSRP分组编号的十六进制值，且是基于相应的接口的。而在HSRP版本2中，使用了一个虚拟网关IP地址的新的MAC地址范围`0000.0C9F.F000`到`0000.0C9F.FFFF`。
+
+在某些情况下，不一定要求使用这些默认的地址范围。这类情形的一个实例就是，在某个连接到配置了端口安全的交换机端口的路由器接口上配置多个HSRP分组的地方。在此情况下，该路由器就要对各个HSRP分组使用不同的MAC地址，结果就是这些MAC地址需要与交换机的端口安全相适应。在每次将HSRP分组加入到该接口时，此项配置都必须进行修改；否则就会出现端口安全冲突（otherwise, a port security violation would occur）。
+
+为解决此问题，思科IOS软件允许管理员使用配置了HSRP的物理接口的真实MAC地址作为虚拟网关IP地址的MAC地址。

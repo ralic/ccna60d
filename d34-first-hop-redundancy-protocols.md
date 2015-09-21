@@ -117,4 +117,44 @@ HSRP版本1的组编号数字受限于范围`0`到`255`，而版本2的组编号
 
 在HSRP版本1中，由虚拟IP地址所使用的二层地址将是一个由`0000.0C07.ACxx`所构成的虚拟MAC地址，其中的`xx`就是HSRP组别编号的十六进制值，又是基于相应接口的。但在HSRP版本2中，为虚拟网关IP地址使用了一个新的MAC地址范围`0000.0C9F.F000`到`0000.0C9F.FFFF`。在下面的图34.10及34.11中，对这些不同之处进行了演示，图34.10显示了版本1的HSRP组1的虚拟MAC地址，图34.11显示了版本2的HSRP组1的虚拟MAC地址。
 
-![HSRPb]
+![HSRP版本1的虚拟地址格式](images/3410.png)
+*图34.10 -- HSRP版本1的虚拟地址格式*
+
+![HSRP版本2的虚拟地址格式](images/3410.png)
+*图34.11 -- HSRP版本2的虚拟地址格式*
+
+###HSRP主要网关的选举
+
+可通过将默认为`100`的HSRP优先级，调整为`1`到`255`之间的任何数值，来对HSRP主要网关的选举施加影响。有着最高优先级的路由器将被选作HSRP分组的主要网关。
+
+如两个网关都使用默认优先级数值（`100`），或者两个网关上手动配置的优先级数值是相等的，那么有着最高IP地址的路由器将被选为主要网关。HSRP优先级数值在HSRP数据帧中有装载，同时在HSRP数据帧中也包含了路由器的当前状态（比如是主要路由器还是备用路由器）。下图34.12演示了一个配置了非默认优先级数值`105`的网关的优先级和状态字段，表明该网关被选为了该HSRP分组的活动网关（Figure 34.12 below illustrates the Priority and State fields of a gateway configured with a non-default priority value of 105, which result in it being elected as the active gateway for the HSRP group）。
+
+![HSRP的优先级与状态字段](images/3412.png)
+*图34.12 -- HSRP的优先级与状态字段*
+
+###HSRP的报文
+
+**HSRP Messages**
+
+HSRP路由器就以下三种类型的报文进行交换。
+
++ Hello报文，Hello messages
++ Coup报文，Coup messages
++ Rsign报文，Resign messages
+
+Hello报文是经由多播进行交换的，同时这些报文将本地路由器的HSRP状态及优先级数值告知其它网关。Hello报文同样包含了分组ID（the Group ID）、HSRP计数器值、版本号及**认证信息**（authentication information）等。前面的截屏中所展示的所有报文都是HSRP的Hello报文。
+
+HSRP的Coup报文是在当前的备份路由器打算承担起该HSRP分组的活动网关时所发出的。这与现实中的政变类似（this is similar to a coup d’état in real life。
+
+HSRP的Resign报文是在活动路由器将要关机或一个有着较高优先级的网关发出一条Hello或Coup报文时，有活动活动路由器所发出的。也就是说，该报文是在活动网关让出其主要网关角色时所发出的。
+
+###HSRP抢占
+
+**HSRP Preemption**
+
+如果某个网关已被选为活动网关，同时该HSRP分组的另一网关随后重新配置了一个更高的优先级数值，那么当前活动网关仍将保留主要转发角色。这是HSRP的默认做法（this is the default behaviour of HSRP）。
+
+为了在某个HSRP分组已有主要网关时，令到有着更高优先级的网关承担活动网关功能，该路由器必须被配置上抢占。抢占的配置允许该网关发起政变并承担该HSRP分组活动网关的角色（in order for a gateway with a higher priority to assume active gateway functionality when a primary gateway is already present for an HSRP group, the router must be configured for preemption. This allows the gateway to initiate a coup and assume the role of the active gateway for the HSRP group）。HSRP抢占在接下来的配置示例中有演示。
+
+>**注意：**抢占并不意味着生成树拓扑的同时改变（preemmption does not necessarily mean that the Spanning Tree topology changes also）。
+

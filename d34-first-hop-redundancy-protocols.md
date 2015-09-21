@@ -365,3 +365,67 @@ HSRP接口追踪允许管理员将HSRP配置为追踪某个接口的状态，并
 
 又假如Switch 2配置了抢占，此配置在这种情形下是强制的，Switch 2就会意识到其有着较高的优先级了（100对95）, 从而执行一次coup, 承担起该HSRP分组的活动网关的角色。
 
+![真实世界](images/real-world.png)
+
+###真实世界部署
+
+**Real-World Implementation**
+
+在生产网络中，思科Catalyst交换机还支持增强对象追踪技术（Enhanced Object Tracking, EOT），该技术可与任何FHRP（也就是HSRP、VRRP及GLBP）一起使用。增强对象追踪技术允许管理员将交换机配置为对以下参数进行追踪。
+
++ 某个接口的IP路由状态，the IP routing state of an interface
++ IP路由的可达性，IP route reachability
++ IP路由度量值的阈值，the threshold of IP route metrics
++ IP SLA的运作状态，IP SLA operations
+
+这些FHRPs，比如HSRP，都可被配置为对这些增强对象进行追踪，实现在部署FHRP错误恢复情形时获得更大的灵活性。比如，在使用EOT时，可以将活动的HSRP路由器配置在某个网络或主机的路由不可达时（也即是在路由表中），将其优先级减少某个数量。EOT是超出CCNA考试要求范围的，在配置示例中不会进行演示。
+
+###HSRP的负载均衡
+
+**HSRP Load Balancing**
+
+HSRP允许管理员在物理接口上配置多个HSRP分组，以实现负载均衡。默认下，当在两个网关直接配置HSRP时，在任何时候，都仅有一个网关活动地转发那个分组的流量。这样就可能导致备用网关链路带宽的浪费。这下下面的图34.15中有所演示。
+
+![没有HSRP负载均衡的网络](images/3415.png)
+*图34.15 -- 没有HSRP负载均衡的网络*
+
+在图34.15中，Switch 1和Switch 2直接配置了两个HSRP分组。Switch 1已被配置两个分组的活动（主要）网关--根据其较高的优先级数值。Switch 1和Switch 2分别与R1及R2连接。这两台路由器都通过T3/E3专线（T3/E3 dedicated lines）连接到因特网。因为两个分组的活动网关都是Switch 1，除非失效，它将转发这两个分组的流量，在Switch 1失效时，Switch 2将承担起活动（主要）网关的角色。
+
+尽管这确实满足了网络的冗余需求，但其也造成除非Switch 2成为活动网关而开始通过其转发流量时，R2上那条昂贵的T3/E3链路的空闲。自然，这反应出带宽的浪费。
+
+而通过配置多个HSRP分组，且每个分组使用不同的活动网关，管理员就可以有效地防止资源的不必要浪费，从而实现在Switch 1和Switch 2之间的负载均衡。这在下面的图34.16中进行了演示。
+
+![采用HSRP实现负载均衡的一个网络](images/3416.png)
+*图34.16 -- 采用HSRP实现负载均衡的一个网络*
+
+通过将Switch 1配置为HSRP分组1的活动网关，将Switch 2配置为HSRP分组2的活动网关，管理员可允许来自这两个分组的流量在Switch 1和Switch 2之间进行负载均衡，从而最终通过两条专用的T3/E3 WAN连接。两台交换机分别作为另一分组的备份。比如，在Switch 2失效时，Switch 1将承担分组2的活动网关角色，反之亦然。
+
+![真实世界](real-world.png)
+
+###真实世界的部署
+
+**Real-World Implementation**
+
+在生产网络中，重要的是记住多个HSRP分组的创建可能造成网关CPU使用量的升高，以及由于HSRP报文交换而导致的网络带宽占用增加。诸如Catalyst 4500及6500系列的思科Catalyst交换机支持HSRP客户端分组的部署(the implementation of HSRP client groups)。
+
+在前面的小节，学习到HSRP允许在单一网关接口上多个分组的配置。在网关接口上运行许多不同HSRP分组的主要问题在于，这将提升网关上CPU的使用率，同时可能会潜在地增加由HSRP所用到的3秒Hello报文间隔而带来的网络流量。
+
+为解决这个潜在问题，HSRP还允许客户端或从分组的配置（the configuration of client or slave groups）。客户端或从分组是一些简单的HSRP分组，配置作为跟随一个主HSRP分组（a master HSRP group）而不加入到HSRP的选举中。这些客户端或从分组跟嘴主分组的运作及HSRP状态，因此，它们本身无需就周期性的Hello数据包进行交换。这样做就可以在使用多个HSRP分组时，降低CPU及网络的使用。
+
+但是，需要注意客户端分组为刷新其在交换机中的虚拟MAC地址，仍要发出周期性的报文。该刷新报文会以相比有主分组发出的协议选举报文低得多的频率发出。尽管客户端分组的配置是超出CCNA考试要求范围，下面的输出仍对跟随主分组HSRP分组1，同时被命名为`SWITCH-HSRP`分组的两个客户端分组的配置进行了演示。
+
+```
+Gateway-1(config)#interface vlan100
+Gateway-1(config-if)#ip address 192.168.1.1 255.255.255.0
+Gateway-1(config-if)#ip address 172.16.31.1 255.255.255.0 secondary
+Gateway-1(config-if)#ip address 10.100.10.1 255.255.255.0 secondary
+Gateway-1(config-if)#standby 1 ip 192.168.1.254
+Gateway-1(config-if)#standby 1 name SWITCH-HSRP
+Gateway-1(config-if)#standby 2 ip 172.16.31.254
+Gateway-1(config-if)#standby 2 follow SWITCH-HSRP
+Gateway-1(config-if)#standby 3 ip 10.100.10.254
+Gateway-1(config-if)#standby 3 follow SWITCH-HSRP
+Gateway-1(config-if)#exit
+```
+
+在上面的

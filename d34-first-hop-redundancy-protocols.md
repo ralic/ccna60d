@@ -428,4 +428,37 @@ Gateway-1(config-if)#standby 3 follow SWITCH-HSRP
 Gateway-1(config-if)#exit
 ```
 
-在上面的
+在上面输出的配置中，组1被配置为主HSRP分组，组2及组3被配置为客户端或从HSRP分组。
+
+###在网关上配置HSRP
+
+**Configuring HSRP on the Gateway**
+
+下列步骤是在网关上配置HSRP所需要的。
+
+1. 使用接口配置命令`ip address [address] [mask] [secondary]`为该网关接口配置正确的IP地址与子网掩码；
+2. 在网关接口上建立一个HSRP分组并通过接口配置命令`standby [number] ip [virtual address] [secondary]`为该分组指派虚拟IP地址；
+3. 作为可选项，使用接口配置命令`standby [number] name [name]`为该HSRP分组分配一个名称；
+4. 作为可选项，如要对活动网关的选举进行控制，就要通过接口配置命令`standby [number] priority [value]`配置该分组的优先级。
+
+以下本小节所有配置输出都将基于下图34.17中的网络。
+
+![HSRP配置示例的拓扑](images/3417.png)
+*图34.17 -- HSRP配置示例的拓扑*
+
+>**注意：**这里假设VLAN及VTP-Server-1和VTP-Server-2之间的中继配置都已存在且VLAN172中可以成功地ping通。为简短起见，该项配置输出将在配置示例中省略。
+
+```
+VTP-Server-1(config)#interface vlan172
+VTP-Server-1(config-if)#ip address 172.16.31.1 255.255.255.0
+VTP-Server-1(config-if)#standby 1 ip 172.16.31.254
+VTP-Server-1(config-if)#standby 1 priority 105
+VTP-Server-1(config-if)#exit
+VTP-Server-2(config)#interface vlan172
+VTP-Server-2(config-if)#ip address 172.16.31.2 255.255.255.0
+VTP-Server-2(config-if)#standby 1 ip 172.16.31.254
+VTP-Server-2(config-if)#exit
+```
+
+>**注意：**应用到VTP-Server-2的HSRP配置中没有手动分配优先级数值。默认情况下，HSRP将使用`100`的优先级值，允许VTP-Server-1带有一个`105`的优先级值，以便赢得选举而被选举为该HSRP分组的主要网关。
+
